@@ -29,6 +29,11 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem*{example}{Example}
 
+\newcommand*\comp[1]{\overline{#1}}
+
+\newcommand{\lb}{\left}
+\newcommand{\rb}{\right}
+
 %------------------
 
 %Everything before begin document is called the pre-amble and sets out how the document will look
@@ -37,14 +42,106 @@
 \begin{document}
 
 \input{coverpage.tex}
-	
+
 
 \begin{abstract}
-Some sorts of documents need abstracts. Others do not.
+	Some sorts of documents need abstracts. Others do not.
 \end{abstract}
+	
+	
+\tableofcontents
 
-%The following code is not run because of the percentage sign, but you might find it useful for future work
-% \tableofcontents
+\section{Definitions}
+
+\begin{definition}
+	Dynamic Network
+
+	$$
+		\mathcal{G} = (G_t)_{t \in \mathbb{N}}, G_t = (V, E_t)
+	$$
+\end{definition}
+
+\begin{definition}
+	Cut
+	$$
+		E(S, \comp{S}) = \left\{\{u, v\} \in E \mid u \in S, v \in \comp{S} \right\}
+	$$
+\end{definition}
+
+\begin{definition}
+	Diligence of a cut $ E(S, \comp{S}) $
+	$$
+		\rho(S) = \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
+	$$ 
+
+	where $\comp{d}(S) := \frac{\sum_{v \in S} d_v}{|S|}$ is the average degree of the vertices in $S$
+\end{definition}
+
+\begin{definition}
+	Diligence of a graph $G$
+	$$
+		\rho(G) = \min_{S \in V} \rho(S) 
+	$$
+\end{definition}
+
+\begin{definition}
+	Absolute Diligence of a non-empty graph $G = (V, E)$
+	$$
+		\comp{\rho}(G) = \min_{\{u, v\}v \in E}\left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
+	$$
+\end{definition}
+
+\begin{definition}
+	Conductance of a graph $G = (V, E)$
+
+	$$
+		\Phi(G) = \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}}
+	$$
+\end{definition}
+
+\begin{definition}
+	Edge-Markovian Dynamic Network
+
+	% TODO
+\end{definition}
+
+\section{Results}
+
+\newcommand{\ModelIntro}{
+	Let $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network, where at least one node is aware of a rumour in $G_0$.
+}
+
+\begin{theorem}
+	\ModelIntro Then with high probability, the rumour will have spread to all the nodes of $\mathcal{G}$ in time at most
+
+	$$
+		\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
+	$$
+\end{theorem}
+
+\begin{theorem}
+	\ModelIntro Then with high probability, the rumour will have spread to all the nodes of $\mathcal{G}$ in time at most 
+
+	$$ 
+		\min \left\{ t : \sum_{k=0}^t \delta_{G_k} \comp{\rho}(G_k) \right\}
+	$$
+\end{theorem}
+
+\begin{theorem}
+	\ModelIntro Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that for all $t \in \mathbb{N}$, $G_t$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the flooding time of $\mathcal{G}$ is
+
+	$$
+		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
+	$$
+\end{theorem}
+
+\begin{theorem}
+	Let $\mathcal{M}(n, p, q)$ be an Edge-Markovian Dynamic Network in its stationary distribution. If $p \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the flooding time in $\mathcal{M}(n, p, q)$ is 
+
+	$$
+		\mathcal{O}\left(\frac{\log n}{\log np} + \log \log np \right)
+	$$
+\end{theorem}
 
 \section{Introduction}
 
@@ -131,7 +228,6 @@ A^{T} & =\begin{pmatrix}1 & 2\\
 2 & 4
 \end{pmatrix}
 \end{align}
-
 
 
 
