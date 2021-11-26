@@ -1,11 +1,6 @@
-import matplotlib.pyplot as plt
 from networkx.classes.graph import Graph
 import numpy as np
 import random
-
-from utils import draw_graph, generate_ER_graph
-
-exponential_sample = np.random.Generator.exponential
 
 def exponential_sample(rate: float):
     return np.random.exponential(1/rate)
@@ -33,19 +28,23 @@ def spread_continuous_rumour(graph_generator, number_of_nodes, initial_node):
             if len(neighbors) > 0:
                 chosen_neighbor = random.choice(neighbors)
 
-                if chosen_neighbor in informed_nodes or chosen_node in informed_nodes:
+                chosen_informed = chosen_node in informed_nodes
+                neighbor_informed = chosen_neighbor in informed_nodes
+
+                if (chosen_informed and not neighbor_informed) or (neighbor_informed and not chosen_informed):
                     informed_nodes.add(chosen_node)
                     informed_nodes.add(chosen_neighbor)
             
             events.append({
                 'time': timestep + round_time,
-                'informed_nodes': informed_nodes,
+                'informed_nodes': set(informed_nodes),
                 'graph': G
             })
 
+
             # Minumum of k exponentials has exponential distribution of sum of rates
             round_time += exponential_sample(number_of_nodes)
-        
+
         timestep += 1
 
     return events

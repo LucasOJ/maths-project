@@ -1,11 +1,6 @@
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 from networkx.classes.graph import Graph
 import random
 
-from utils import draw_graph, generate_ER_graph
-
-# TODO: Continous-time
 
 def spread_discrete_rumour(graph_generator, number_of_nodes, initial_node):
     informed_nodes = {initial_node}
@@ -34,10 +29,3 @@ def spread_discrete_rumour(graph_generator, number_of_nodes, initial_node):
         })
 
     return events
-
-# TODO: Animation of spread
-
-
-
-events = spread_discrete_rumour(generate_ER_graph, 50, 0)
-print(events)
