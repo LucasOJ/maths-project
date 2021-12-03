@@ -25,13 +25,7 @@ def display_simulation(events):
         informed_nodes: set = event['informed_nodes']
         colour_map = make_colour_map(n, informed_nodes)
 
-        nx.draw_shell(G, node_color=colour_map, font_weight='bold', with_labels=True, ax = ax)
+        nx.draw_shell(G, node_color=colour_map, font_weight='bold', ax = ax)
 
-    anim = animation.FuncAnimation(figure, frame, len(events), interval=500)
+    anim = animation.FuncAnimation(figure, frame, len(events), interval=100)
     plt.show()
-
-print("STARTED SIMULATION")
-events = spread_discrete_rumour(generate_neighbor_graph, one_neighbor_spread_function, 50, 0)
-print("FINISHED SIMULATION")
-
-display_simulation(events)

@@ -14,7 +14,7 @@ def spread_continuous_rumour(graph_generator, number_of_nodes, initial_node):
     
     while len(informed_nodes) < number_of_nodes:
 
-        G: Graph = graph_generator(timestep)
+        G: Graph = graph_generator(number_of_nodes, timestep)
         assert(G.number_of_nodes() == number_of_nodes)
 
         round_time = exponential_sample(number_of_nodes)
@@ -32,15 +32,13 @@ def spread_continuous_rumour(graph_generator, number_of_nodes, initial_node):
                 neighbor_informed = chosen_neighbor in informed_nodes
 
                 if (chosen_informed and not neighbor_informed) or (neighbor_informed and not chosen_informed):
-                    informed_nodes.add(chosen_node)
-                    informed_nodes.add(chosen_neighbor)
-            
+                    informed_nodes = informed_nodes.union({chosen_node, chosen_neighbor})
+
             events.append({
                 'time': timestep + round_time,
-                'informed_nodes': set(informed_nodes),
+                'informed_nodes': informed_nodes,
                 'graph': G
             })
-
 
             # Minumum of k exponentials has exponential distribution of sum of rates
             round_time += exponential_sample(number_of_nodes)

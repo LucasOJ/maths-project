@@ -25,7 +25,7 @@ def flooding_spread_function(G: Graph, informed_nodes: set):
 
 def spread_discrete_rumour(graph_generator, spread_function, number_of_nodes, initial_node):
     informed_nodes = {initial_node}
-    timestep = 1
+    timestep = 0
     events = []
 
     while len(informed_nodes) < number_of_nodes:
