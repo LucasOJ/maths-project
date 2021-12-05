@@ -172,7 +172,7 @@ Superposition
 \begin{definition}
 	Edge-boundary of a set of vertices $A \subseteq V$
 	$$
-		\partial A = \left\{ \{u, v\} \in E \mid u \in E, v \in V \setminus E \right\} 
+		\partial A = \left\{ \{u, v\} \in E \mid u \in A, v \in V \setminus A \right\} 
 	$$
 \end{definition}
 
@@ -198,40 +198,52 @@ Superposition
 \end{theorem}
 
 \begin{proof}
+
+	% TODO: Move tau' defn to lemma statement
+	Let $\tau'$ be the first time at which the number of informed nodes increases by at least $m(\tau)$ ie the smallest $\gamma$ such that $|I_{\gamma}| \geq |I_\tau| + m(\tau)$
+	
 	Let $ \gamma \in [\tau, \tau')$.
 
-	Suppose $|I_{\tau}| \leq \frac{n}{2}$, thus $|I_\gamma| \leq \frac{n}{2}$ THIS DOES NOT HOLD. By the definition of the Cheeger constant we have that $h(G_\gamma) \leq \frac{|\partial I_\gamma|}{|I_\gamma|}$. Note that $ \partial I_\gamma = E(I_\gamma, U_\gamma)$, since $\partial I_\gamma$ is the set of edges with has exactly one endpoint in $I_\gamma$, thus the other endpoint must be in the complement of $I_\gamma$, namely $U_\gamma$. Thus
+	Suppose  $|I_\gamma| \leq \frac{n}{2}$. By the definition of the Cheeger constant we have that $h(G_\gamma) \leq \frac{|\partial I_\gamma|}{|I_\gamma|}$. Note that $ \partial I_\gamma = E(I_\gamma, U_\gamma)$, since $\partial I_\gamma$ is the set of edges with has exactly one endpoint in $I_\gamma$, thus the other endpoint must be in the complement of $I_\gamma$, namely $U_\gamma$. Thus
 
 	\begin{align*}
 		\lambda(\gamma) &= |E(I_\gamma, U_\gamma)| \\
 		& = |\partial I_\gamma| \\
 		& \geq h(G_\gamma) |I_\gamma| \\
-		& \geq h(G_\gamma) |I_\tau|
+		& \geq h(G_\gamma) |I_\tau| & \text{since } |I_\gamma| \text{ is increasing} \\
+		& \geq h(G_\gamma) m(\tau)
 	\end{align*}
 		
 	%TODO: THIS JUST EXCLUDES THE ERROR CASE
-	Now suppose $|I_\tau| > \frac{n}{2}$, thus $|U_\gamma| \leq \frac{n}{2}$. Hence by the definition of the Cheeger constant we have that $h(G_\gamma) \leq \frac{|\partial U_\gamma|}{|U_\gamma|}$. Note that $ \partial U_\gamma = E(I_\gamma, U_\gamma)$, since $\partial U_\gamma$ is the set of edges with has exactly one endpoint in $U_\gamma$,  thus the other endpoint must be in the complement of $U_\gamma$, namely $I_\gamma$. Thus 
+	Now suppose $|I_\gamma| > \frac{n}{2}$, thus $|U_\gamma| < \frac{n}{2}$. Hence, by the definition of the Cheeger constant we have that $h(G_\gamma) \leq \frac{|\partial U_\gamma|}{|U_\gamma|}$. Note that $ \partial U_\gamma = E(I_\gamma, U_\gamma)$, since $\partial U_\gamma$ is the set of edges with exactly one endpoint in $U_\gamma$,  thus the other endpoint must be in the complement of $U_\gamma$, namely $I_\gamma$. Thus 
 
 	\begin{align*}
 		\lambda(\gamma) &= |E(I_\gamma, U_\gamma)| \\
 		& = |\partial U_\gamma| \\
 		& \geq h(G_\gamma) |U_\gamma| \\
-		& \geq h(G_\gamma) \frac{|U_\tau|}{2}
-	\end{align*}
+	\end{align*} 
 
-	%TODO: Think about if tau before n/2 informed nodes and if tau' after n/2 nodes
-		
-	Thus %TODO: MENTION FOR ANY TIME
+	Since $|I_t| + |U_t| = n$ for all $t$, we can reformulate the definition of $\tau'$ as follows
+
+	\begin{definition}
+		$\tau'$ is the smallest $\gamma$ such that $|U_\tau| - m(\tau) \geq |U_\gamma|$
+	\end{definition}
+	
+	Since $\gamma < \tau'$ we have that
 
 	\begin{align*}
-		\lambda(\gamma) &\geq \min \left\{ h(G_\gamma) |I_\tau|, h(G_\gamma) \frac{|U_\tau|}{2} \right\} \\
-		& \geq h(G_\gamma) \min \left\{|I_\tau|, \frac{|U_\tau|}{2} \right\} \\
-		& \geq h(G_\gamma) \frac{\min \left\{|I_\gamma|,|U_\gamma| \right\}}{2}\\
+		|U_\gamma| & \geq |U_\tau| - m(\tau) \\
+		& \geq |U_\tau| - \frac{|U_\tau|}{2} \\
+		& = \frac{|U_\tau|}{2} \\
 	\end{align*}
+	
+	Hence $\lambda(\gamma) \geq h(G_\gamma)\frac{|U_\tau|}{2} = h(G_\gamma)m(\tau)$
 
 \end{proof}
 
 \subsection{Applying the bound to Edge-Markovian evolution}
+
+For each edge there is a stationary distribution
 
 Talk about stationarity
 
