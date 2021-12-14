@@ -51,14 +51,75 @@
 
 
 \begin{abstract}
-	Some sorts of documents need abstracts. Others do not.
+	TODO
 \end{abstract}
 	
 	
 \tableofcontents
 
-\section{Definitions}
 
+\section{Introduction}
+
+
+TODO
+
+\begin{enumerate}
+	\item Motivation for studying
+	\item Structure of paper
+	\item Results proved
+	\item My contributions
+\end{enumerate}
+
+\section{Bounding the asynchronous rumour spreading time in terms of the conductance}
+
+\subsection{Review of Possion Processes}
+
+TODO
+
+\begin{enumerate}
+	\item Definition
+	\item $N(s + t) - N(s)$ has a Possion distribution with rate $\lambda t$
+	\item Superposition
+\end{enumerate}
+
+\subsection{Introduction to Inhomogeneous Poisson Processes}
+
+\begin{enumerate}
+	\item Definition
+	\item Proof that $N(b) - N(a)$ has a Possion distribution with rate
+	$$
+		\int_a^b \lambda(t) dt
+	$$
+\end{enumerate}
+
+\subsection{Order statistics of exponential random variables}
+
+TODO: Prove that minimum of exponentials is exponential, where the probability each exponential that attains the minimum is dependent on each exponentials' rate, and independent of the value of the min
+
+
+\newcommand{\ModelIntro}{
+	Let $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network, where one node is aware of a rumour in $G_0$.
+}
+
+\subsection{Model}
+
+\begin{definition}
+	Dynamic Network
+
+	$$
+		\mathcal{G} = (G_t)_{t \in \mathbb{N}}, G_t = (V, E_t)
+	$$
+\end{definition}
+
+
+In this subsection, we define the model used for asynchronous rumour spreading
+
+
+An asynchronous rumour spreads on a dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds. In round $t$, each node aware of the rumour is associated with a unit rate exponential clock. When the clock \dots
+
+TODO: Finish specification of the model
+
+\subsection{Proof of the bound}
 
 \begin{definition}
 	Cut
@@ -98,51 +159,6 @@
 	$$
 \end{definition}
 
-\begin{definition}
-	Edge-Markovian Dynamic Network
-
-	% TODO
-\end{definition}
-
-\section{Introduction}
-
-% Motivation for studying
-
-% Results proved
-
-% My contributions
-
-\section{Bounding the asynchronous rumour spreading time in terms of the conductance}
-
-\subsection{Review of Possion Processes}
-
-Superposition
-
-\subsection{Introduction to Inhomogeneous Poisson Processes}
-
-\subsection{Order statistics of exponential random variables}
-
-\newcommand{\ModelIntro}{
-	Let $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network, where one node is aware of a rumour in $G_0$.
-}
-
-\subsection{Model}
-
-In this subsection, we define the model used for asynchronous rumour spreading
-
-\begin{definition}
-	Dynamic Network
-
-	$$
-		\mathcal{G} = (G_t)_{t \in \mathbb{N}}, G_t = (V, E_t)
-	$$
-\end{definition}
-
-
-
-An asynchronous rumour spreads on a dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds. In round $t$, each node aware of the rumour is associated with a unit rate exponential clock. When the clock 
-
-\subsection{Proof of the bound}
 
 First we prove a lemma about how long it takes for the number of nodes aware of the rumour to increase by a multiplicative factor. 
 
@@ -165,6 +181,8 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 	where $c = \frac{1}{2} - \frac{1}{e}$
 \end{lemma}
 
+TODO: Proof
+
 \begin{proof}
 	
 \end{proof}
@@ -182,6 +200,8 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	for a sufficiently large $C$
 \end{theorem}
 
+TODO: Proof
+
 \begin{proof}
 
 \end{proof}
@@ -197,26 +217,43 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	% for a sufficiently large $C$
 \end{theorem}
 
+TODO: Proof 
+
 \begin{proof}
 	
 \end{proof}
 
 \subsection{Interpretation}
 
-% Why diligence useful?
-% When useful/better than other bounds?
-% Difference between absolute and non-absolute
+TODO
+
+\begin{enumerate}
+	\item Why diligence useful?
+	\item When useful/better than other bounds?
+	\item Comparison between absolute and non-absolute  diligence results, when is each useful?
+\end{enumerate}
 
 \subsection{Simulations}
 
-% Look at symmetrical graphs (complete, star, ring, path) and work evaluate bounds - verify they hold
+TODO 
 
-%Simulations for random evolutions eg ER 
-
+\begin{enumerate}
+	\item Look at symmetrical graphs (complete, star, ring, path) and evaluate explicit bounds - evaluate tightness in each case with simulations
+	\item Simulations for random graphs/evolutions
+\end{enumerate}
 
 \section{Bounding the synchronous flooding time}
 
 \subsection{Review of Markov Chains}
+
+\begin{enumerate}
+	\item Definition
+	\item Stationary distribution definition and Interpretation
+\end{enumerate}
+
+\subsection{Model}
+
+TODO: Describe how synchronous rumour spreads on dynamic network
 
 \subsection{Proof of the bound}
 
@@ -229,6 +266,8 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
 	$$
 \end{theorem}
+
+TODO: Finish proof
 
 \begin{proof}
 	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$,
@@ -250,17 +289,19 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 
 
 	% TODO: Why does |I_{t+s}| satisfy required condtition to apply inequality?
-	\begin{align*}
-		|I_{t+s}| &\geq (1 + k_i)|I_{t+s-1}| \\
-		&\geq (1 + k_i)^2|I_{t+s-2}|\\
-		& \dots \\
-		&\geq (1 + k_i)^s |I_t| \\
-		&\geq (1 + k_i)^s h_{i-1}
-	\end{align*}
+	% \begin{align*}
+	% 	|I_{t+s}| &\geq (1 + k_i)|I_{t+s-1}| \\
+	% 	&\geq (1 + k_i)^2|I_{t+s-2}|\\
+	% 	& \dots \\
+	% 	&\geq (1 + k_i)^s |I_t| \\
+	% 	&\geq (1 + k_i)^s h_{i-1}
+	% \end{align*}
 
 \end{proof}
 
 \subsection{Applying the bound to Edge-Markovian evolution}
+
+TODO: Prove that stationary distribution of edge-markovian evolution is ER G(n, p/(p+q))
 
 \begin{theorem}
 	Let $\mathcal{M}(n, p, q)$ be an Edge-Markovian Dynamic Network in its stationary distribution. If $p \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the flooding time in $\mathcal{M}(n, p, q)$ is 
@@ -269,6 +310,8 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 		\mathcal{O}\left(\frac{\log n}{\log np} + \log \log np \right)
 	$$
 \end{theorem}
+
+TODO: Proof
 
 \begin{proof}
 	
@@ -279,7 +322,17 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 
 \subsection{Simulations}
 
+TODO: Evaluate tightness of bound for Edge-Markovian evolution
+
 \section{Bounding the asynchronous rumour spreading time in terms of the Cheeger constant}
+
+\subsection{Model}
+
+TODO: Define asynchronous model - explain impact of changes in comparison to the other model (in this model each edge has rate 1 instead of 1/deg(v), bound not dependent on degrees of nodes)
+
+
+Each edge is associated with a Poisson Process of unit rate. When the Possion Processes fires, if one of the endpoints knows the rumour then both endpoints immediately become aware of the rumour. 
+% TODO: CHANGE WORDING - what if nodes know rumour already
 
 \begin{definition}
 	Edge-boundary of a set of vertices $A \subseteq V$
@@ -297,7 +350,7 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 \end{definition}
 
 \begin{theorem}
-	Let $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ be an $n$-node asychronus PUSH-model dynamic network, where at least one node is aware of a rumour in $G_0$. Each edge is associated with a Poisson Process of unit rate. When the Possion Processes fires, if one of the endpoints knows the rumour then both endpoints immediately become aware of the rumour. % TODO: CHANGE WORDING - what if nodes know rumour already
+	Let $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ be an $n$-node asychronus PUSH-model dynamic network, where at least one node is aware of a rumour in $G_0$.
 
 	Then, with high probability, the rumour will have spread to all the nodes of $\mathcal{G}$ in time at most
 
@@ -309,8 +362,7 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 	for a sufficiently large $C$
 \end{theorem}
 
-Talk about differences in model and how reflected in results
-
+TODO: Explain how can apply the following result in the proof from the first asychronus model
 
 \begin{proof}
 
@@ -361,14 +413,25 @@ Talk about differences in model and how reflected in results
 
 \subsection{Applying the bound to Edge-Markovian evolution}
 
-For each edge there is a stationary distribution
+TODO
+\begin{enumerate}
+	\item Prove that an individual G(n,p) ER graph satisfies $h(G) > p$ w.h.p
+	\item Prove that the first log(n)/p ER graphs satisfy this property w.h.p (union bound on event at least one not satisfying)- see edge-markovian proof
+	\item Combine with result from previous bound to get O(log(n)/p) concrete bound
+	\item If possible - prove spread time is $\Theta(\log(n)/p)$
+\end{enumerate}
 
-Talk about stationarity
+\subsection{Simulations}
 
-Why only need to consider stationary distribution?
+TODO: Evaluate bound with simulatons if can't prove spread time is  $\Theta(\log(n)/p)$
 
-Prove stationarity distribution of Edge-Markovian model is ER graph
+\section{Conclusion}
 
-Prove lower bound on $h(G)$ for ER graph
+TODO:
+
+\begin{enumerate}
+	\item Summary of results
+	\item Questions for further study
+\end{enumerate}
 
 \end{document}
