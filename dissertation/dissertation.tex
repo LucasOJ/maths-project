@@ -60,8 +60,22 @@
 
 \section{Introduction}
 
+Dynamic networks are complex networks which change over time. The study of such structures are important as we can use them to model many important real-world situations[CITE]. For example, computer networks such as the internet are dynamic: connections between nodes can fail and new nodes can be added which leads to an ever-changing network topology. 
 
-TODO
+In this paper we investigate a variety of randomized rumour spreading algorithms on dynamic networks. In these algorithms initially a single node is aware the rumour, which spreads randomly between nodes along present edges. These algorithms model important phenomenons such as epidemics spreading through a population [CITE], or distributed databases replicating their state across a network [CITE]. 
+
+% TODO: FOLLOWING IS WRONG - ALSO CONSIDERING FLOODING TIME
+We compare rumour spreading algorithms by deriving the time it takes for the rumour to spread to all nodes on a given dynamic network, known as the rumour spreading time. Since the algorithms we consider are randomized, the rumour spreading time will vary. Hence, the best we can do is we find bounds that hold with high probability. Such bounds are well-known for static networks [CITE], but in these paper we extend these results to networks changing topologies. For simplicity, we restrict our investigations to dynamic networks where the edges may be added or deleted, but the vertex set remains the same.
+
+In Section \ref{AsyncUpperBoundSection} we review a result by [CITE] which bounds the spreading time of an asynchronous rumour spreading algorithm. In this analysis the exact changes in network topology are known before the rumour spreading takes place. If we do not control the changes this assumption may be unrealistic.
+
+In Section \ref{AsyncLowerBoundSection} we review the complementary result from the same paper that the asynchronous bound is almost tight. 
+
+In Section \ref{SyncFloodingSection} we investigate the flooding time for a synchronous rumour spreading algorithm, following results of a paper by [CITE]. We also loosen the assumption that we know the exact changes to the network topology at each time step. Instead, we consider a model where changes occur according to a given probability distribution.
+
+In Section \ref{AsyncCheegerBound} we combine ideas from sections \ref{AsyncUpperBoundSection} and \ref{SyncFloodingSection} to derive a novel bound on the rumour spreading time of an asynchronous algorithm. 
+
+% TODO - finish this
 
 \begin{enumerate}
 	\item Motivation for studying
@@ -71,6 +85,7 @@ TODO
 \end{enumerate}
 
 \section{Bounding the asynchronous rumour spreading time in terms of the conductance}
+\label{AsyncUpperBoundSection}
 
 \subsection{Review of Possion Processes}
 
@@ -78,7 +93,7 @@ TODO
 
 \begin{enumerate}
 	\item Definition
-	\item $N(s + t) - N(s)$ has a Possion distribution with rate $\lambda t$
+	\item $N(s + t) - N(s)$ has a Poisson distribution with rate $\lambda t$
 	\item Superposition
 \end{enumerate}
 
@@ -86,7 +101,7 @@ TODO
 
 \begin{enumerate}
 	\item Definition
-	\item Proof that $N(b) - N(a)$ has a Possion distribution with rate
+	\item Proof that $N(b) - N(a)$ has a Poisson distribution with rate
 	$$
 		\int_a^b \lambda(t) dt
 	$$
@@ -164,27 +179,30 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 
 \begin{lemma} \label{AsyncIncreaseLemma}
 	Let $\mathcal{G}=(G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network, where some node is aware of the rumour in $G_0$. Choose an arbitrary time $\tau \in [0, \infty)$. We denote the set of informed nodes at this time $I_\tau$, and set uninformed nodes $U_\tau$.
-
+	\noindent
 	Define 
 	
 	$$
 	\Delta(\alpha) = \min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil{\tau}+k})\rho(G_{\ceil{\tau}+k}) \geq 2 \alpha \right\}
 	$$
 
+	\noindent
 	Let $\tau'$ denote the earliest time when $I_t$ increases by $m(\tau) := \frac{\min\{|I_\tau|, |U_\tau|\}}{2}$.
-
+	\noindent
 	Then, 
 	$$
 		\mathbb{P}(\tau' - \tau \geq \Delta(\alpha) + 2) \leq e^{-c\alpha m(\tau)}
 	$$
-
+	\noindent
 	where $c = \frac{1}{2} - \frac{1}{e}$
 \end{lemma}
 
-TODO: Proof
-
 \begin{proof}
+	Let $\gamma \in [\tau', \tau)$. We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. For every $\{u, v\} \in E(I_\gamma, U_\gamma)$, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$
 	
+	
+	% Mention later:
+	Since the topology of the network only changes at integer times, we have that $G_\gamma = G_{\lfloor\gamma\rfloor}$. 
 \end{proof}
 
 Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following Theorem.
@@ -242,7 +260,11 @@ TODO
 	\item Simulations for random graphs/evolutions
 \end{enumerate}
 
+\section{Proof that the asynchronous rumour spreading time bound is almost tight}
+\label{AsyncLowerBoundSection}
+
 \section{Bounding the synchronous flooding time}
+\label{SyncFloodingSection}
 
 \subsection{Review of Markov Chains}
 
@@ -325,6 +347,7 @@ TODO: Proof
 TODO: Evaluate tightness of bound for Edge-Markovian evolution
 
 \section{Bounding the asynchronous rumour spreading time in terms of the Cheeger constant}
+\label{AsyncCheegerBound}
 
 \subsection{Model}
 
