@@ -259,13 +259,10 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 	We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. 
 	For every $\{u, v\} \in E(I_\gamma, U_\gamma)$, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_u(\gamma)}$ % TODO: Why does this hold?
 	Thus the time until the first uniformed node is made aware of the rumour has an exponential distribution of rate % TODO: Why does this hold
-
 	$$
 		\lambda(\gamma) = \sum_{\{u, v\} \in E(I_\gamma, U_\gamma)} \frac{1}{d_u(\gamma)}
 	$$
-
 	% TODO: DIAGRAM HERE LABELLED WITH RATES
-
 	Let $S = I_\gamma$ if $\text{vol}(I_\gamma) \leq \text{vol}(I_\gamma)$, otherwise let $S = U_\gamma$. Then,
 
 	%TODO: Justify all steps
@@ -290,9 +287,7 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 		& = \rho(G_\gamma)\Phi(G_\gamma) m(\gamma) \\
 		& \text{by the definition of } m(\gamma)
 	\end{align*}
-
 	% TODO: Brief exposition here
-
 	We now procceed to prove the following claim, by performing case analysis on $m(\gamma)$
 
 	\textbf{Claim.} $m(\gamma) \geq \frac{m(\tau)}{2}$. % Inutive explanation
@@ -309,21 +304,21 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 	\textbf{Case 2.} Suppose instead that $m(\gamma) = |U_\gamma|$
 
 	\noindent
-	Since $|I_t| + |U_t| = n$ for all $t$, note that
+	Since $|I_t| + |U_t| = n$ for all times $t$, note that
 	$$
 		|I_{\gamma}| \geq |I_\tau| + \frac{m(\tau)}{2} 
 		\iff
 		n - |U_{\gamma}| \geq n - |U_\tau| + \frac{m(\tau)}{2} 
 		\iff
-		|U_\tau| - \frac{m(\tau)}{2} \geq |U_\gamma| 
+		|U_\gamma| \leq |U_\tau| - \frac{m(\tau)}{2}
 	$$
 	Hence we can reformulate the definition of $\tau'$ as follows
 	$$
-		\tau' = \min \left\{ \gamma : |U_\tau| - \frac{m(\tau)}{2} \geq |U_\gamma| \right\} 
+		\tau' = \min \left\{ \gamma : |U_\gamma| \leq |U_\tau| - \frac{m(\tau)}{2} \right\} 
 	$$ 
 	Thus we have that
 	\begin{align*}
-		|U_\gamma| & \geq |U_\tau| - \frac{m(\tau)}{2} & \text{since }\gamma < \tau' \\
+		|U_\gamma| & > |U_\tau| - \frac{m(\tau)}{2} & \text{since }\gamma < \tau' \\
 		& \geq |U_\tau| - \frac{|U_\tau|}{2} & \text{since } m(\tau) \leq |U_\tau| \\
 		& = \frac{|U_\tau|}{2} \\
 	\end{align*}
@@ -335,10 +330,10 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 		\lambda(\gamma) \geq \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2}
 	\end{equation}
 
-	We have lower-bounded the rate at which new uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
+	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
 
 
-	By [CITE INHOMOGENOUS THEROEM], $N(\tau + \Delta(\alpha) + 2)$ has a Poission distribution with rate $\Lambda(\tau + \Delta(\alpha) + 2)$ where
+	By [CITE INHOMOGENOUS THEROEM], $N(\tau + \Delta(\alpha) + 2)$ has a Poission distribution with rate $\Lambda(\tau + \Delta(\alpha) + 2)$, where
 	\begin{align*}
 		\Lambda(\tau + \Delta(\alpha) + 2) &= \int_\tau^{\tau + \Delta(\alpha) + 2} \lambda(\gamma) d\gamma \\
 		& \geq \int_{\ceil\tau}^{{\ceil\tau} + \Delta(\alpha) + 1} \lambda(\gamma) d\gamma \\
@@ -358,7 +353,50 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 		& \\
 		& = \alpha m(\tau)
 	\end{align*}
+	Let $X$ be a random variable with a $\text{Poisson}(\alpha m(\tau))$ distribution. 
+	By the previous chain of inequalities we have that $X$ is stochastically dominated by $N(\tau + \Delta(\alpha) + 2)$. % TODO: Talk about stochastic domination
+	Note that
+	$$
+		\tau' - \tau \geq \Delta(\alpha) + 2 \iff 
+		\tau' \geq \tau + \Delta(\alpha) + 2 \implies 
+		N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}
+	$$
+	where the final implication holds since by the definition of $\tau'$, if $\tau' \geq \tau + \Delta(\alpha) + 2$ then the number of new nodes informed of the the rumour between time $\tau$ and $\tau + \Delta(\alpha) + 2$ must be less than or equal to $\frac{m(\tau)}{2}$. Hence we have that
+	\begin{align*}
+		\mathbb{P}(\tau' - \tau \geq \Delta(\alpha) + 2) & 
+		\leq \mathbb{P} (N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}) \\ %TODO: Make () brackets large
+		& \leq \mathbb{P}(X \leq \frac{m(\tau)}{2}) \\
+		& \text{since } X \text{ is stochastically dominated by } N(\tau + \Delta(\alpha) + 2) \\
+		& \\
+		& \leq \mathbb{P}(X \leq \frac{\alpha m(\tau)}{2}) \\
+		& \text{since } \alpha \geq 1 \\ % TODO: Check this assumption
+	\end{align*}
+	To finish the proof we prove the following claim
 
+	\noindent
+	\textbf{Claim.} For a Poisson($r$) distributed random random variable $Y$, 
+	$$
+		\mathbb{P}(Y \leq \frac{r}{2}) \leq e^{-cr}
+	$$
+	where $c$ is the constant defined in the statement of the theorem.
+
+	\noindent
+	\textit{Proof of Claim}
+
+	\noindent
+	From the definition of the density function of Poisson random variables we have that 
+	\begin{align*}
+		\mathbb{P}(Y \leq \frac{r}{2}) & = e^{-r} \sum_{j=0}^\frac{r}{2} \frac{r^j}{j!} \\ % TODO: Assumes r/2 is integer? 
+		& = e^{-r} \sum_{j=0}^\frac{r}{2} \frac{2^j(\frac{r}{2})^j}{j!} \\
+		& \leq e^{-r} \sum_{j=0}^\frac{r}{2} \frac{2^\frac{r}{2}(\frac{r}{2})^j}{j!} \\
+		& \leq e^{-r} e^\frac{r \log 2}{2} \sum_{j=0}^\frac{r}{2} \frac{(\frac{r}{2})^j}{j!} \\
+		& \leq e^{-r} e^\frac{r \log 2}{2} e^\frac{r}{2} \\
+		& = e^{-r(\frac{1}{2} - \frac{\log2}{2})} \\ % TODO: Weaken constant?
+	\end{align*}
+	thus the claim is proved. Since $X \sim \text{Poisson}(\alpha m(\tau))$ we get that
+	\begin{align*}
+		\mathbb{P}(\tau' - \tau \geq \Delta(\alpha) + 2) \leq \mathbb{P}(X \leq \frac{\alpha m(\tau)}{2}) \leq e^{-c \alpha m(\tau)}
+	\end{align*}	
 \end{proof}
 
 Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following Theorem.
@@ -555,7 +593,7 @@ TODO: Explain how can apply the following result in the proof from the first asy
 		& \geq h(G_\gamma) |U_\gamma| \\
 	\end{align*} 
 
-	Since $|I_t| + |U_t| = n$ for all $t$, we can reformulate the definition of $\tau'$ as follows
+	Since $|I_t| + |U_t| = n$ for all times $t$, we can reformulate the definition of $\tau'$ as follows
 
 	$$
 		\tau' = \min \left\{ \gamma : |U_\tau| - \frac{m(\tau)}{2} \geq |U_\gamma| \right\} 
