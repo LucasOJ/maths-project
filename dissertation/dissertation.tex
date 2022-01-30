@@ -35,11 +35,15 @@
 
 \newcommand{\lb}{\left}
 \newcommand{\rb}{\right}
+\newcommand{\ModelIntro}{
+	Let $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network, where one node is aware of a rumour in $G_0$.
+}
 
 
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
+\allowdisplaybreaks
 %------------------
 
 %Everything before begin document is called the pre-amble and sets out how the document will look
@@ -60,18 +64,20 @@
 
 \section{Introduction}
 
-Dynamic networks are complex networks which change over time. The study of such structures are important as we can use them to model many important real-world situations[CITE]. For example, computer networks such as the internet are dynamic: connections between nodes can fail and new nodes can be added which leads to an ever-changing network topology. 
+Dynamic networks are complex networks which change over time. The study of such structures is important as we can use them to model many important real-world situations[CITE]. For example, computer networks such as the internet are dynamic: connections between nodes can fail and new nodes can be added which leads to an ever-changing network topology. 
 
-In this paper we investigate a variety of randomized rumour spreading algorithms on dynamic networks. In these algorithms initially a single node is aware the rumour, which spreads randomly between nodes along present edges. These algorithms model important phenomenons such as epidemics spreading through a population [CITE], or distributed databases replicating their state across a network [CITE]. 
+In this paper we investigate a variety of randomized rumour spreading algorithms on dynamic networks. In these algorithms initially a single node is aware the rumour, which spreads randomly between nodes along present edges. These algorithms model important phenomenons such as epidemics spreading through a population [CITE], and distributed databases replicating their state across a network [CITE]. 
 
 % TODO: FOLLOWING IS WRONG - ALSO CONSIDERING FLOODING TIME
-We compare rumour spreading algorithms by deriving the time it takes for the rumour to spread to all nodes on a given dynamic network, known as the rumour spreading time. Since the algorithms we consider are randomized, the rumour spreading time will vary. Hence, the best we can do is we find bounds that hold with high probability. Such bounds are well-known for static networks [CITE], but in these paper we extend these results to networks changing topologies. For simplicity, we restrict our investigations to dynamic networks where the edges may be added or deleted, but the vertex set remains the same.
+We compare rumour spreading algorithms by deriving the time it takes for the rumour to spread to all nodes on a given dynamic network, known as the rumour spreading time. Since the algorithms we consider are randomized, the rumour spreading time will vary. Hence, the best we can do is we find bounds that hold with high probability. Such bounds are well-known for static networks [CITE - complex networks unit], but in this paper we extend these results to networks with changing topologies. For simplicity, we restrict our investigations to dynamic networks where the edges may be introduced or removed over time, but the vertex set remains the same.
 
-In Section \ref{AsyncUpperBoundSection} we review a result by [CITE] which bounds the spreading time of an asynchronous rumour spreading algorithm. In this analysis the exact changes in network topology are known before the rumour spreading takes place. If we do not control the changes this assumption may be unrealistic.
+In Section \ref{Prelims} we introduce the notation and background needed to model rumour spreading.
 
-In Section \ref{AsyncLowerBoundSection} we review the complementary result from the same paper that the asynchronous bound is almost tight. 
+In Section \ref{AsyncUpperBoundSection} we specify an asynchronous rumour spreading algorithm and review a result by [CITE] which bounds its associated spreading time on a dynamic network. In this analysis the exact changes in network topology are known before the rumour spreading takes place, however in practice this assumption may be unrealistic.
 
-In Section \ref{SyncFloodingSection} we investigate the flooding time for a synchronous rumour spreading algorithm, following results of a paper by [CITE]. We also loosen the assumption that we know the exact changes to the network topology at each time step. Instead, we consider a model where changes occur according to a given probability distribution.
+In Section \ref{AsyncLowerBoundSection} we review the complementary result from the same paper that the asynchronous bound is almost tight.
+
+In Section \ref{SyncFloodingSection} we investigate the flooding time for a synchronous rumour spreading algorithm, following results of a paper by [CITE]. We loosen the assumption that we know the exact changes to the network topology at each time step, by instead considering a model where changes occur according to a given probability distribution.
 
 In Section \ref{AsyncCheegerBound} we combine ideas from sections \ref{AsyncUpperBoundSection} and \ref{SyncFloodingSection} to derive a novel bound on the rumour spreading time of an asynchronous algorithm. 
 
@@ -84,62 +90,55 @@ In Section \ref{AsyncCheegerBound} we combine ideas from sections \ref{AsyncUppe
 	\item My contributions
 \end{enumerate}
 
-\section{Bounding the asynchronous rumour spreading time in terms of the conductance}
-\label{AsyncUpperBoundSection}
+\section{Preliminaries}
+\label{Prelims}
 
-\subsection{Review of Possion Processes}
+\subsection{Notation}
 
-TODO
-
-\begin{enumerate}
-	\item Definition
-	\item $N(s + t) - N(s)$ has a Poisson distribution with rate $\lambda t$
-	\item Superposition
-\end{enumerate}
-
-\subsection{Introduction to Inhomogeneous Poisson Processes}
-
-\begin{enumerate}
-	\item Definition
-	\item Proof that $N(b) - N(a)$ has a Poisson distribution with rate
-	$$
-		\int_a^b \lambda(t) dt
-	$$
-\end{enumerate}
-
-\subsection{Order statistics of exponential random variables}
-
-TODO: Prove that minimum of exponentials is exponential, where the probability each exponential that attains the minimum is dependent on each exponentials' rate, and independent of the value of the min
-
-
-\newcommand{\ModelIntro}{
-	Let $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network, where one node is aware of a rumour in $G_0$.
-}
-
-\subsection{Model}
+First we introduce notation for expressing graph metrics. This notation will also be used throughout the paper. % TODO - GET RID OF SECOND LINE?
 
 \begin{definition}
-	Dynamic Network
+	Complement Set
 
-	$$
-		\mathcal{G} = (G_t)_{t \in \mathbb{N}}, G_t = (V, E_t)
+	\noindent
+	Given a graph $G = (V, E)$, for a set of vertices $S \subseteq V$ we define the complement set $\comp{S} = V \setminus A$
+\end{definition}
+
+\begin{definition}
+	Cut Set
+
+	\noindent
+	Given a graph $G = (V, E)$, for a set of vertices $S \subseteq V$ we define the cut set $ E(S, \comp{S}) = \left\{\{u, v\} \in E \mid u \in S, v \in \comp{S} \right\}.$
+\end{definition}
+
+\begin{definition}
+	Degree of a vertex
+
+	\noindent
+	Given a graph $G = (V, E)$, let $d_v$ be the number of neighbouring nodes $v$ is adjacent to, i.e. $$
+		d_v = |\left\{ e \in E : v \in e \right\}|
 	$$
 \end{definition}
 
+\begin{definition}
+	Volume of a vertex set
 
-In this subsection, we define the model used for asynchronous rumour spreading
+	\noindent
+	Given a graph $G = (V, E)$ with $S \subseteq V$, let 
+	$$
+		\text{vol}(S) = \sum_{v \in S} d_v
+	$$
+\end{definition}
 
+% TODO: Explain Implications of Cut set defn?
 
-An asynchronous rumour spreads on a dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds. In round $t$, each node aware of the rumour is associated with a unit rate exponential clock. When the clock \dots
-
-TODO: Finish specification of the model
-
-\subsection{Proof of the bound}
+\subsection{Graph Metrics}
 
 \begin{definition}
-	Cut
+	Conductance of a graph $G = (V, E)$
+
 	$$
-		E(S, \comp{S}) = \left\{\{u, v\} \in E \mid u \in S, v \in \comp{S} \right\}
+		\Phi(G) = \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}}
 	$$
 \end{definition}
 
@@ -159,26 +158,78 @@ TODO: Finish specification of the model
 	$$
 \end{definition}
 
-\begin{definition}
-	Absolute Diligence of a non-empty graph $G = (V, E)$
-	$$
-		\comp{\rho}(G) = \min_{\{u, v\}v \in E}\left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
-	$$
-\end{definition}
+\subsection{Introducing Dynamic Networks}
+
+Here we formally define the Dynamic Network structure rumours will spread on.
 
 \begin{definition}
-	Conductance of a graph $G = (V, E)$
+	Dynamic Network
 
-	$$
-		\Phi(G) = \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}}
-	$$
+	\noindent
+	A dynamic network is a sequence of graphs $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$. All the graphs in the sequence have the same vertex set at each time step, but the edge set may vary, i.e.  $G_t = (V, E_t)$ where $E_t$ is some edge set on $V$.
 \end{definition}
 
+$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
+
+% TODO: Segway
+
+\begin{definition}
+	Vertex degree at time $\gamma \in \mathbb{R}_+ $ 
+
+	\noindent
+	For a Dynamic Network $\mathcal{G}$ on a vertex set $V$, $d_v(\gamma)$ is the degree of a vertex $v \in V$ at time $\gamma$, i.e. the degree of $v$ in $G_\gamma$
+\end{definition}
+
+
+\subsection{Review of Poisson Processes}
+
+In this subsection we introduce Poisson processes, which will be needed to specify the first asychronous rumour spread algorithm.
+
+The Poisson process ...
+
+TODO
+
+\begin{enumerate}
+	\item Definition
+	\item $N(s + t) - N(s)$ has a Poisson distribution with rate $\lambda t$
+	\item Superposition
+\end{enumerate}
+
+
+\subsection{Order statistics of exponential random variables}
+
+TODO: Prove that minimum of exponentials is exponential, where the probability each exponential that attains the minimum is dependent on each exponentials' rate, and independent of the value of the min
+
+% TODO: Discuss implications for async rumour spreading - interpreting poission process as exponential clock, not interested in value of the process
+
+\section{Upper bounding the asynchronous rumour spreading time}
+\label{AsyncUpperBoundSection}
+
+\subsection{Introducing the Rumour Spreading Model}
+Now we are ready to define our first asynchronous algorithm for rumour spreading on a given dynamic network.
+
+\begin{definition}
+	Node-centric Asynchronous Rumour Spreading Algorithm 
+\end{definition}
+\label{NodeCentricAsyncAlgorithm}
+
+\noindent
+An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds. Initially a single node is aware of the rumour. In round $t$, each node aware of the rumour is associated with a unit rate exponential clock. When the of clock of an informed node $u$ ticks, another node $v$ is selected uniformly at random from the set of neighbouring nodes in $G_t$. $u$ then instantaneously informs $v$ of the rumour if $v$ was not already informed. Each round lasts for a unit time. % TODO: Change final line
+
+% TODO: This is wrong - push and pull model
+
+% TODO: DEFINE 'UNIT RATE CLOCK' and how it functions (eg what happens after infomed a node)
+
+% TODO: What happens in the case where the node has no neighbours?
+
+% TODO: Implications of this model
+
+\subsection{Result and Proof}
 
 First we prove a lemma about how long it takes for the number of nodes aware of the rumour to increase by a multiplicative factor. 
 
 \begin{lemma} \label{AsyncIncreaseLemma}
-	Let $\mathcal{G}=(G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network, where some node is aware of the rumour in $G_0$. Choose an arbitrary time $\tau \in [0, \infty)$. We denote the set of informed nodes at this time $I_\tau$, and set uninformed nodes $U_\tau$.
+	Let $\mathcal{G}=(G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network. At $t=0$ a single node is aware of rumour which spreads according to algorithm \ref{NodeCentricAsyncAlgorithm}. Choose an arbitrary time $\tau \in [0, \infty)$. We denote the set of informed nodes at this time $I_\tau$, and set uninformed nodes $U_\tau$.
 	\noindent
 	Define 
 	
@@ -187,7 +238,11 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 	$$
 
 	\noindent
-	Let $\tau'$ denote the earliest time when $I_t$ increases by $m(\tau) := \frac{\min\{|I_\tau|, |U_\tau|\}}{2}$.
+	Let $\tau'$ denote the earliest time when $|I_t|$ increases by $\frac{m(\tau)}{2}$, where $m(\tau) := \min\{|I_\tau|, |U_\tau|\}$, i.e,
+
+	$$
+		\tau' = \min\left\{\gamma : |I_{\gamma}| \geq |I_\tau| + \frac{m(\tau)}{2}\right\}
+	$$
 	\noindent
 	Then, 
 	$$
@@ -197,12 +252,113 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 	where $c = \frac{1}{2} - \frac{1}{e}$
 \end{lemma}
 
+% TODO: Exposition about interpretation here, dependeces (ie what is m(t) dependent on? et)
+
 \begin{proof}
-	Let $\gamma \in [\tau', \tau)$. We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. For every $\{u, v\} \in E(I_\gamma, U_\gamma)$, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$
+	Fix a time $\gamma \in [\tau, \tau')$. 
+	We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. 
+	For every $\{u, v\} \in E(I_\gamma, U_\gamma)$, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_u(\gamma)}$ % TODO: Why does this hold?
+	Thus the time until the first uniformed node is made aware of the rumour has an exponential distribution of rate % TODO: Why does this hold
+
+	$$
+		\lambda(\gamma) = \sum_{\{u, v\} \in E(I_\gamma, U_\gamma)} \frac{1}{d_u(\gamma)}
+	$$
+
+	% TODO: DIAGRAM HERE LABELLED WITH RATES
+
+	Let $S = I_\gamma$ if $\text{vol}(I_\gamma) \leq \text{vol}(I_\gamma)$, otherwise let $S = U_\gamma$. Then,
+
+	%TODO: Justify all steps
+	\begin{align*}
+		\lambda(\gamma) &= \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)} \left\{ \frac{1}{d_{u'}(\gamma)} + \frac{1}{d_{v'}(\gamma)} \right\}\\
+		& \geq \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)}  \max \left\{ \frac{1}{d_{u'}(\gamma)},\frac{1}{d_{v'}(\gamma)} \right\} \\ 
+		% TODO: Justify above
+		& \geq \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)} \min_{\{u, v\} \in E(I_\gamma, U_\gamma) } \left\{ \max \left\{ \frac{1}{d_u(\gamma)},\frac{1}{d_v(\gamma)} \right\} \right\} & \\ 
+		& = \min_{\{u, v\} \in E(I_\gamma, U_\gamma) } 
+		\left\{ \max \left\{ \frac{1}{d_u(\gamma)},\frac{1}{d_v(\gamma)} \right\} \right\} |E(I_\gamma, U_\gamma)| \\
+		%TODO: Mention degrees indexed by time above?
+		& = \rho(S) \frac{|S|}{\text{vol}(S)} |E(I_\gamma, U_\gamma)| \\
+		& = \rho(S) |S| \frac{|E(I_\gamma, U_\gamma)|}{ 
+			\min\{\text{vol}(I_\gamma), \text{vol}(U_\gamma)\}
+		} \\
+		& \geq \rho(G_\gamma)\Phi(G_\gamma)|S| \\ 
+		% TODO: Since We instantiate at specific sets
+		& \\
+		& \geq \rho(G_\gamma)\Phi(G_\gamma) \min\{|I_\gamma|, |U_\gamma|\} \\
+		& \text{since } S = I_\gamma \text { or } U_\gamma \\
+		& \\
+		& = \rho(G_\gamma)\Phi(G_\gamma) m(\gamma) \\
+		& \text{by the definition of } m(\gamma)
+	\end{align*}
+
+	% TODO: Brief exposition here
+
+	We now procceed to prove the following claim, by performing case analysis on $m(\gamma)$
+
+	\textbf{Claim.} $m(\gamma) \geq \frac{m(\tau)}{2}$. % Inutive explanation
+
+	\textbf{Case 1.} Suppose $m(\gamma) = |I_\gamma|$
+
+	\noindent
+	Once a node is aware of the rumour it never becomes uninformed. Hence, as $\tau \leq \gamma$, at time $\gamma$ there are at least $|I_\tau|$ informed nodes, thus 
+	$$
+	|I_\gamma| \geq |I_\tau| \geq \frac{|I_\tau|}{2} \geq \frac{m(\tau)}{2}
+	$$
+	so the claim holds in this case.
+
+	\textbf{Case 2.} Suppose instead that $m(\gamma) = |U_\gamma|$
+
+	\noindent
+	Since $|I_t| + |U_t| = n$ for all $t$, note that
+	$$
+		|I_{\gamma}| \geq |I_\tau| + \frac{m(\tau)}{2} 
+		\iff
+		n - |U_{\gamma}| \geq n - |U_\tau| + \frac{m(\tau)}{2} 
+		\iff
+		|U_\tau| - \frac{m(\tau)}{2} \geq |U_\gamma| 
+	$$
+	Hence we can reformulate the definition of $\tau'$ as follows
+	$$
+		\tau' = \min \left\{ \gamma : |U_\tau| - \frac{m(\tau)}{2} \geq |U_\gamma| \right\} 
+	$$ 
+	Thus we have that
+	\begin{align*}
+		|U_\gamma| & \geq |U_\tau| - \frac{m(\tau)}{2} & \text{since }\gamma < \tau' \\
+		& \geq |U_\tau| - \frac{|U_\tau|}{2} & \text{since } m(\tau) \leq |U_\tau| \\
+		& = \frac{|U_\tau|}{2} \\
+	\end{align*}
+	Thus the claim holds in this case also.
 	
-	
-	% Mention later:
-	Since the topology of the network only changes at integer times, we have that $G_\gamma = G_{\lfloor\gamma\rfloor}$. 
+	\noindent
+	By applying the claim to the final inequality in the previous chain of inequalities we get that
+	\begin{equation} \label{eq:RateBound}
+		\lambda(\gamma) \geq \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2}
+	\end{equation}
+
+	We have lower-bounded the rate at which new uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
+
+
+	By [CITE INHOMOGENOUS THEROEM], $N(\tau + \Delta(\alpha) + 2)$ has a Poission distribution with rate $\Lambda(\tau + \Delta(\alpha) + 2)$ where
+	\begin{align*}
+		\Lambda(\tau + \Delta(\alpha) + 2) &= \int_\tau^{\tau + \Delta(\alpha) + 2} \lambda(\gamma) d\gamma \\
+		& \geq \int_{\ceil\tau}^{{\ceil\tau} + \Delta(\alpha) + 1} \lambda(\gamma) d\gamma \\
+		& \text{since } \lambda(\gamma) \geq 0 \text{ as it is a rate function}\\
+		& \\
+		& = \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \lambda(\gamma) d\gamma \\
+		& \text{by splitting the integral into unit length intervals } \\
+		& \\
+		& = \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2} d\gamma \\
+		& \text{by applying Inequality } \ref{eq:RateBound} \\
+		& \\
+		& = \sum_{k=0}^{\Delta(\alpha)} \rho(G_{\ceil\tau + k})\Phi(G_{\ceil\tau + k})\frac{m(\tau)}{2} \\
+		& \text{since } G_\gamma = G_{\floor\gamma} \\
+		& \\
+		& \geq 2\alpha\frac{m(\tau)}{2} \\
+		& \text{by the definition of } \Delta(\alpha) \\
+		& \\
+		& = \alpha m(\tau)
+	\end{align*}
+
 \end{proof}
 
 Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following Theorem.
@@ -222,23 +378,6 @@ TODO: Proof
 
 \begin{proof}
 
-\end{proof}
-
-\begin{theorem}
-	\ModelIntro Then with high probability, the rumour will have spread to all the nodes of $\mathcal{G}$ in time at most 
-
-	$$ 
-		\min \left\{ t : \sum_{k=0}^t \delta_{G_k} \comp{\rho}(G_k) \right\}
-	$$
-
-	%TODO: FINISH THEORM STATEMENT EG
-	% for a sufficiently large $C$
-\end{theorem}
-
-TODO: Proof 
-
-\begin{proof}
-	
 \end{proof}
 
 \subsection{Interpretation}
