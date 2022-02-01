@@ -254,6 +254,18 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 
 % TODO: Exposition about interpretation here, dependeces (ie what is m(t) dependent on? et)
 
+Since this relationship this lemma expresses can seem obscure at first sight, we first explore its implications before moving to the proof.
+
+When less than half of the nodes are informed of the rumour, we can interpret $\tau'$ as the first time at which the number of informed nodes increases by a half, compared to number of informed nodes at time $\tau$. In this case $|I_{\tau'}| \approxeq \frac{3}{2} |I_\tau|$. Conversely, when more than half of the nodes are informed, $\tau'$ is the first time at which the set of uniformed nodes shrinks in size by a half, i.e $|U_{\tau'}| \approxeq \frac{|U_\tau|}{2}$. Thus, the random quantity of interest $\tau'-\tau$ is the amount of time it takes for the number of informed nodes to expand by a multiplicative factor, from time $\tau$. 
+
+In the lemma we are interested in the event that this time exceeds $\Delta(\alpha) + 2$. 
+The  $+2$ arises from technicalities in the proof, however the $\Delta(\alpha)$ term reveals a relationship between to the rate at which the set of informed nodes expands, and the connectivity of the dynamic network. % TODO: Change the end of this sentance?
+Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta(\alpha)$ we see that the greater the conductance and diligence metrics of the static topologies in the time steps immediately after $\tau$, the smaller the value of $\Delta(\alpha)$ becomes, since the summation will exceed $2\alpha$ in fewer terms. Thus, we see that well-connected topologies will yield smaller values of $\Delta(\alpha)$. Returning to the probability bound, we see that the bounding term $e^{-c\alpha m(\tau)}$ is independent of the topologies after $\tau$. Thus the bound tells us that the better the connectivity, the shorter the time it takes for the rumour to spread by a multiplicative factor (under the same probability). % TODO: Change bracketed bit to make more sense or remove
+This supports our intuitive expectation that rumour spreading using algorithm \ref{NodeCentricAsyncAlgorithm} is faster in well-connected dynamic networks. % TODO: SHOULD WE EXPECT THIS? HIGHER CONNETIVITY => HIGER DEGREE => LOWER RATE OF TRANSMISSION BETWEEN INDIVIUDAL PAIRS OF NODES.
+
+% TODO: Sanity check on bound by varying alpha: larger alpha => larger delta(alpha) => stronger bound below => tighter proabilitstic bound e^stuff
+
+
 \begin{proof}
 	Fix a time $\gamma \in [\tau, \tau')$. 
 	We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. 
