@@ -254,7 +254,7 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 
 % TODO: Exposition about interpretation here, dependeces (ie what is m(t) dependent on? et)
 
-Since this relationship this lemma expresses can seem obscure at first sight, we first explore its implications before moving to the proof.
+At first sight, it may be difficult to identify the relationship that this lemma expresses, so we first explore the implications of this result before moving to the proof.
 
 When less than half of the nodes are informed of the rumour, we can interpret $\tau'$ as the first time at which the number of informed nodes increases by a half, compared to number of informed nodes at time $\tau$. In this case $|I_{\tau'}| \approxeq \frac{3}{2} |I_\tau|$. Conversely, when more than half of the nodes are informed, $\tau'$ is the first time at which the set of uniformed nodes shrinks in size by a half, i.e $|U_{\tau'}| \approxeq \frac{|U_\tau|}{2}$. Thus, the random quantity of interest $\tau'-\tau$ is the amount of time it takes for the number of informed nodes to expand by a multiplicative factor, from time $\tau$. 
 
@@ -316,18 +316,16 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\textbf{Case 2.} Suppose instead that $m(\gamma) = |U_\gamma|$
 
 	\noindent
+	By the defintion of $\tau'$, since $\gamma < \tau'$ we have that $|I_{\gamma}| < |I_\tau| + \frac{m(\tau)}{2}$.
+
 	Since $|I_t| + |U_t| = n$ for all times $t$, note that
 	$$
-		|I_{\gamma}| \geq |I_\tau| + \frac{m(\tau)}{2} 
+		|I_{\gamma}| < |I_\tau| + \frac{m(\tau)}{2} 
 		\iff
-		n - |U_{\gamma}| \geq n - |U_\tau| + \frac{m(\tau)}{2} 
+		n - |U_{\gamma}| < n - |U_\tau| + \frac{m(\tau)}{2} 
 		\iff
-		|U_\gamma| \leq |U_\tau| - \frac{m(\tau)}{2}
+		|U_\gamma| > |U_\tau| - \frac{m(\tau)}{2}
 	$$
-	Hence we can reformulate the definition of $\tau'$ as follows
-	$$
-		\tau' = \min \left\{ \gamma : |U_\gamma| \leq |U_\tau| - \frac{m(\tau)}{2} \right\} 
-	$$ 
 	Thus we have that
 	\begin{align*}
 		|U_\gamma| & > |U_\tau| - \frac{m(\tau)}{2} & \text{since }\gamma < \tau' \\
@@ -424,9 +422,54 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	for a sufficiently large $C$
 \end{theorem}
 
-TODO: Proof
-
 \begin{proof}
+	We analyse the spread time in two phases. 
+
+	% TODO: Add a of phase and intervals here, maybe plot m(t)
+
+	\textbf{First Phase.} 	The first phase starts at time $t=0$ and ends at the first time when the number of informed nodes reaches $\frac{n}{2}$, which we denote $\tau_f$. We divide the phase into intervals $[\tau_i, \tau_{i+1}]$ where $\tau_{i+1}$ is the first time the number of informed nodes increases by $\frac{m(\tau_i)}{2}$. Using the notation from Lemma \ref{AsyncIncreaseLemma}, we have that $\tau_{i+1} = \tau_i'$. 
+	
+	Note that for all times $\tau_i < \tau_f$, the number of informed nodes is less than $\frac{n}{2}$, so $m(\tau_i) = |I_{\tau _i}|$. Thus, by the following induction at time $\tau_i < \tau_f$ there are at least $(\frac{3}{2})^i$ informed nodes.
+
+	\textbf{Base Case.}
+	By algorithm \ref{NodeCentricAsyncAlgorithm} the rumour spreading starts at time 0 with a single node aware of the rumour. Thus $|I_{\tau_0}| = 1 = (\frac{3}{2})^0$
+
+	\textbf{Inductive Case.} 
+	Assume that $\tau_i \geq (\frac{3}{2})^i$.
+	From the definition of $\tau_i'$, we have that 
+	\begin{align*}
+		\tau_{i+1} &= \tau_i' \\
+		&= \min\left\{\gamma : |I_{\gamma}| \geq |I_{\tau_i}| + \frac{m(\tau_i)}{2}\right\} \\
+		&= \min\left\{\gamma : |I_{\gamma}| \geq |I_{\tau_i}| + \frac{|I_{\tau_i}|}{2}\right\} & \text{since } m(\tau_i) = |I_{\tau _i}| \\ 
+		&= \min\left\{\gamma : |I_{\gamma}| \geq \frac{3}{2}|I_{\tau_i}|\right\} 
+	\end{align*}
+	Thus $|I_{\tau_{i+1}}| \geq \frac{3}{2}|I_{\tau_i}| \geq \frac{3}{2}(\frac{3}{2})^i = (\frac{3}{2})^{i+1}$ by the induction hypothesis. 
+	
+	Let $K$ be the random variable for the index of the final interval in the phase, i.e the interval where $\tau_K < \tau_f$ and $\tau_{K+1} \geq \tau_f$.
+	% TODO: TIMELINE FIGURE HERE
+	Let $\beta = \ceil{\log_\frac{3}{2}\frac{n}{2}}$.  Since $|I_{\tau_i}| \geq (\frac{3}{2})^i$, we have that $|I_{\tau_\beta}| \geq (\frac{3}{2})^\beta \geq \frac{n}{2}$. Thus, $K < \beta$ the number of informed nodes at time $\tau_k$ would be greater than or equal to $\frac{n}{2}$, so $\tau_K$ would be at least $\tau_f$ which contradicts the definition of $K$.
+
+	Let $\alpha_i = \ceil{\frac{c \log n}{c_0 (3/2)^i}}$. % TODO: Are c_0 and C defined? 
+	By Lemma \ref{AsyncIncreaseLemma}, $\Delta(\alpha_i) + 2$ is an upper bound for the length of the interval $[\tau_i, \tau_{i+1}]$ 
+	with probability at least $1 - e^{-c_0\alpha_i m(\tau_i)}$. %TODO: RESTRICT to i \leq K
+	Since $m(\tau_i) = |I_{\tau_i}| \geq (\frac{3}{2})^i$, this probability is greater than $1 - e^{-c_0\alpha_i (\frac{3}{2})^i} \geq 1 - e^{-c \log n}$, by the definition of $\alpha_i$. By the union bound over all $K$ intervals of the phase,
+	\begin{align*}
+		& \mathbb{P}(\text{Any interval has length at least } \Delta(\alpha_i) + 2) \\
+		&= \mathbb{P}(\bigcup_{i=0}^K \{\tau_{i+1} - \tau_i \geq \Delta(\alpha_i) + 2\}) \\
+		&\leq \sum_{i=0}^K \mathbb{P}(\tau_{i+1} - \tau_i \geq \Delta(\alpha_i) + 2) \\
+		&\leq \sum_{i=0}^K e^{-c \log n} \\
+		&\leq \sum_{i=0}^\beta e^{-c \log n} 
+		%% TODO: PUT IN REASONING& \text{since } K < \beta 
+		\\
+		&= \beta e^{-c \log n} \\
+		&\to 0 \text { as } n \to \infty
+	\end{align*}
+	Thus with high probability all intervals have length at least $\Delta(\alpha_i) + 2$, hence
+	\begin{align*}
+		\tau_f &\leq \sum_{i=0}^K (\Delta(\alpha_i) + 2) \\
+		&\leq \min \{t : blah \geq 2 \sum_{i=0}^K \alpha_i \} \\ % TODO: Justify this step
+		&\leq \min \{t : blah \geq 2 \sum_{i=0}^\beta \alpha_i \} & %TODO: Mention \alpha_i need to be defined up to \beta
+	\end{align*}
 
 \end{proof}
 
