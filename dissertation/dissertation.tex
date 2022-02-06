@@ -101,7 +101,7 @@ First we introduce notation for expressing graph metrics. This notation will als
 	Complement Set
 
 	\noindent
-	Given a graph $G = (V, E)$, for a set of vertices $S \subseteq V$ we define the complement set $\comp{S} = V \setminus A$
+	Given a graph $G = (V, E)$, for a set of vertices $S \subseteq V$ we define the complement set $\comp{S} = V \setminus S$
 \end{definition}
 
 \begin{definition}
@@ -209,7 +209,7 @@ TODO: Prove that minimum of exponentials is exponential, where the probability e
 Now we are ready to define our first asynchronous algorithm for rumour spreading on a given dynamic network.
 
 \begin{definition}
-	Node-centric Asynchronous Rumour Spreading Algorithm 
+	Push-Pull Asynchronous Rumour Spreading Algorithm 
 \end{definition}
 \label{NodeCentricAsyncAlgorithm}
 
@@ -254,7 +254,7 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 
 % TODO: Exposition about interpretation here, dependeces (ie what is m(t) dependent on? et)
 
-At first sight, it may be difficult to identify the relationship that this lemma expresses, so we first explore the implications of this result before moving to the proof.
+At first sight, it may be difficult to identify the relationship that this lemma expresses, so we first explore the implications of the result before moving to the proof.
 
 When less than half of the nodes are informed of the rumour, we can interpret $\tau'$ as the first time at which the number of informed nodes increases by a half, compared to number of informed nodes at time $\tau$. In this case $|I_{\tau'}| \approxeq \frac{3}{2} |I_\tau|$. Conversely, when more than half of the nodes are informed, $\tau'$ is the first time at which the set of uniformed nodes shrinks in size by a half, i.e $|U_{\tau'}| \approxeq \frac{|U_\tau|}{2}$. Thus, the random quantity of interest $\tau'-\tau$ is the amount of time it takes for the number of informed nodes to expand by a multiplicative factor, from time $\tau$. 
 
@@ -427,27 +427,29 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 
 	% TODO: Add a of phase and intervals here, maybe plot m(t)
 
-	\textbf{First Phase.} 	The first phase starts at time $t=0$ and ends at the first time when the number of informed nodes reaches $\frac{n}{2}$, which we denote $\tau_f$. We divide the phase into intervals $[\tau_i, \tau_{i+1}]$ where $\tau_{i+1}$ is the first time the number of informed nodes increases by $\frac{m(\tau_i)}{2}$. Using the notation from Lemma \ref{AsyncIncreaseLemma}, we have that $\tau_{i+1} = \tau_i'$. 
+	\textbf{First Phase.} The first phase starts at time $t=0$ and ends at the first time when the number of informed nodes reaches $\frac{n}{2}$, which we denote $t_\text{half}$. We divide the phase into intervals $[\tau_i, \tau_{i+1}]$ where $\tau_0 = 0$ and $\tau_{i+1}$ is the first time the number of informed nodes increases by $\frac{m(\tau_i)}{2}$. 
+	% TODO: MENTION FINAL INTERVAL MAY END AFTER t_\text{half}
+	Using the notation from Lemma \ref{AsyncIncreaseLemma}, we have that $\tau_{i+1} = \tau_i'$. 
 	
-	Note that for all times $\tau_i < \tau_f$, the number of informed nodes is less than $\frac{n}{2}$, so $m(\tau_i) = |I_{\tau _i}|$. Thus, by the following induction at time $\tau_i < \tau_f$ there are at least $(\frac{3}{2})^i$ informed nodes.
+	Note that for all times $\tau < t_\text{half}$, the number of informed nodes is less than $\frac{n}{2}$, so $m(\tau) = |I_\tau|$. Thus, by the following induction at time $\tau_i < t_\text{half}$ there are at least $(\frac{3}{2})^i$ informed nodes.
 
-	\textbf{Base Case.}
+	\underline{Base Case.}
 	By algorithm \ref{NodeCentricAsyncAlgorithm} the rumour spreading starts at time 0 with a single node aware of the rumour. Thus $|I_{\tau_0}| = 1 = (\frac{3}{2})^0$
 
-	\textbf{Inductive Case.} 
+	\underline{Inductive Case.} 
 	Assume that $\tau_i \geq (\frac{3}{2})^i$.
 	From the definition of $\tau_i'$, we have that 
 	\begin{align*}
 		\tau_{i+1} &= \tau_i' \\
 		&= \min\left\{\gamma : |I_{\gamma}| \geq |I_{\tau_i}| + \frac{m(\tau_i)}{2}\right\} \\
-		&= \min\left\{\gamma : |I_{\gamma}| \geq |I_{\tau_i}| + \frac{|I_{\tau_i}|}{2}\right\} & \text{since } m(\tau_i) = |I_{\tau _i}| \\ 
+		&= \min\left\{\gamma : |I_{\gamma}| \geq |I_{\tau_i}| + \frac{|I_{\tau_i}|}{2}\right\} & \text{since } m(\tau_i) = |I_{\tau _i}| \text{ in this phase} \\ 
 		&= \min\left\{\gamma : |I_{\gamma}| \geq \frac{3}{2}|I_{\tau_i}|\right\} 
 	\end{align*}
 	Thus $|I_{\tau_{i+1}}| \geq \frac{3}{2}|I_{\tau_i}| \geq \frac{3}{2}(\frac{3}{2})^i = (\frac{3}{2})^{i+1}$ by the induction hypothesis. 
 	
-	Let $K$ be the random variable for the index of the final interval in the phase, i.e the interval where $\tau_K < \tau_f$ and $\tau_{K+1} \geq \tau_f$.
+	Let $K$ be the random variable for the index of the final interval in the phase, i.e the interval where $\tau_K < t_\text{half}$ and $\tau_{K+1} \geq t_\text{half}$.
 	% TODO: TIMELINE FIGURE HERE
-	Let $\beta = \ceil{\log_\frac{3}{2}\frac{n}{2}}$.  Since $|I_{\tau_i}| \geq (\frac{3}{2})^i$, we have that $|I_{\tau_\beta}| \geq (\frac{3}{2})^\beta \geq \frac{n}{2}$. Thus, $K < \beta$ the number of informed nodes at time $\tau_k$ would be greater than or equal to $\frac{n}{2}$, so $\tau_K$ would be at least $\tau_f$ which contradicts the definition of $K$.
+	Let $N = \ceil{\log_\frac{3}{2}\frac{n}{2}}$.  Since $|I_{\tau_i}| \geq (\frac{3}{2})^i$, we have that $|I_{\tau_N}| \geq (\frac{3}{2})^N \geq \frac{n}{2}$. Thus, $K < N$ otherwise the number of informed nodes at time $\tau_K$ would be greater than or equal to $\frac{n}{2}$, so $\tau_K$ would be at least $t_\text{half}$ which contradicts the definition of $K$.
 
 	Let $\alpha_i = \ceil{\frac{c \log n}{c_0 (3/2)^i}}$. % TODO: Are c_0 and C defined? 
 	By Lemma \ref{AsyncIncreaseLemma}, $\Delta(\alpha_i) + 2$ is an upper bound for the length of the interval $[\tau_i, \tau_{i+1}]$ 
@@ -458,21 +460,46 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		&= \mathbb{P}(\bigcup_{i=0}^K \{\tau_{i+1} - \tau_i \geq \Delta(\alpha_i) + 2\}) \\
 		&\leq \sum_{i=0}^K \mathbb{P}(\tau_{i+1} - \tau_i \geq \Delta(\alpha_i) + 2) \\
 		&\leq \sum_{i=0}^K e^{-c \log n} \\
-		&\leq \sum_{i=0}^\beta e^{-c \log n} 
-		%% TODO: PUT IN REASONING& \text{since } K < \beta 
+		&\leq \sum_{i=0}^N e^{-c \log n} 
+		%% TODO: PUT IN REASONING& \text{since } K < N 
 		\\
-		&= \beta e^{-c \log n} \\
+		&= N e^{-c \log n} \\
 		&\to 0 \text { as } n \to \infty
 	\end{align*}
 	Thus with high probability all intervals have length at least $\Delta(\alpha_i) + 2$, hence
 	\begin{align*}
-		\tau_f &\leq \sum_{i=0}^K (\Delta(\alpha_i) + 2) \\
+		t_\text{half} &\leq \sum_{i=0}^K (\Delta(\alpha_i) + 2) \\
 		&\leq \min \{t : blah \geq 2 \sum_{i=0}^K \alpha_i \} \\ % TODO: Justify this step
-		&\leq \min \{t : blah \geq 2 \sum_{i=0}^\beta \alpha_i \} & %TODO: Mention \alpha_i need to be defined up to \beta
+		&\leq \min \{t : blah \geq 2 \sum_{i=0}^N \alpha_i \} & %TODO: Mention \alpha_i need to be defined up to N
 	\end{align*}
 
-\end{proof}
+	\textbf{Second Phase.} The second phase starts at $t_\text{half}$, when at least $\frac{n}{2}$ nodes have been made aware of the rumour. The phase ends at the first time all nodes are aware of the rumour, which we denote $t_\text{all}$. We again divide up the phase into intervals $[\tau_j, \tau_{j+1}]$, where $\tau_0 = t_\text{half}$ and $\tau_{j+1} = \tau_j'$ as in the first phase.
 
+	Note that since the number of informed nodes is at least $\frac{n}{2}$ during this is phase, the number of uniformed nodes is at most $\frac{n}{2}$. Thus for $\tau > t_\text{half}$, $m(\tau) = |U_\tau|$. Using this fact, we prove $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$ by induction.
+
+	\underline{Base Case.}
+	From the definition of $t_\text{half}$, $|I_{\tau_0}| = |I_{t_\text{half}}| \geq \frac{n}{2}$, so $|U_{\tau_0}| \leq n(\frac{1}{2})^{0+1}$.
+
+	\underline{Inductive Case.} Suppose $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$. Note that since $|I_\tau| + |U_\tau| = n$, we have that $|I_{\gamma}| \geq |I_\tau| + \frac{m(\tau)}{2} \iff |U_\gamma| \leq |U_\tau| - \frac{m(\tau)}{2}$. Hence by the defintion of $\tau_j'$,
+	\begin{align*}
+		\tau_{j+1} &= \tau_j' \\
+		&= \min \{ \gamma : |I_\gamma| \geq |I_{\tau_j}| + \frac{m(\tau_j)}{2}\} \\
+		&= \min \{ \gamma : |U_\gamma| \leq |U_{\tau_j}| - \frac{m(\tau_j)}{2}\} \\
+		&= \min \{ \gamma : |U_\gamma| \leq |U_{\tau_j}| - \frac{|U_{\tau_j}|}{2}\} & \text{since } m(\tau_j) = |U_{\tau_j}| \text{ in this phase} \\
+		&= \min \{ \gamma : |U_\gamma| \leq \frac{1}{2}|U_{\tau_j}|\}
+	\end{align*}
+	Thus by the induction hypothesis, $|U_{\tau_{j+1}}| \leq \frac{1}{2}|U_{\tau_j}| \leq \frac{1}{2}n(\frac{1}{2})^{j+1} = n(\frac{1}{2})^{j+2}$.
+
+	As in the first phase, let $K$ be the random variable for the index of the final interval in the phase, i.e the interval where $\tau_K < t_\text{all}$ and $\tau_{K+1} \geq t_\text{all}$.
+
+	Let $M = \floor{\log_2 n}$. Since $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$, we have that $|U_{\tau_M}| \leq n(\frac{1}{2})^{M+1} \leq \frac{1}{2}$, thus since the number of informed nodes is an integer, at time $\tau_M$ there are no uninformed nodes left i.e all nodes are informed of the rumour. Hence $K < M$, otherwise at time $\tau_K$ all nodes would be aware of the rumour but we have that $\tau_K < t_\text{all}$ by the definition of $K$.
+
+	Let $\beta_j = \ceil{\frac{c \log n}{c_0 n(1/2)^j}}$. % TODO: Are c_0 and C defined? 
+	By Lemma \ref{AsyncIncreaseLemma}, $\Delta(\beta_i) + 2$ is an upper bound for the length of the interval $[\tau_j, \tau_{j+1}]$ 
+	with probability at least $1 - e^{-c_0\beta_j m(\tau_j)}$. %TODO: RESTRICT to i \leq K
+	Since $m(\tau_j) = |U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$.
+
+\end{proof}
 \subsection{Interpretation}
 
 TODO
@@ -507,49 +534,96 @@ TODO
 
 \subsection{Model}
 
-TODO: Describe how synchronous rumour spreads on dynamic network
+\begin{definition}
+	Markovian Evolving Dynamic Network
+
+	\noindent 
+	Let $A_n$ be the set of all possible graphs on n vertices.
+	A Markovian Evolving Dynamic Network is a random sequence of graphs $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$, such that $\mathcal{G}$ is a Markov chain with state space $A_n$.
+\end{definition}
+
+\begin{definition} \label{SyncFloodingAlgorithm}
+	Synchronous Flooding Rumour Spreading Algorithm
+
+	\noindent
+	The synchronous rumour spreading algorithm proceeds in rounds on a dynamic network $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$. Initially a single node is aware of the rumour. In round $i$, every node that is aware of the rumour informs all of its neighbours in $G_i$, regardless of whether they already knew the rumour or not.
+\end{definition}
+
+% TODO: Why study flooding time?
+
+\begin{definition}
+	$(h, k)$-Expander
+
+	\noindent
+	A graph $G$ on a vertex set $V$ is a $(h, k)$-expander if for all subsets of nodes $S \subseteq V$ such that $|S| \leq h$ satisfy $|N(I)| \geq k$.
+\end{definition}
+
+\begin{definition}
+	Boundary set $B(S)$
+
+	\noindent 
+	Given a graph $G=(V,E)$, the boundary set $B(S)$ of a vertex subset $S \subseteq V$ is defined as the set of vertices outside $S$ connected to a node of $S$ by an edge, i.e
+	$$
+		B(S) = \left\{u \in V \setminus S : \{u, v\} \in E \text{ for some } v \in S \right\}
+	$$
+\end{definition}
 
 \subsection{Proof of the bound}
 
 First we give a bound on the rumour spreading time for a deterministic sequence of graphs. 
 
 \begin{theorem}
-	\ModelIntro Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that for all $t \in \mathbb{N}$, $G_t$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the flooding time of $\mathcal{G}$ is
+	\ModelIntro Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that for all $t \in \mathbb{N}$, $G_t$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the spreading time of $\mathcal{G}$ under algorithm \ref{SyncFloodingAlgorithm} is
 
 	$$
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
 	$$
 \end{theorem}
 
-TODO: Finish proof
-
 \begin{proof}
-	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$,
+	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$, i.e
 
 	$$
 		T_i = \min \{ t \in \mathbb{N} : |I_t| > h_i \}
 	$$
 
-	Suppose $t$ is a time step for which $h_{i-1} < |I_t| \leq h_i$ for some $i = 1,\dots, s$. Since $G_t$ is a $(h_i, k_i)$-expander and $|I_t| \leq h_i$, the number of nodes at the next time step is 
+	First we bound the number of steps in the interval $[T_{i-1}, T_i]$. If $T_{i-1} = T_i$ then the length of the interval is trivially 0, so suppose instead that $T_{i-1} < T_i$.
+
+	By induction, we show that if $T_{i-1} + t < T_i$, then the number of informed nodes at time $T_{i-1} + t$ is greater than $(1+k_i)^t h_{i-1}$.
 	
+	\underline{Base Case.} Suppose that $t=0$. 
+	
+	Then by the definition of $T_{i-1}$, the number of informed nodes at time $T_{i-1}$ is strictly greater than $h_{i-1}$
+
+	\underline{Inductive Case.} Suppose that $|I_{T_{i-1} + t}| > (1+k_i)^t h_{i-1}$.
+
+	For brevity, let $s = T_{i-1} + t$. We notice that 
+	% TODO: Justify steps
+	% TODO: Define boundary of S, B(S)
 	\begin{align*}
-		|I_{t+1}| &= |I_t| + N(I_t) \\
-		& \geq |I_t| + k_i |I_t| \\
-		& = (1 + k_i)|I_t|
+		|I_{s+1}| &= |I_s| + |B(I_s)| \\ %by operation of algo
+		& \geq |I_s| + k_i |I_s| \\ % since we assume s < T_i => |I_s| \leq h_s + (h_s, k_s)-expander
+		& = (1 + k_i)|I_s| \\
+		& > (1 + k_i)(1+k_i)^t h_{i-1} \\ % by induction hypotheis
+		& = (1+k_i)^{t+1} h_{i-1}
 	\end{align*}
+	% TODO: boundary set picture here	
+	Let $\tau = T_{i-1} + \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}$. 
+	Suppose for contradiction that $\tau < T_i$. %TODO: Is contradicition overkill here?
+	Since we assumed $\tau < T_i$ we can apply the above inequality %TODO: label
+	to get that 
+	$$
+		|I_\tau| > 
+		(1+k_i)^{\ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}} h_{i-1}
+		\geq e^{\log (h_i/h_{i-1})} h_{i-1}
+		= h_i
+	$$
+	Thus we have a contradiction since the number of informed nodes at time $\tau$ is greater than $h_i$, so $\tau \geq T_i$. Rearranging this inequality gives us the following bound on the length of the interval $[T_{i-1}, T_i]$:
+	$$
+		T_i - T_{i-1} \leq \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}
+	$$
 
-	% TODO: expand proof for this
-	Hence, by induction, after $s$ time steps
-
-
-	% TODO: Why does |I_{t+s}| satisfy required condtition to apply inequality?
-	% \begin{align*}
-	% 	|I_{t+s}| &\geq (1 + k_i)|I_{t+s-1}| \\
-	% 	&\geq (1 + k_i)^2|I_{t+s-2}|\\
-	% 	& \dots \\
-	% 	&\geq (1 + k_i)^s |I_t| \\
-	% 	&\geq (1 + k_i)^s h_{i-1}
-	% \end{align*}
+	% TODO: Make ceiling brackets fit
 
 \end{proof}
 
