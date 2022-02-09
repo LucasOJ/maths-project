@@ -580,6 +580,8 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 	$$
 \end{theorem}
 
+% TODO: Strength of assumptions, why bother considering?
+
 \begin{proof}
 	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$, i.e
 
@@ -619,12 +621,50 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 		= h_i
 	$$
 	Thus we have a contradiction since the number of informed nodes at time $\tau$ is greater than $h_i$, so $\tau \geq T_i$. Rearranging this inequality gives us the following bound on the length of the interval $[T_{i-1}, T_i]$:
-	$$
-		T_i - T_{i-1} \leq \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}
-	$$
-
+	\begin{equation} \label{eq:FloodingSingleStepBound}
+		T_i - T_{i-1} \leq \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}} \leq \frac{\log (h_i/h_{i-1})}{\log(1+k_i)} + 1
+	\end{equation}
 	% TODO: Make ceiling brackets fit
+	% TODO: Exposition about next steps + direction here
+	We now apply our bound in two cases
 
+	\textbf{Case 1.} Suppose $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$.
+
+	In this case $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)}$ term is the dominant term in inequality (\ref{eq:FloodingSingleStepBound}), thus
+	$$
+		T_i - T_{i-1} = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right) + \mathcal{O}(1) = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right)
+	$$
+
+	\textbf{Case 2.} Suppose $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} < 1$.
+
+	In this case we cannot achieve the same bound on $T_i - T_{i-1}$, since the additive 1 is the dominant term. By following the same reasoning as in Case 1, we can only obtain
+	\begin{equation}\label{eq:Weak1StepBound}
+		T_i - T_{i-1} = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right) + \mathcal{O}(1) = \mathcal{O}(1)
+	\end{equation}
+	To understand why this bound is weak, and derive a stronger one, we inspect the inequality we assumed in this case. % TODO: link back to this 
+	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since the minimum number of informed nodes after round $T_{i-1}$ is $(1+k_i)h_{i-1}$, we see that the number of informed nodes "jumps" from at most $h_i$ nodes at the start of round $T_{i-1}$ to more than $h_i$ nodes in a single time step.
+
+	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, from which we obtain $T_{i-1} = T_i = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 0. However, using equation (\ref{eq:Weak1StepBound}) to bound even the first increment $T_{i-1}$ to $T_i$ gives the bound of $\mathcal{O}(1)$. We would prefer a much tighter bound, so instead bound the whole jump interval as follows. %TODO: Reprase end of this sentance
+	
+	% TODO: j doesn't exist case
+	Let $j$ be the index such that $h_{j-1} < (1+k_i)h_{i-1} \leq h_j$, i.e the first $j \geq i$ when $T_j \neq T_{i-1}$. % TODO: Check this equivalence
+
+	Note that from rearranging the definition of j
+	\begin{align*}\label{eq:JumpBoundGeq1}
+		1 &\leq \frac{\log (h_j) - \log(h_{i-1})}{\log(1+k_i) } \\
+		& =\sum_{l=i}^j \frac{\log (h_{l}) - \log(h_{l-1})}{\log(1+k_i) } & \text{since the numerator forms a telescoping sum} \\
+		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } & \text{since the } k_i \text{s are a decreasing sequence and } i \leq l
+	\end{align*}
+	
+	Hence, we can bound the length of the interval $[T_{i-1}, T_j]$ as follows.
+	\begin{align*}
+		T_j - T_{i-1} &= T_j - T_{j-1} & \text{since by the definition of j } T_{i-1} = T_{j-1}\\
+		& \leq \frac{\log (h_j/h_{j-1})}{\log(1+k_i)} + 1 & \text{by applying inequality }(\ref{eq:FloodingSingleStepBound}) \\
+		& \leq \frac{\log (h_j/h_{i-1})}{\log(1+k_i)} + 1 & \text{since the } h_i \text{s are increasing and } j \geq i \\
+		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } + 1 & \text{ by the previous inequality chain} \\
+		& = \mathcal{O}\left(\sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) }\right)
+ 	\end{align*}
+	where the final equality holds since by the previous inequality chain, the sum is at least 1, so is the dominant term.
 \end{proof}
 
 \subsection{Applying the bound to Edge-Markovian evolution}
