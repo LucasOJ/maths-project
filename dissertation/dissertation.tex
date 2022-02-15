@@ -525,22 +525,7 @@ TODO
 \section{Bounding the synchronous flooding time}
 \label{SyncFloodingSection}
 
-\subsection{Review of Markov Chains}
-
-\begin{enumerate}
-	\item Definition
-	\item Stationary distribution definition and Interpretation
-\end{enumerate}
-
 \subsection{Model}
-
-\begin{definition}
-	Markovian Evolving Dynamic Network
-
-	\noindent 
-	Let $A_n$ be the set of all possible graphs on n vertices.
-	A Markovian Evolving Dynamic Network is a random sequence of graphs $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$, such that $\mathcal{G}$ is a Markov chain with state space $A_n$.
-\end{definition}
 
 \begin{definition} \label{SyncFloodingAlgorithm}
 	Synchronous Flooding Rumour Spreading Algorithm
@@ -549,7 +534,11 @@ TODO
 	The synchronous rumour spreading algorithm proceeds in rounds on a dynamic network $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$. Initially a single node is aware of the rumour. In round $i$, every node that is aware of the rumour informs all of its neighbours in $G_i$, regardless of whether they already knew the rumour or not.
 \end{definition}
 
+We note that the asynchronous rumour spreading algorithm (algorithm \ref{NodeCentricAsyncAlgorithm}) was probabilistic since the algorithm depended on sources of randomness such as exponential clocks. In contrast, once the dynamic network and initial node from which the rumour spreads are chosen, algorithm \ref{SyncFloodingAlgorithm} is entirely deterministic. Since the trajectory of the rumour spread is completely determined by the initial conditions, it is reasonable to question why we would want bounds on the spreading time if we can simply simulate the rumour, and record how long it takes to inform all the nodes. However, some graphs may be so large that simulation is computationally infeasible. In such cases we need bounds in terms of the structural properties of graphs instead. Additionally, in section \ref{subsection:MEDNBound}
+we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of graphs is not fixed but instead follows some distribution. In this case, deterministic bounds will allow us to make claims about the spreading time over the distribution of graph sequences.
+
 % TODO: Why study flooding time?
+% Flooding only works for synchronus
 
 \begin{definition}
 	$(h, k)$-Expander
@@ -568,13 +557,12 @@ TODO
 	$$
 \end{definition}
 
-\subsection{Proof of the bound}
+\subsection{Deriving the Deterministic Flooding Bound}
 
 First we give a bound on the rumour spreading time for a deterministic sequence of graphs. 
 
-\begin{theorem}
+\begin{theorem}\label{theorem:DeterministicFloodingBound}
 	\ModelIntro Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that for all $t \in \mathbb{N}$, $G_t$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the spreading time of $\mathcal{G}$ under algorithm \ref{SyncFloodingAlgorithm} is
-
 	$$
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
 	$$
@@ -642,9 +630,9 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 		T_i - T_{i-1} = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right) + \mathcal{O}(1) = \mathcal{O}(1)
 	\end{equation}
 	To understand why this bound is weak, and derive a stronger one, we inspect the inequality we assumed in this case. % TODO: link back to this 
-	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since the minimum number of informed nodes after round $T_{i-1}$ is $(1+k_i)h_{i-1}$, we see that the number of informed nodes "jumps" from at most $h_i$ nodes at the start of round $T_{i-1}$ to more than $h_i$ nodes in a single time step.
+	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since the minimum number of informed nodes after round $T_{i-1}$ is $(1+k_i)h_{i-1}$, we see that the number of informed nodes "jumps" to more than $h_i$ nodes in a single time step. % TODO: Wrong, fix this
 
-	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, from which we obtain $T_{i-1} = T_i = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 0. However, using equation (\ref{eq:Weak1StepBound}) to bound even the first increment $T_{i-1}$ to $T_i$ gives the bound of $\mathcal{O}(1)$. We would prefer a much tighter bound, so instead bound the whole jump interval as follows. %TODO: Reprase end of this sentance
+	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, from which we obtain $T_i = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 0. However, using equation (\ref{eq:Weak1StepBound}) to bound even the first increment $T_{i-1}$ to $T_i$ gives the bound of $\mathcal{O}(1)$. We would prefer a much tighter bound, so instead bound the whole jump interval as follows. %TODO: Reprase end of this sentance
 	
 	% TODO: j doesn't exist case
 	Let $j$ be the index such that $h_{j-1} < (1+k_i)h_{i-1} \leq h_j$, i.e the first $j \geq i$ when $T_j \neq T_{i-1}$. % TODO: Check this equivalence
@@ -664,7 +652,55 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } + 1 & \text{ by the previous inequality chain} \\
 		& = \mathcal{O}\left(\sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) }\right)
  	\end{align*}
-	where the final equality holds since by the previous inequality chain, the sum is at least 1, so is the dominant term.
+	where the final equality holds since by the previous inequality chain, the summation is greater than 1, so is the dominant term.
+
+	We now use this equality to bound the growth of $T_s$, the first time at which more than $h_s = \frac{n}{2}$ nodes are aware of the rumour. We can express $T_s$ as a telescoping sum of intervals as follows:
+	$$
+		T_s = \sum_{i=1}^s T_i - T_{i-1}
+	$$
+	For the $i^\text{th}$ interval, if $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$, i.e. it takes at least one step then we can apply the bound from Case 1.
+	
+\end{proof}
+
+\subsection{Review of Markov Chains}
+
+\begin{enumerate}
+	\item Definition
+	\item Stationary distribution definition and Interpretation
+\end{enumerate}
+
+\subsection{Generalising the bound to Markovian Evolving Dynamic Networks}
+\label{subsection:MEDNBound}
+
+\begin{definition}
+	Markovian Evolving Dynamic Network (MEDN)
+
+	\noindent 
+	Let $A_n$ be the set of all possible graphs on n vertices.
+	A Markovian Evolving Dynamic Network is a random sequence of graphs $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$, such that $\mathcal{G}$ is a Markov chain with state space $A_n$.
+\end{definition}
+
+We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0$ is a stationary distribution of $\mathcal{M}$. By the definition of a stationary distribution, in such an MEDN the probability that $G_t = G'$ for a given $G'$ is the probability that $G_t = G'$ under the stationary distribution, for any time step $t$. Hence, the evolution of the network essentially proceeds by independently sampling a topology from the stationary distribution at each time step. % TODO: Check if independent, get rid of "essentially"?
+
+\begin{theorem}
+	Let $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$  be a stationary Markovian evolving graph. Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that with probability $1-\frac{1}{n^2}$, the stationary distribution of $\mathcal{M}$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the spreading time of $\mathcal{G}$ under algorithm \ref{SyncFloodingAlgorithm} is
+	$$
+		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
+	$$
+	with high probability.
+\end{theorem}
+
+We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the expansion properties hold with high probability with respect to the stationary distribution. Since topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will still hold as long as the vast majority of topologies in our network have strong expansion properties. 
+
+\begin{proof}
+	For all $t \in \mathbb{N}$, let $A_t$ be the event that $G_t$ is an $(h_i, k_i)$-expander for all $1 \leq i \leq s$. Since $\mathcal{M}$ is stationary, we have that $\mathbb{P}(A_t) \geq 1 - \frac{1}{n^2}$ for all t. 
+
+	Let $B$ denote the event we are interested in, namely that the rumour spreading time is 	
+	$$
+		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
+	$$
+
+	% TODO: why guarenteed to spread in n steps?
 \end{proof}
 
 \subsection{Applying the bound to Edge-Markovian evolution}
@@ -687,6 +723,7 @@ TODO: Proof
 
 % TODO: What happens if p < c logn/n?
 % lower bound on mixing time
+% TODO: Why can't generalise to varying t? (Non-homogenous MC)
 
 \subsection{Simulations}
 
