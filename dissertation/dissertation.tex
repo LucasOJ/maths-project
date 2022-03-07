@@ -75,7 +75,7 @@ In Section \ref{Prelims} we introduce the notation and background needed to mode
 
 In Section \ref{AsyncUpperBoundSection} we specify an asynchronous rumour spreading algorithm and review a result by [CITE] which bounds its associated spreading time on a dynamic network. In this analysis the exact changes in network topology are known before the rumour spreading takes place, however in practice this assumption may be unrealistic.
 
-In Section \ref{AsyncLowerBoundSection} we review the complementary result from the same paper that the asynchronous bound is almost tight.
+In Section \ref{section:AsyncLowerBound} we review the complementary result from the same paper that the asynchronous bound is almost tight.
 
 In Section \ref{SyncFloodingSection} we investigate the flooding time for a synchronous rumour spreading algorithm, following results of a paper by [CITE]. We loosen the assumption that we know the exact changes to the network topology at each time step, by instead considering a model where changes occur according to a given probability distribution.
 
@@ -520,7 +520,59 @@ TODO
 \end{enumerate}
 
 \section{Proof that the asynchronous rumour spreading time bound is almost tight}
-\label{AsyncLowerBoundSection}
+\label{section:AsyncLowerBound}
+
+In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is tight, by constructing an example where the spread time is close to the bound with high probability.
+
+\begin{definition}\label{def:HkAB}
+ 	Graph $H_k(A,B)$
+
+	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\frac{n}{4} \leq |A| \leq \frac{3n}{4}$. Let B denote $V \setminus A$. Let $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ be arbitrary positive integers. We construct the graph $H_k(A,B)$ on the vertex set $V$ using the following steps
+
+	% TODO: Can we adjust k and delta slightly to work for k-regualr ends? 
+
+	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$ and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in figure % TODO: REFBELOW
+
+	%TODO: Graph after step 1 
+
+	\textit{Step 2.} Let $G_A$ be an arbitrary m-regular %TODO: Fill in once decided on ending graphs
+	graph on $A \setminus S_0$ such that $\Phi(G_A) = \Theta(1)$. %TODO: remove this??
+
+	% TODO: m-regular graph 
+	% https://sites.math.rutgers.edu/~sk1233/courses/topics-S13/lec8.pdf
+	% Margulis–Gabber–Galil convert to simple graph?
+
+	We now connect each node of $S_0$ to $\Delta$ distinct nodes of $G_A$. First, we arbitrarily enumerate the nodes in $S_0$ and $G_A$ as $v_1, v_2, \dots, v_\Delta$ and $u_1, u_2, \dots, u_{|G_A|}$ respectively. Connect $v_1$ to the first $\Delta$ nodes in the $G_A$, starting with $u_1$. Connect $v_2$ to the next $\Delta$ nodes in $G_A$, starting with $u_{\Delta + 1}$.
+	Repeat this process for each $v_i$, as in figure % TODO: REF 
+	If there are more new connections than nodes in $G_A$, reuse nodes in $G_A$ starting again from $u_1$ and forming new connections in the enumerated order, i.e the $i^\text{th}$ new connection should be made with node $u_m$ where $m = i\mod |G_A|$.
+
+	\textit{Step 3.} Let $G_B$ be an arbitrary m-regular graph on $B \setminus \bigcup_{i=1}^k S_i$ such that $\Phi(G_B) = \Theta(1)$. 
+	We generate $G_B$ using the same construction as in Step 2. We then connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_k(A,B)$ illustrated in figure %TODO: REF
+
+	% TODO: Final graph structure figure
+
+
+	%TODO: explain how Winding around the ring increases the degree by at most an additive constant O(sqrt(n))^2 extra edges O(n) nodes in A \ S_0 so by O notation at most addivie constant difference
+
+\end{definition}
+
+We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary permutations of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_k(A,B)$ as a single graph as all graphs in the family are isomorphic, and thus have the same structural properties needed for the proof. % TODO: Remove this paragraph? premature?
+
+\begin{definition}
+	$\rho$-diligent Dynamic Network
+	
+	First we define the sequences of node subsets $(A_t)_{t\geq 0}$ and $(B_t)_{t\geq0}$ with $A_t, B_t \subseteq V$ for all $t$. For each $t$, we construct $A_t$ and $B_t$ such that they partition $V$ into two subsets, as follows:
+
+	Let $A_0$ be an arbitrary subset of $V$ of size $\ceil{\frac{n}{4}}$ containing the first node to be aware of the rumour. % TODO: Any problem with ceiling function?
+	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$. Let $A_{t+1} = V \setminus A_t$, i.e. the set of nodes that were either in $A_0$ or informed of the rumour by round $t+1$.
+
+	Now we can define the dynamic network $\rho$-diligent Dynamic Network $\mathcal{G}(n, \rho) = (G_t)_{t\geq 0}$ itself. 
+	% TODO: Check sequnce notation consistent, 0 not in N
+	% TODO: Does \Delta satisfy conditions required for H_\Delta(A,B)
+	% TODO: Standardise notation for H_K(A,B)
+
+	Let $\Delta = \ceil{\frac{1}{\rho}}$. Let $G_t = H_\Delta(A_t, B_t)$ while $|B_t| \geq \frac{n}{4}$. Note that $|B_t|$ is decreasing in $t$ since $B_t$ is a subset of the uniformed nodes at time $t$, so at some time step $l$ we have that $|B_l| < \frac{n}{4}$. For all time steps $t \geq l$, let $G_{t+1} = G_t$, since we cannot construct $H_\Delta(A,B)$ if $|B| < \frac{n}{4}$ as this would imply $|A| > \frac{3n}{4}$. % TODO: Reword ending$
+\end{definition}
 
 \section{Bounding the synchronous flooding time}
 \label{SyncFloodingSection}
@@ -682,6 +734,8 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 
 We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0$ is a stationary distribution of $\mathcal{M}$. By the definition of a stationary distribution, in such an MEDN the probability that $G_t = G'$ for a given $G'$ is the probability that $G_t = G'$ under the stationary distribution, for any time step $t$. Hence, the evolution of the network essentially proceeds by independently sampling a topology from the stationary distribution at each time step. % TODO: Check if independent, get rid of "essentially"?
 
+% TODO: Is this a non-theorm? What does it acutally mean?
+
 \begin{theorem}
 	Let $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$  be a stationary Markovian evolving graph. Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that with probability $1-\frac{1}{n^2}$, the stationary distribution of $\mathcal{M}$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the spreading time of $\mathcal{G}$ under algorithm \ref{SyncFloodingAlgorithm} is
 	$$
@@ -690,7 +744,9 @@ We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0
 	with high probability.
 \end{theorem}
 
-We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the expansion properties hold with high probability with respect to the stationary distribution. Since topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will still hold as long as the vast majority of topologies in our network have strong expansion properties. 
+We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the expansion properties hold with high probability with respect to the stationary distribution. Since each topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will still hold, as long as the long-term proportion of topologies in our network without strong expansion properties is bounded by $\frac{1}{n^2}$.
+
+% TODO: Review this proof for order that makes sense, and check it actually holds
 
 \begin{proof}
 	For all $t \in \mathbb{N}$, let $A_t$ be the event that $G_t$ is an $(h_i, k_i)$-expander for all $1 \leq i \leq s$. Since $\mathcal{M}$ is stationary, we have that $\mathbb{P}(A_t) \geq 1 - \frac{1}{n^2}$ for all t. 
@@ -700,7 +756,22 @@ We notice that in this theorem, instead of requiring every graph topology to sat
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
 	$$
 
-	% TODO: why guarenteed to spread in n steps?
+	Suppose that $A_k$ holds for all $k \leq n$. We claim that the rumour spreads in at most $n$ time steps with certainty. Since we have assumed that all topologies up to time $n$ are $(h_1, k_1)$-expanders, there are no isolated nodes, as such an isolated node $v$ would form a subset of size $1 \leq h_1$ with $B({v}) = 0 < k_1$, a contradiction. Thus, the network is connected for the first $n$ time steps. Hence, for any time step $t \leq n$ before all nodes are informed of the rumour, $B(I_t) \geq 1$, since there is only 1 connected component so $I_t$ must be connected  to $U_t$ by at least 1 edge. It follows that in each time step at least 1 new node becomes informed of the rumour by the operation of algorithm \ref{SyncFloodingAlgorithm}. Hence, at most $n$ steps are needed to spread the rumour when $A_k$ holds for all $k \leq n$. 
+
+	Let $T$ denote the first time step at which all nodes are informed of the rumour. By Theorem \ref{theorem:DeterministicFloodingBound} we have that if $A_k$ holds for all $k \leq T$, then $T=\mathcal{O}\left(\sum_{i=1}^s \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}\right)$, as once all the nodes have been informed, the expansion properties of the remaining topologies are irrelevant.
+
+	Now we combine the previous two claims. By the first claim if $A_k$ holds for all $k \leq n$ we have that $T \leq n$, thus $A_k$ holds for all $k \leq T$. In this case, by the second claim we obtain that  $T=\mathcal{O}\left(\sum_{i=1}^s \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}\right)$.
+
+	Since we have shown that the event $\bigcap_{t=0}^n A_t \implies B$, we have that $\comp{B} \implies \comp{ \bigcap_{t=0}^n A_t} = \bigcup_{t=0}^n \comp{A_t}$. To finish the proof, we show that the event $\comp{B}$ happens with vanishing probability, thus $B$ happens with high probability.
+
+	\begin{align*}
+		\mathbb{P}(\comp{B}) &\leq \mathbb{P}(\bigcup_{t=0}^n \comp{A_t}) & \text{by the inferred implication} \\ 
+		& \leq n \mathbb{P}(\comp{A_t}) & \text{by the union bound}\\ 
+		& \leq n \frac{1}{n^2} = \frac{1}{n} & \text{by the conditions on the stationary distribution}
+	\end{align*}
+
+	% TODO: THINK ABOUT h_0
+
 \end{proof}
 
 \subsection{Applying the bound to Edge-Markovian evolution}
