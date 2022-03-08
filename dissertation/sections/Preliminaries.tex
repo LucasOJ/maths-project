@@ -1,0 +1,111 @@
+\section{Preliminaries}
+\label{Prelims}
+
+\subsection{Notation}
+
+First we introduce notation for expressing graph metrics. This notation will also be used throughout the paper. % TODO - GET RID OF SECOND LINE?
+
+\begin{definition}
+	Complement Set
+
+	\noindent
+	Given a graph $G = (V, E)$, for a set of vertices $S \subseteq V$ we define the complement set $\comp{S} = V \setminus S$
+\end{definition}
+
+\begin{definition}
+	Cut Set
+
+	\noindent
+	Given a graph $G = (V, E)$, for a set of vertices $S \subseteq V$ we define the cut set $ E(S, \comp{S}) = \left\{\{u, v\} \in E \mid u \in S, v \in \comp{S} \right\}.$
+\end{definition}
+
+\begin{definition}
+	Degree of a vertex
+
+	\noindent
+	Given a graph $G = (V, E)$, let $d_v$ be the number of neighbouring nodes $v$ is adjacent to, i.e. $$
+		d_v = |\left\{ e \in E : v \in e \right\}|
+	$$
+\end{definition}
+
+\begin{definition}
+	Volume of a vertex set
+
+	\noindent
+	Given a graph $G = (V, E)$ with $S \subseteq V$, let 
+	$$
+		\text{vol}(S) = \sum_{v \in S} d_v
+	$$
+\end{definition}
+
+% TODO: Explain Implications of Cut set defn?
+
+\subsection{Graph Metrics}
+
+\begin{definition}
+	Conductance of a graph $G = (V, E)$
+
+	$$
+		\Phi(G) = \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}}
+	$$
+\end{definition}
+
+\begin{definition}
+	Diligence of a cut $ E(S, \comp{S}) $
+	$$
+		\rho(S) = \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
+	$$ 
+
+	where $\comp{d}(S) := \frac{\sum_{v \in S} d_v}{|S|}$ is the average degree of the vertices in $S$
+\end{definition}
+
+\begin{definition}
+	Diligence of a graph $G$
+	$$
+		\rho(G) = \min_{S \in V} \rho(S) 
+	$$
+\end{definition}
+
+\subsection{Introducing Dynamic Networks}
+
+Here we formally define the Dynamic Network structure rumours will spread on.
+
+\begin{definition}
+	Dynamic Network
+
+	\noindent
+	A dynamic network is a sequence of graphs $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$. All the graphs in the sequence have the same vertex set at each time step, but the edge set may vary, i.e.  $G_t = (V, E_t)$ where $E_t$ is some edge set on $V$.
+\end{definition}
+
+$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
+
+% TODO: Segway
+
+\begin{definition}
+	Vertex degree at time $\gamma \in \mathbb{R}_+ $ 
+
+	\noindent
+	For a Dynamic Network $\mathcal{G}$ on a vertex set $V$, $d_v(\gamma)$ is the degree of a vertex $v \in V$ at time $\gamma$, i.e. the degree of $v$ in $G_\gamma$
+\end{definition}
+
+
+\subsection{Review of Poisson Processes}
+
+In this subsection we introduce Poisson processes, which will be needed to specify the first asychronous rumour spread algorithm.
+
+The Poisson process ...
+
+TODO
+
+\begin{enumerate}
+	\item Definition
+	\item $N(s + t) - N(s)$ has a Poisson distribution with rate $\lambda t$
+	\item Superposition
+\end{enumerate}
+
+
+\subsection{Order statistics of exponential random variables}
+
+TODO: Prove that minimum of exponentials is exponential, where the probability each exponential that attains the minimum is dependent on each exponentials' rate, and independent of the value of the min
+
+% TODO: Discuss implications for async rumour spreading - interpreting poission process as exponential clock, not interested in value of the process

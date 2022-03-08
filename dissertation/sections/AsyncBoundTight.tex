@@ -1,0 +1,54 @@
+\section{Proof that the asynchronous rumour spreading time bound is almost tight}
+\label{section:AsyncLowerBound}
+
+In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is tight, by constructing an example where the spread time is close to the bound with high probability.
+
+\begin{definition}\label{def:HkAB}
+ 	Graph $H_k(A,B)$
+
+	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\frac{n}{4} \leq |A| \leq \frac{3n}{4}$. Let B denote $V \setminus A$. Let $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ be arbitrary positive integers. We construct the graph $H_k(A,B)$ on the vertex set $V$ using the following steps
+
+	% TODO: Can we adjust k and delta slightly to work for k-regualr ends? 
+
+	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$ and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in figure % TODO: REFBELOW
+
+	%TODO: Graph after step 1 
+
+	\textit{Step 2.} Let $G_A$ be an arbitrary m-regular %TODO: Fill in once decided on ending graphs
+	graph on $A \setminus S_0$ such that $\Phi(G_A) = \Theta(1)$. %TODO: remove this??
+
+	% TODO: m-regular graph 
+	% https://sites.math.rutgers.edu/~sk1233/courses/topics-S13/lec8.pdf
+	% Margulis–Gabber–Galil convert to simple graph?
+
+	We now connect each node of $S_0$ to $\Delta$ distinct nodes of $G_A$. First, we arbitrarily enumerate the nodes in $S_0$ and $G_A$ as $v_1, v_2, \dots, v_\Delta$ and $u_1, u_2, \dots, u_{|G_A|}$ respectively. Connect $v_1$ to the first $\Delta$ nodes in the $G_A$, starting with $u_1$. Connect $v_2$ to the next $\Delta$ nodes in $G_A$, starting with $u_{\Delta + 1}$.
+	Repeat this process for each $v_i$, as in figure % TODO: REF 
+	If there are more new connections than nodes in $G_A$, reuse nodes in $G_A$ starting again from $u_1$ and forming new connections in the enumerated order, i.e the $i^\text{th}$ new connection should be made with node $u_m$ where $m = i\mod |G_A|$.
+
+	\textit{Step 3.} Let $G_B$ be an arbitrary m-regular graph on $B \setminus \bigcup_{i=1}^k S_i$ such that $\Phi(G_B) = \Theta(1)$. 
+	We generate $G_B$ using the same construction as in Step 2. We then connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_k(A,B)$ illustrated in figure %TODO: REF
+
+	% TODO: Final graph structure figure
+
+
+	%TODO: explain how Winding around the ring increases the degree by at most an additive constant O(sqrt(n))^2 extra edges O(n) nodes in A \ S_0 so by O notation at most addivie constant difference
+
+\end{definition}
+
+We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary permutations of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_k(A,B)$ as a single graph as all graphs in the family are isomorphic, and thus have the same structural properties needed for the proof. % TODO: Remove this paragraph? premature?
+
+\begin{definition}
+	$\rho$-diligent Dynamic Network
+	
+	First we define the sequences of node subsets $(A_t)_{t\geq 0}$ and $(B_t)_{t\geq0}$ with $A_t, B_t \subseteq V$ for all $t$. For each $t$, we construct $A_t$ and $B_t$ such that they partition $V$ into two subsets, as follows:
+
+	Let $A_0$ be an arbitrary subset of $V$ of size $\ceil{\frac{n}{4}}$ containing the first node to be aware of the rumour. % TODO: Any problem with ceiling function?
+	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$. Let $A_{t+1} = V \setminus A_t$, i.e. the set of nodes that were either in $A_0$ or informed of the rumour by round $t+1$.
+
+	Now we can define the dynamic network $\rho$-diligent Dynamic Network $\mathcal{G}(n, \rho) = (G_t)_{t\geq 0}$ itself. 
+	% TODO: Check sequnce notation consistent, 0 not in N
+	% TODO: Does \Delta satisfy conditions required for H_\Delta(A,B)
+	% TODO: Standardise notation for H_K(A,B)
+
+	Let $\Delta = \ceil{\frac{1}{\rho}}$. Let $G_t = H_\Delta(A_t, B_t)$ while $|B_t| \geq \frac{n}{4}$. Note that $|B_t|$ is decreasing in $t$ since $B_t$ is a subset of the uniformed nodes at time $t$, so at some time step $l$ we have that $|B_l| < \frac{n}{4}$. For all time steps $t \geq l$, let $G_{t+1} = G_t$, since we cannot construct $H_\Delta(A,B)$ if $|B| < \frac{n}{4}$ as this would imply $|A| > \frac{3n}{4}$. % TODO: Reword ending$
+\end{definition}
