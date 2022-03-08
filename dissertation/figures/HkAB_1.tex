@@ -1,0 +1,104 @@
+\begin{tikzpicture}[
+    roundnode/.style={circle, fill=black, minimum size=0.5mm},
+    align=center,
+    node distance=0.5cm and 2cm
+    ]
+    %Nodes
+    \node[roundnode] (1A) {};
+    \node[roundnode] (1B) [below=of 1A] {};
+    \node[roundnode] (1C) [below=of 1B] {};
+    \node[roundnode] (1D) [below=of 1C] {};
+    
+    \node[draw=blue!20,inner sep=2mm,label=above:$S_0$,fit=(1A) (1A) (1A) (1D)] (S0fit) {};
+
+    \node[draw=red!20,inner sep=6mm,label=below:$A$,fit=(S0fit)] {};
+    
+    \node[roundnode] (2A) [right=of 1A]{};
+    \node[roundnode] (2B) [below=of 2A] {};
+    \node[roundnode] (2C) [below=of 2B] {};
+    \node[roundnode] (2D) [below=of 2C] {};
+    
+    \node[draw=blue!20,inner sep=2mm,label=above:$S_1$,fit=(2A) (2A) (2A) (2D)] (S1fit) {};
+    
+    \node[roundnode] (3A) [right=of 2A]{};
+    \node[roundnode] (3B) [below=of 3A] {};
+    \node[roundnode] (3C) [below=of 3B] {};
+    \node[roundnode] (3D) [below=of 3C] {};
+    
+    \node[draw=blue!20,inner sep=2mm,label=above:$S_2$,fit=(3A) (3A) (3A) (3D)] {};
+    
+    \node[roundnode] (4A) [right=of 3A]{};
+    \node[roundnode] (4B) [below=of 4A] {};
+    \node[roundnode] (4C) [below=of 4B] {};
+    \node[roundnode] (4D) [below=of 4C] {};
+    
+    \path (3A) -- node[auto=false]{\ldots} (4A);
+    \path (3B) -- node[auto=false]{\ldots} (4B);
+    \path (3C) -- node[auto=false]{\ldots} (4C);
+    \path (3D) -- node[auto=false]{\ldots} (4D);
+    
+    \node[draw=blue!20,inner sep=2mm,label=above:$S_{k-1}$,fit=(4A) (4A) (4A) (4D)] {};
+    
+    \node[roundnode] (5A) [right=of 4A]{};
+    \node[roundnode] (5B) [below=of 5A] {};
+    \node[roundnode] (5C) [below=of 5B] {};
+    \node[roundnode] (5D) [below=of 5C] {};
+    
+    \node[draw=blue!20,inner sep=2mm,label=above:$S_k$,fit=(5A) (5A) (5A) (5D)] (Skfit) {};
+    
+    \node[draw=red!20,inner sep=6mm,label=below:$B$,fit=(S1fit) (Skfit)] {};
+
+    %Lines
+    \draw[-] (1A) -- (2A);
+    \draw[-] (1B) -- (2A);
+    \draw[-] (1C) -- (2A);
+    \draw[-] (1D) -- (2A);
+    \draw[-] (1A) -- (2B);
+    \draw[-] (1B) -- (2B);
+    \draw[-] (1C) -- (2B);
+    \draw[-] (1D) -- (2B);
+    \draw[-] (1A) -- (2C);
+    \draw[-] (1B) -- (2C);
+    \draw[-] (1C) -- (2C);
+    \draw[-] (1D) -- (2C);
+    \draw[-] (1A) -- (2D);
+    \draw[-] (1B) -- (2D);
+    \draw[-] (1C) -- (2D);
+    \draw[-] (1D) -- (2D);
+    
+    
+    \draw[-] (2A) -- (3A);
+    \draw[-] (2B) -- (3A);
+    \draw[-] (2C) -- (3A);
+    \draw[-] (2D) -- (3A);
+    \draw[-] (2A) -- (3B);
+    \draw[-] (2B) -- (3B);
+    \draw[-] (2C) -- (3B);
+    \draw[-] (2D) -- (3B);
+    \draw[-] (2A) -- (3C);
+    \draw[-] (2B) -- (3C);
+    \draw[-] (2C) -- (3C);
+    \draw[-] (2D) -- (3C);
+    \draw[-] (2A) -- (3D);
+    \draw[-] (2B) -- (3D);
+    \draw[-] (2C) -- (3D);
+    \draw[-] (2D) -- (3D);
+    
+    \draw[-] (4A) -- (5A);
+    \draw[-] (4B) -- (5A);
+    \draw[-] (4C) -- (5A);
+    \draw[-] (4D) -- (5A);
+    \draw[-] (4A) -- (5B);
+    \draw[-] (4B) -- (5B);
+    \draw[-] (4C) -- (5B);
+    \draw[-] (4D) -- (5B);
+    \draw[-] (4A) -- (5C);
+    \draw[-] (4B) -- (5C);
+    \draw[-] (4C) -- (5C);
+    \draw[-] (4D) -- (5C);
+    \draw[-] (4A) -- (5D);
+    \draw[-] (4B) -- (5D);
+    \draw[-] (4C) -- (5D);
+    \draw[-] (4D) -- (5D);
+
+    \end{tikzpicture}

@@ -10,10 +10,17 @@ In this section, we prove that the upper bound derived in Section \ref{AsyncUppe
 
 	% TODO: Can we adjust k and delta slightly to work for k-regualr ends? 
 
-	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$ and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in figure % TODO: REFBELOW
+	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$ and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in Figure \ref{fig:HkAB_1}.
 
 	%TODO: Graph after step 1 
 
+    \begin{figure}[h]
+        \centering
+        \input{figures/HkAB_1.tex}
+        \caption{Construction of $H_k(A,B)$ after Step 1}
+        \label{fig:HkAB_1}
+    \end{figure}
+    
 	\textit{Step 2.} Let $G_A$ be an arbitrary m-regular %TODO: Fill in once decided on ending graphs
 	graph on $A \setminus S_0$ such that $\Phi(G_A) = \Theta(1)$. %TODO: remove this??
 
@@ -22,14 +29,26 @@ In this section, we prove that the upper bound derived in Section \ref{AsyncUppe
 	% Margulis–Gabber–Galil convert to simple graph?
 
 	We now connect each node of $S_0$ to $\Delta$ distinct nodes of $G_A$. First, we arbitrarily enumerate the nodes in $S_0$ and $G_A$ as $v_1, v_2, \dots, v_\Delta$ and $u_1, u_2, \dots, u_{|G_A|}$ respectively. Connect $v_1$ to the first $\Delta$ nodes in the $G_A$, starting with $u_1$. Connect $v_2$ to the next $\Delta$ nodes in $G_A$, starting with $u_{\Delta + 1}$.
-	Repeat this process for each $v_i$, as in figure % TODO: REF 
+	Repeat this process for each $v_i$, as in Figure \ref{fig:HkAB_2}.
 	If there are more new connections than nodes in $G_A$, reuse nodes in $G_A$ starting again from $u_1$ and forming new connections in the enumerated order, i.e the $i^\text{th}$ new connection should be made with node $u_m$ where $m = i\mod |G_A|$.
 
+    \begin{figure}[h]
+        \centering
+        \input{figures/HkAB_2.tex}
+        \caption{Illustration of the enumeration technique used in Step 2}
+        \label{fig:HkAB_2}
+    \end{figure}
+
+
 	\textit{Step 3.} Let $G_B$ be an arbitrary m-regular graph on $B \setminus \bigcup_{i=1}^k S_i$ such that $\Phi(G_B) = \Theta(1)$. 
-	We generate $G_B$ using the same construction as in Step 2. We then connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_k(A,B)$ illustrated in figure %TODO: REF
+	We generate $G_B$ using the same construction as in Step 2. We then connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_k(A,B)$ illustrated in Figure \ref{fig:HkAB_3}.
 
-	% TODO: Final graph structure figure
-
+    \begin{figure}[h]
+        \centering
+        \input{figures/HkAB_3.tex}
+        \caption{Construction of $H_k(A,B)$ after Step 3}
+        \label{fig:HkAB_3}
+    \end{figure}
 
 	%TODO: explain how Winding around the ring increases the degree by at most an additive constant O(sqrt(n))^2 extra edges O(n) nodes in A \ S_0 so by O notation at most addivie constant difference
 

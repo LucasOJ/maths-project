@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+    roundnode/.style={circle, fill=black, minimum size=0.5mm},
+    align=center,
+    node distance=0.5cm and 2cm,
+    redline/.style={-, red},
+    blueline/.style={-, blue},
+    greenline/.style={-, green}
+    ]
+    %Nodes
+    \node[roundnode, label=west:$u_1$] (1A) {};
+    \node[roundnode, label=west:$u_2$] (1B) [below=of 1A] {};
+    \node[roundnode, label=west:$u_\Delta$] (1C) [below=of 1B] {};
+    \node[roundnode, label=west:$u_{\Delta+1}$] (1D) [below=of 1C] {};
+    \node[roundnode] (1E) [below=of 1D] {};
+
+    \node[inner sep=3mm,label=above:$G_A$,fit=(1A) (1A) (1A) (1E)] {};
+    
+    \node[roundnode, label=east:$v_1$, red] (2A) [right=of 1A]{};
+    \node[roundnode, label=east:$v_2$, blue] (2B) [below=of 2A] {};
+    \node[roundnode, label=east:$v_\Delta$, green] (2C) [below=of 2B] {};
+    
+    \node[inner sep=3mm,label=above:$S_0$,fit=(2A) (2A) (2A) (2C)] {};
+    
+    %Lines
+    \draw[redline] (1A) -- (2A);
+    \draw[redline] (1B) -- (2A);
+    \draw[redline] (1C) -- (2A);
+
+    \draw[blueline] (1D) -- (2B);
+    \draw[blueline] (1E) -- (2B);
+    \draw[blueline] (1A) -- (2B);
+
+    \draw[greenline] (1B) -- (2C);
+    \draw[greenline] (1C) -- (2C);
+    \draw[greenline] (1D) -- (2C);
+
+\end{tikzpicture}
