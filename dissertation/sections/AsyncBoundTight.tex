@@ -69,5 +69,38 @@ We note that Definition \ref{def:HkAB} technically specifies a family of graphs,
 	% TODO: Does \Delta satisfy conditions required for H_\Delta(A,B)
 	% TODO: Standardise notation for H_K(A,B)
 
-	Let $\Delta = \ceil{\frac{1}{\rho}}$. Let $G_t = H_\Delta(A_t, B_t)$ while $|B_t| \geq \frac{n}{4}$. Note that $|B_t|$ is decreasing in $t$ since $B_t$ is a subset of the uniformed nodes at time $t$, so at some time step $l$ we have that $|B_l| < \frac{n}{4}$. For all time steps $t \geq l$, let $G_{t+1} = G_t$, since we cannot construct $H_\Delta(A,B)$ if $|B| < \frac{n}{4}$ as this would imply $|A| > \frac{3n}{4}$. % TODO: Reword ending$
+	Let $\Delta = \ceil{\frac{1}{\rho}}$, and $k = \mathcal{O}(\log n / \log \log n)$.
+	Let $G_t = H_{k, \Delta}(A_t, B_t)$ while $|B_t| \geq \frac{n}{4}$. Note that since $\Delta = \mathcal{O}(\sqrt{n})$ by the definition of $H_{k, \Delta}(A,B)$, we must have that $\rho = \Omega\left(\frac{1}{\sqrt{n}}\right)$.
+	Note also that $|B_t|$ is decreasing in $t$ since $B_t$ is a subset of the uniformed nodes at time $t$, so at some time step $l$ we have that $|B_l| < \frac{n}{4}$. For all time steps $t \geq l$, let $G_{t+1} = G_t$, since we cannot construct $H_\Delta(A,B)$ if $|B| < \frac{n}{4}$ as this would imply $|A| = |\comp{B}| > \frac{3n}{4}$. % TODO: Reword ending$
 \end{definition}
+
+First we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network.
+
+\begin{theorem}
+	With high probability, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at most 
+	$$
+		\mathcal{O}\left(\left(\rho n + \frac{k}{\rho}\right)\log n\right)
+	$$
+\end{theorem}
+
+\begin{proof}
+	To determine a concrete bound using Theorem \ref{theorem:AsyncUpperBound}, we need to calculate $\Phi(G_t)$ and $\rho(G_t)$. Since $G_t = H_{k, \Delta}(A, B)$ for some $A$ and $B$ at each time step, it suffices to calculate the conductance and diligence for a general $H_{k, \Delta}(A, B)$.
+
+	\textbf{Claim 1.} $\Phi(H_{k, \Delta}(A, B)) = \Theta\left(\frac{\Delta^2}{k\Delta^2 +n }\right)$
+
+	For $q = 1, \dots, k$, let $A_q = G_A \cup \bigcup_{i=1}^q  S_i$. We want to calculate $\text{vol}(A_q)$. The degree of any arbitrary node in $S_i$ is $2\Delta$, since it is connected to all $\Delta$ nodes in $S_{i-1}$ and all $\Delta$ nodes in $S_{i+1}$, where we set $S_0 = G_A$ and $S_{k+1} = G_B$ for brevity. Since there are $\Delta$ nodes in each $S_i$, $\text{vol}(S_i) = 2\Delta^2$. By taking the disjoint union of $q$ $S_i$ subsets, we obtain that $\text{vol}(\bigcup_{i=1}^q) = 2q\Delta^2$. Now we consider $\text{vol}(G_A)$. Since $|A| = \Theta(n)$ and $|S_i| = \Delta = \mathcal{O}(\sqrt{n})$, 
+	$$
+		|G_A| = |A \setminus S_0| = |A| - |S_0| = \Theta(n) - \mathcal{O}(\sqrt{n}) = \Theta(n)
+	$$
+	By construction each node in $G_A$ is connected to exactly $m$ % TODO: Replace with actual number
+	other nodes in $G_A$, so internal edges contribute $\Theta(n)$ degree to $\text{vol}(G_A)$. The only other edges which terminate in $G_A$ are the $\Delta^2$ edges between $G_A$ and $S_0$, thus $\text{vol}(G_A) = \Delta^2 + \Theta(n)$. By taking the disjoint union of $G_A$ and $\bigcup_{i=1}^q S_i$ we obtain $\text{vol}(A_q) = (2q + 1)\Delta^2 + \Theta(n)$. % TODO: Check as doesn't match paper.
+	Note that for any $q$, $|E(A_q,\comp{A_q})| = \Delta^2$ since the only edges connecting $A_q$ and $\comp{A_q}$ are the edges passing between $S_q$ and $S_{q+1}$. This is most easily seen by inspecting Figure \ref{fig:HkAB_3}, and noting that $A_q$ corresponds to the first $q + 1$ sets of nodes in the string, while $\comp{A_q}$ corresponds to the remaining $k - q + 1$ sets at the end of the string. By construction, each of these cuts consist of exactly $\Delta^2$ edges, thus $|E(A_q,\comp{A_q})| = \Delta^2$ as claimed.
+	Hence, we can derive an upper bound on the conductance of $H_{k, \Delta}(A, B)$ by evaluating the conductance expression for the set $A_q$ instead of the set which achieves the minimum. 
+	$$
+		\Phi(H_{k, \Delta}(A, B)) \leq \frac{|E(A_q, \comp{A_q})|}{\text{vol}(A_q)} = \frac{\Delta^2}{(2q + 1)\Delta^2 + \Theta(n)}
+	$$	
+
+	% TODO: Prove that A_k is the minimal set
+
+	
+\end{proof}

@@ -2,9 +2,10 @@
     roundnode/.style={circle, fill=black, minimum size=0.5mm},
     align=center,
     node distance=0.5cm and 2cm,
-    redline/.style={-, red},
-    blueline/.style={-, blue},
-    greenline/.style={-, green}
+    redline/.style={-, red!40},
+    blueline/.style={-, blue!40},
+    greenline/.style={-, green!40},
+    line width = 0.4mm
     ]
     %Nodes
     \node[roundnode, label=west:$u_1$] (1A) {};
@@ -15,9 +16,9 @@
 
     \node[inner sep=3mm,label=above:$G_A$,fit=(1A) (1A) (1A) (1E)] {};
     
-    \node[roundnode, label=east:$v_1$, red] (2A) [right=of 1A]{};
-    \node[roundnode, label=east:$v_2$, blue] (2B) [below=of 2A] {};
-    \node[roundnode, label=east:$v_\Delta$, green] (2C) [below=of 2B] {};
+    \node[roundnode, label=east:$v_1$, red!70] (2A) [right=of 1A]{};
+    \node[roundnode, label=east:$v_2$, blue!70] (2B) [below=of 2A] {};
+    \node[roundnode, label=east:$v_\Delta$, green!70] (2C) [below=of 2B] {};
     
     \node[inner sep=3mm,label=above:$S_0$,fit=(2A) (2A) (2A) (2C)] {};
     
