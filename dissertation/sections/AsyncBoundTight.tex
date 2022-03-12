@@ -94,13 +94,34 @@ First we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading
 	$$
 	By construction each node in $G_A$ is connected to exactly $m$ % TODO: Replace with actual number
 	other nodes in $G_A$, so internal edges contribute $\Theta(n)$ degree to $\text{vol}(G_A)$. The only other edges which terminate in $G_A$ are the $\Delta^2$ edges between $G_A$ and $S_0$, thus $\text{vol}(G_A) = \Delta^2 + \Theta(n)$. By taking the disjoint union of $G_A$ and $\bigcup_{i=1}^q S_i$ we obtain $\text{vol}(A_q) = (2q + 1)\Delta^2 + \Theta(n)$. % TODO: Check as doesn't match paper.
-	Note that for any $q$, $|E(A_q,\comp{A_q})| = \Delta^2$ since the only edges connecting $A_q$ and $\comp{A_q}$ are the edges passing between $S_q$ and $S_{q+1}$. This is most easily seen by inspecting Figure \ref{fig:HkAB_3}, and noting that $A_q$ corresponds to the first $q + 1$ sets of nodes in the string, while $\comp{A_q}$ corresponds to the remaining $k - q + 1$ sets at the end of the string. By construction, each of these cuts consist of exactly $\Delta^2$ edges, thus $|E(A_q,\comp{A_q})| = \Delta^2$ as claimed.
+	
+	Note that for any $q$, $|E(A_q,\comp{A_q})| = \Delta^2$ since the only edges connecting $A_q$ and $\comp{A_q}$ are the edges passing between $S_q$ and $S_{q+1}$. This is most easily seen by inspecting Figure \ref{fig:HkAB_3}, and noting that $A_q$ corresponds to the first $q + 1$ sets of nodes in the string, while $\comp{A_q}$ corresponds to the remaining $k - q + 1$ sets of noes at the end of the string. By construction, each of these cuts consist of exactly $\Delta^2$ edges, thus $|E(A_q,\comp{A_q})| = \Delta^2$ as claimed.
 	Hence, we can derive an upper bound on the conductance of $H_{k, \Delta}(A, B)$ by evaluating the conductance expression for the set $A_q$ instead of the set which achieves the minimum. 
 	$$
-		\Phi(H_{k, \Delta}(A, B)) \leq \frac{|E(A_q, \comp{A_q})|}{\text{vol}(A_q)} = \frac{\Delta^2}{(2q + 1)\Delta^2 + \Theta(n)}
+		\Phi(H_{k, \Delta}(A, B)) \leq \frac{|E(A_q, \comp{A_q})|}{\min \left\{ \text{vol}(A_q), \text{vol}(\comp{A_q}) \right\} } % TODO: THIS INEQUALITY DOESN'T WORK
+		\leq \frac{|E(A_q, \comp{A_q})|}{\text{vol}(A_q)} = \frac{\Delta^2}{(2q + 1)\Delta^2 + \Theta(n)}
 	$$	
-
 	% TODO: Prove that A_k is the minimal set
 
-	
+	% TODO: Finish this
+
+	\textbf{Claim 2.} $\rho(H_{k, \Delta}(A,B)) = \Theta\left(\frac{1}{\Delta}\right)$
+
+	First we consider the set of vertices $A = G_A \cup S_0$ for which the minimal diligence is achieved. % TODO: Check this works with A instead of A_1 (used in paper)
+	We have that $\text{vol}(A) = 2\Delta^2 + \Theta(n)$ since $S_0$ contributes $2\Delta^2$ degree and $G_A$ contributes $\Theta(n)$ degree as shown in claim 1. Since $\Delta = \mathcal{O}(\sqrt{n})$, we obtain that 
+	$$
+		\text{vol}(A) = 2 \mathcal{O}(\sqrt{n})^2 + \Theta(n) = \mathcal{O}(n) + \Theta(n) = \Theta(n)
+	$$ % TODO: Check adding theta and O gives theta
+	Since $|A| = \Theta(n)$ by construction we have that the average degree of $A$ $\bar{d}(A) = \frac{\text{vol}(A)}{|A|} = \frac{\Theta(n)}{\Theta(n)} = \Theta(1)$. To compute the diligence of $A$, we now consider the cut set $E(A, \comp{A})$. Since every endpoint of the cut set has degree $2\Delta$, we get that 
+	$$
+		\min_{\{u, v\} \in E(A, \comp{A})} \max \left\{ \frac{1}{d_u}, \frac{1}{d_v} \right\} = \frac{1}{2\Delta}
+	$$
+	Hence, the diligence of $A$ is 
+	$$
+		\rho(A) = \frac{\bar{d}(A)}{2\Delta} = \Theta\left(\frac{1}{\Delta}\right)
+	$$ 
+	% TODO: Prove no set with lower diligence exists
+
+	% TODO: Resolve k -> 0 log n -> +inf
+	% 		- why choice of log n / log log n for k?
 \end{proof}
