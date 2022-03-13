@@ -122,6 +122,41 @@ First we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading
 	$$ 
 	% TODO: Prove no set with lower diligence exists
 
-	% TODO: Resolve k -> 0 log n -> +inf
+
+	We can now apply the bound from Theorem \ref{theorem:AsyncUpperBound}, to yield an upper bound on the spreading time of a $\rho$-diligent dynamic network $\mathcal{G}(n, \rho) = (G_t)_{t\geq 0}$. 
+	
+	From Theorem \ref{theorem:AsyncUpperBound}, we have that the first $T$ for which $\sum_t^T \Phi(G_t)\rho(G_t)$ exceeds $C \log n = \mathcal{O}(\log n)$ is an upper bound on the spreading time with high probability.  Note that 
+	$$
+		\sum_t^T \Phi(G_t)\rho(G_t)
+		= 
+		T \Theta\left(\frac{\Delta^2}{k\Delta^2 +n }\right) \Theta\left(\frac{1}{\Delta}\right)
+		= 
+		T \Theta\left(\frac{\Delta}{k\Delta^2 +n }\right)
+		= 
+		T \Theta\left(\frac{1}{n \rho + \frac{k}{\rho}}\right)
+	$$
+	since $G_t = H_{k, \Delta}(A_t,B_t)$ for all $t$, where $\Delta = \floor{\frac{1}{\rho}} = \Theta\left(\frac{1}{\rho}\right)$ by the definition of the dynamic network. Hence 
+	$$
+		\min \left\{T : \sum_t^T \Phi(G_t)\rho(G_t) \geq C \log n \right\}
+		=
+		\frac{\mathcal{O}(\log n)}{\Theta\left(\frac{1}{n \rho + \frac{k}{\rho}}\right)}
+		= 
+		\mathcal{O}\left(\log n \left(n \rho + \frac{k}{\rho}\right)\right)
+	$$
+	% TODO: Resolve k -> 0 log n -> +inf -> (check multaplicitve difference between log n from upper bound and 1/k for lower bound)
 	% 		- why choice of log n / log log n for k?
+\end{proof}
+
+Now we verify that the upper bound is tight by computing a lower bound on the spreading time for a $\rho$-diligent dynamic network that holds with high probability.
+
+% TODO: Talk about restrictions on rho and k later?
+\begin{theorem}
+	With high probability, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at least 
+	$$
+		\Omega\left(\frac{n \rho}{k}\right)
+	$$
+\end{theorem}
+
+\begin{proof}
+	
 \end{proof}
