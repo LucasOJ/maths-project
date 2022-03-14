@@ -54,7 +54,7 @@ In this section, we prove that the upper bound derived in Section \ref{AsyncUppe
 
 \end{definition}
 
-We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary permutations of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_k(A,B)$ as a single graph as all graphs in the family are isomorphic, and thus have the same structural properties needed for the proof. % TODO: Remove this paragraph? premature?
+We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary sets of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_k(A,B)$ as a single graph as all graphs in the family have the same structural properties required for the proof. % TODO: Remove this paragraph? premature?
 
 \begin{definition}
 	$\rho$-diligent Dynamic Network
@@ -135,7 +135,7 @@ First we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading
 		= 
 		T \Theta\left(\frac{1}{n \rho + \frac{k}{\rho}}\right)
 	$$
-	since $G_t = H_{k, \Delta}(A_t,B_t)$ for all $t$, where $\Delta = \floor{\frac{1}{\rho}} = \Theta\left(\frac{1}{\rho}\right)$ by the definition of the dynamic network. Hence 
+	since $G_t = H_{k, \Delta}(A_t,B_t)$ for all $t$, where $\Delta = \ceil{\frac{1}{\rho}} = \Theta\left(\frac{1}{\rho}\right)$ by the definition of the dynamic network. Hence 
 	$$
 		\min \left\{T : \sum_t^T \Phi(G_t)\rho(G_t) \geq C \log n \right\}
 		=
@@ -149,6 +149,57 @@ First we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading
 
 Now we verify that the upper bound is tight by computing a lower bound on the spreading time for a $\rho$-diligent dynamic network that holds with high probability.
 
+First we prove a lemma about the spread of the rumour down the chain of bipartite graphs.
+
+\begin{lemma}
+	Suppose we spread a rumour according to Algorithm \ref{NodeCentricAsyncAlgorithm} on $G = H_{k, \Delta}(A,B)$ for some $A, B$ with $\Delta = \ceil{\frac{1}{\rho}}$. Assume that every node in $S_0$ is aware of the rumour, and no node in $B$ is informed. Then the probability that at least one node of $S_k$ is informed after a unit length of time is at most
+	$$
+		\frac{2^k}{k!}\ceil{\frac{1}{\rho}}
+	$$	
+\end{lemma}
+
+\begin{proof}
+	% TODO: Introduce two-push algorithm
+	Let $I_i(\gamma)$ denote the number of informed nodes in $S_i$ at time $\gamma \in [0,1]$. 
+	% Note that, by assumption, we have that $I_0(\gamma) = |S_0| = \Delta$ for all $\gamma \in [0,1]$. 
+
+	We prove the claim by induction on $m$. % TODO: Change "claim" wording to be more specific - talking about expectation
+
+	\underline{Base Case.} $\mathbb{E}I_1(\tau) \leq 2 \tau \Delta$
+
+	Since each node in $S_0$ is aware of the rumour, each of the $\Delta^2$ edges from $S_0$ to $S_1$ is pushing the rumour forward at rate $\frac{2}{\Delta}$ for all times $\gamma \in [0,1]$. Thus, by the superposition property of Poisson processes, the overall rate at which the rumour is pushed from $S_0$ to any node of $S_1$ is $\frac{2}{\Delta}\Delta^2 = 2\Delta$. Let $N_1(\tau)$ denote the number of times a node of $S_1$ is informed of the rumour in the interval $[0,\tau]$ (even if it already knew the rumour). By the theory of Poisson processes, $N_1(\tau)$ is distributed according to a Poisson distribution with mean $2\tau\Delta$. Note $I_i(\tau) \leq N_1(\tau)$ since the same nodes of $S_1$ may be contacted multiple times. Hence $\mathbb{E}I_1(\tau) \leq \mathbb{E}N_1(\tau) = 2\tau\Delta$ as required.
+	
+	\underline{Inductive Case.} $\mathbb{E}I_k(\tau) \leq \frac{2^k \tau^k}{k!}\Delta$
+
+	Assume that for all $m \leq k - 1$ and $\gamma \in [0,1]$, $\mathbb{E}I_m(\gamma) \leq \frac{2^m \gamma^m}{m!}\Delta$ holds.
+	By the tower law,
+	$$
+		\mathbb{E}I_k(\tau) = \mathbb{E}\mathbb{E}[I_k(\tau) |I_{k-1}(\gamma), \gamma \in [0, \tau]] % TODO: [0, \tau] or [0,1] like in the paper
+	$$
+	As in the base case, let $N_k(\tau)$ denote the number of times a node in $S_k$ is informed of the rumour in the interval $[0, \tau]$. Since $I_k(\tau) \leq N_k(\tau)$,
+	$$
+		\mathbb{E}[I_k(\tau) |I_{k-1}(\gamma), \gamma \in [0, 1]] \leq \mathbb{E}[N_k(\tau) |I_{k-1}(\gamma), \gamma \in [0, \tau]]
+	$$
+	At time $\gamma \in [0,1]$, there are $I_{k-1}(\gamma)$ nodes aware of the rumour in $S_{k-1}$, and pushing the rumour down each of their $\Delta$ edges to $S_k$. Since each of these edges pushes the rumour according to a Poisson process of rate $\frac{2}{\Delta}$, by the superposition of Poisson processes the nodes of $S_{k-1}$ inform the nodes of $S_k$ according to a Poisson processes of rate $\frac{2}{\Delta}I_{k-1}(\gamma)\Delta = 2 I_{k-1}(\gamma)$.
+	Thus, $N_k(\tau)|(I_{k-1}(\gamma), \gamma \in [0, \tau])$ is an inhomogeneous Poisson process, where the value of the rate function at time $\gamma$ is $2 I_{k-1}(\gamma)$. By % TODO: CITE HOMOGENEOUS THEOREM
+	, 
+	\begin{align*}
+		\mathbb{E}[N_k(\tau)|I_{k-1}(\gamma), \gamma \in [0, \tau]] &= \mathbb{E}\int_0^\tau 2 I_{k-1}(\gamma) d\gamma \\
+		&= 2 \int_0^\tau \mathbb{E}I_{k-1}(\gamma) d\gamma \\ % TODO: How can we swap integral and expectation? Fubinis theorem since I_{k-1}(\gamma) \leq \Delta
+		& \leq 2 \int_0^\tau \frac{2^{k-1} \gamma^{k-1}}{(k-1)!} \Delta d\gamma \\
+		& \text{by the induction hypothesis}\\
+		\\
+		& = \frac{2^k \tau^k}{k!} \Delta
+	\end{align*}
+	Hence 
+	$$
+		\mathbb{E}I_k(\tau) \leq \mathbb{E}\frac{2^k \tau^k}{k!}\Delta = \frac{2^k \tau^k}{k!}\Delta
+	$$
+
+	% TODO: Prove choice of k and wrap up
+\end{proof}
+
+
 % TODO: Talk about restrictions on rho and k later?
 \begin{theorem}
 	With high probability, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at least 
@@ -157,6 +208,6 @@ Now we verify that the upper bound is tight by computing a lower bound on the sp
 	$$
 \end{theorem}
 
-\begin{proof}
-	
+\begin{proof} 
+	Let $T_0$ be the first time that all the nodes of $S_0$ are aware of the rumour. To simplify our analysis, suppose that we are at time $T_0$, hence for all remaining time steps we can assume that every node in $S_0$ is aware of the rumour.
 \end{proof}
