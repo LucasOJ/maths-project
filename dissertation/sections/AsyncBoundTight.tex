@@ -6,7 +6,8 @@ In this section, we prove that the upper bound derived in Section \ref{AsyncUppe
 \begin{definition}\label{def:HkAB}
  	Graph $H_k(A,B)$
 
-	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\frac{n}{4} \leq |A| \leq \frac{3n}{4}$. Let B denote $V \setminus A$. Let $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ be arbitrary positive integers. We construct the graph $H_k(A,B)$ on the vertex set $V$ using the following steps
+	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\frac{n}{4} \leq |A| \leq \frac{3n}{4}$. % TODO: Reconsile floors and ceilings on bounds, want that B_0 > 3n/4 
+	Let B denote $V \setminus A$. Let $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ be arbitrary positive integers. We construct the graph $H_k(A,B)$ on the vertex set $V$ using the following steps
 
 	% TODO: Can we adjust k and delta slightly to work for k-regualr ends? 
 
@@ -62,7 +63,8 @@ We note that Definition \ref{def:HkAB} technically specifies a family of graphs,
 	First we define the sequences of node subsets $(A_t)_{t\geq 0}$ and $(B_t)_{t\geq0}$ with $A_t, B_t \subseteq V$ for all $t$. For each $t$, we construct $A_t$ and $B_t$ such that they partition $V$ into two subsets, as follows:
 
 	Let $A_0$ be an arbitrary subset of $V$ of size $\ceil{\frac{n}{4}}$ containing the first node to be aware of the rumour. % TODO: Any problem with ceiling function?
-	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$. Let $A_{t+1} = V \setminus A_t$, i.e. the set of nodes that were either in $A_0$ or informed of the rumour by round $t+1$.
+	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$. % TODO: Have we defined what I_t is?
+	Let $A_{t+1} = V \setminus A_t$, i.e. the set of nodes that were either in $A_0$ or informed of the rumour by round $t+1$.
 
 	Now we can define the dynamic network $\rho$-diligent Dynamic Network $\mathcal{G}(n, \rho) = (G_t)_{t\geq 0}$ itself. 
 	% TODO: Check sequnce notation consistent, 0 not in N
@@ -151,7 +153,7 @@ Now we verify that the upper bound is tight by computing a lower bound on the sp
 
 First we prove a lemma about the spread of the rumour down the chain of bipartite graphs.
 
-\begin{lemma}
+\begin{lemma}\label{lemma:H_k,DeltaABOneStep}
 	Suppose we spread a rumour according to Algorithm \ref{NodeCentricAsyncAlgorithm} on $G = H_{k, \Delta}(A,B)$ for some $A, B$ with $\Delta = \ceil{\frac{1}{\rho}}$. Assume that every node in $S_0$ is aware of the rumour, and no node in $B$ is informed. Then the probability that at least one node of $S_k$ is informed after a unit length of time is at most
 	$$
 		\frac{2^k}{k!}\ceil{\frac{1}{\rho}}
@@ -167,7 +169,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 
 	\underline{Base Case.} $\mathbb{E}I_1(\tau) \leq 2 \tau \Delta$
 
-	Since each node in $S_0$ is aware of the rumour, each of the $\Delta^2$ edges from $S_0$ to $S_1$ is pushing the rumour forward at rate $\frac{2}{\Delta}$ for all times $\gamma \in [0,1]$. Thus, by the superposition property of Poisson processes, the overall rate at which the rumour is pushed from $S_0$ to any node of $S_1$ is $\frac{2}{\Delta}\Delta^2 = 2\Delta$. Let $N_1(\tau)$ denote the number of times a node of $S_1$ is informed of the rumour in the interval $[0,\tau]$ (even if it already knew the rumour). By the theory of Poisson processes, $N_1(\tau)$ is distributed according to a Poisson distribution with mean $2\tau\Delta$. Note $I_i(\tau) \leq N_1(\tau)$ since the same nodes of $S_1$ may be contacted multiple times. Hence $\mathbb{E}I_1(\tau) \leq \mathbb{E}N_1(\tau) = 2\tau\Delta$ as required.
+	Since each node in $S_0$ is aware of the rumour, each of the $\Delta^2$ edges from $S_0$ to $S_1$ is pushing the rumour forward at rate $\frac{2}{\Delta}$ for all times $\gamma \in [0,1]$. Thus, by the superposition property of Poisson processes, the overall rate at which the rumour is pushed from $S_0$ to any node of $S_1$ is $\frac{2}{\Delta}\Delta^2 = 2\Delta$. Let $N_1(\tau)$ denote the number of times any node of $S_1$ is informed of the rumour in the interval $[0,\tau]$ (even if it already knew the rumour). By the theory of Poisson processes, $N_1(\tau)$ is distributed according to a Poisson distribution with mean $2\tau\Delta$. Note $I_i(\tau) \leq N_1(\tau)$ since the same nodes of $S_1$ may be contacted multiple times. Hence $\mathbb{E}I_1(\tau) \leq \mathbb{E}N_1(\tau) = 2\tau\Delta$ as required.
 	
 	\underline{Inductive Case.} $\mathbb{E}I_k(\tau) \leq \frac{2^k \tau^k}{k!}\Delta$
 
@@ -208,6 +210,46 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	$$
 \end{theorem}
 
+% TODO: Interesting dependence on diligence -> higher diligence = longer to spread?
+
 \begin{proof} 
-	Let $T_0$ be the first time that all the nodes of $S_0$ are aware of the rumour. To simplify our analysis, suppose that we are at time $T_0$, hence for all remaining time steps we can assume that every node in $S_0$ is aware of the rumour.
+	Let $T_0$ be the first time that all the nodes of $S_0$ are aware of the rumour. To simplify our analysis, suppose that we are at time $T_0$, hence for all remaining time steps we can assume that every node in $S_0$ is aware of the rumour. % TODO: Check this - we choose S_0 artibitratily, instead consider first time all nodes of A are aware of the rumour? (changes size of B?)
+
+	By the definition of a $\rho$-diligent network, at time $t=0$  we have that all the informed nodes are located in $A_0$, and no node of $B_0$ knows the rumour. Thus, by Lemma \ref{lemma:H_k,DeltaABOneStep}, with high probability at time $t = 1$, no node of $S_k$ is informed of the rumour. Since the only way the rumour can reach the node set $G_B = B \setminus \bigcup_{i=1}^k S_i$ is through $S_k$ (see Figure \ref{fig:HkAB_3}), we can conclude that with high probability after the first time step no node of $G_B$ is aware of the rumour. Equivalently we can say that the set of nodes $B_0 \cap I_1 \subseteq \bigcup_i^k S_i$, i.e. all nodes of $B_0$ that are aware of the rumour after one time step are confined to the set of $S_i$s in $G_1$. Hence, 
+	\begin{equation}\label{eq:firstStepinfectedNodesOfB}
+		|B_0 \cap I_1| \leq \left|\bigcup_{i=1}^k S_i\right| = k\Delta
+	\end{equation}
+	since each of the $k$ disjoint node sets $S_i$ have size $\Delta$. Since $B_1 = B_0 \setminus I_1$
+	$$
+		|B_1| = |B_0 \setminus I_1| = |B_0| - |B_0 \cap I_1| \geq \frac{3n}{4} - k\Delta
+	$$ % TODO: Corrected typo above
+	where the final inequality holds due to inequality (\ref{eq:firstStepinfectedNodesOfB}) and the fact that $|B_0| \geq \frac{3n}{4}$. 
+	% TODO: Mention S, G_A, G_B different each timestep - chosen arbitrarily
+
+	We now repeat this analysis for the first $\frac{n}{4k\Delta}$ time steps, by first showing that with high probability no node in $S_k$ is made aware of the rumour in the first $\frac{n}{4k\Delta}$ time steps. Let $\mathcal{A}_t$ denote the event that in time step $t$ some node in $S_k$ is made aware of the rumour. Note that the event 
+	$$\mathcal{A} = \left\{S_k \text{ is informed of the rumour any time step } t \leq \frac{n}{4k\Delta} \right\} = \bigcup_{t=1}^\frac{n}{4k\Delta} \mathcal{A}_t
+	$$
+	hence by the union bound and Lemma \ref{lemma:H_k,DeltaABOneStep},
+	$$
+		\mathbb{P}(\mathcal{A}) 
+		\leq \sum_{t=1}^\frac{n}{4k\Delta} \mathbb{P}(A_t) 
+		\leq \frac{n}{4k\Delta}n^{-c}
+		= \frac{n^{1-c}}{4k\Delta} \leq n^{1-c}
+	$$
+	as $k, \Delta \geq 1$. Since $c > 1$ % TODO: Introduce this restriction earlier
+	we have that with high probability in the first $\frac{n}{4k\Delta}$ time steps the rumour does not reach $S_k$. 
+
+	Thus, for $m \leq \frac{n}{4k\Delta}$ we can repeat the previous analysis inductively as follows % TODO: Rephrase this
+	$$
+		|B_m| = |B_{m-1} \setminus I_m| \geq \frac{3n}{4} - (m-1)k\Delta - k\Delta = \frac{3n}{4} - mk\Delta
+	$$
+	Note that for $m = \frac{n}{4k\Delta}$, we get that 
+	$$
+		|B_m| \geq \frac{3n}{4} - \frac{nk\Delta}{4k\Delta} = \frac{n}{2}
+	$$
+	Thus, with high probability after $\frac{n}{4k\Delta}$ time steps, there are still at least $\frac{n}{2}$ nodes who are not aware of the rumour (since no node in $B_i$ is aware of the rumour at the beginning of each time step by construction). Hence, we can conclude the algorithm takes at least 
+	$$
+		\Omega\left(\frac{n}{4k\Delta}\right) = \Omega\left(\frac{n\rho}{k}\right)
+	$$
+	time to spread the rumour to all nodes of $\mathcal{G}(n, \rho)$, where $\Delta = \ceil{\frac{1}{\rho}}$
 \end{proof}
