@@ -10,9 +10,7 @@ Now we are ready to define our first asynchronous algorithm for rumour spreading
 \label{NodeCentricAsyncAlgorithm}
 
 \noindent
-An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds. Initially a single node is aware of the rumour. In round $t$, each node aware of the rumour is associated with a unit rate exponential clock. When the of clock of an informed node $u$ ticks, another node $v$ is selected uniformly at random from the set of neighbouring nodes in $G_t$. $u$ then instantaneously informs $v$ of the rumour if $v$ was not already informed. Each round lasts for a unit time. % TODO: Change final line
-
-% TODO: This is wrong - push and pull model
+An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds. Initially a single node is aware of the rumour. In round $t$, each node is associated with a unit rate exponential clock. When the clock of an informed node $u$ ticks, another node $v$ is selected uniformly at random from the set of neighbouring nodes in $G_t$. $u$ then instantaneously informs $v$ of the rumour if $v$ was not already informed (PUSH). Similarly, when the clock of an uniformed node ticks, it chooses one of its neighbours uniformly at random, and becomes aware of the rumour if the chosen neighbour is an informed node. Each round lasts for a unit time. % TODO: Change final line
 
 % TODO: DEFINE 'UNIT RATE CLOCK' and how it functions (eg what happens after infomed a node)
 
@@ -50,9 +48,9 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 
 % TODO: Exposition about interpretation here, dependeces (ie what is m(t) dependent on? et)
 
-At first sight, it may be difficult to identify the relationship that this lemma expresses, so we first explore the implications of the result before moving to the proof.
+At first sight, it may be difficult to identify the relationship that this lemma expresses, so we first explore the implications of the result, before moving to the proof.
 
-When less than half of the nodes are informed of the rumour, we can interpret $\tau'$ as the first time at which the number of informed nodes increases by a half, compared to number of informed nodes at time $\tau$. In this case $|I_{\tau'}| \approxeq \frac{3}{2} |I_\tau|$. Conversely, when more than half of the nodes are informed, $\tau'$ is the first time at which the set of uniformed nodes shrinks in size by a half, i.e $|U_{\tau'}| \approxeq \frac{|U_\tau|}{2}$. Thus, the random quantity of interest $\tau'-\tau$ is the amount of time it takes for the number of informed nodes to expand by a multiplicative factor, from time $\tau$. 
+When less than half of the nodes are aware of the rumour, we can interpret $\tau'$ as the first time at which the number of informed nodes increases by a half, compared to number of informed nodes at time $\tau$. In this case $|I_{\tau'}| \approxeq \frac{3}{2} |I_\tau|$. When more than half of the nodes are informed, $\tau'$ is the first time at which the set of uniformed nodes shrinks in size by a half, i.e $|U_{\tau'}| \approxeq \frac{|U_\tau|}{2}$. Thus, the random quantity of interest $\tau'-\tau$ is the amount of time it takes for the number of informed nodes to expand by a multiplicative factor, from time $\tau$. 
 
 In the lemma we are interested in the event that this time exceeds $\Delta(\alpha) + 2$. 
 The  $+2$ arises from technicalities in the proof, however the $\Delta(\alpha)$ term reveals a relationship between to the rate at which the set of informed nodes expands, and the connectivity of the dynamic network. % TODO: Change the end of this sentance?
@@ -65,10 +63,10 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 \begin{proof}
 	Fix a time $\gamma \in [\tau, \tau')$. 
 	We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. 
-	For every $\{u, v\} \in E(I_\gamma, U_\gamma)$, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_u(\gamma)}$ % TODO: Why does this hold?
-	Thus the time until the first uniformed node is made aware of the rumour has an exponential distribution of rate % TODO: Why does this hold
+	Let $\{u, v\} \in E(I_\gamma, U_\gamma)$. By the thinning property of Poisson processes, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_u(\gamma)}$. Similarly, node $v$ pulls the rumour from $u$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$. % TODO: Why does this hold?
+	Thus, by the superposition property of Poisson processes, the time until the first uniformed node is made aware of the rumour has an exponential distribution of rate % TODO: Why does this hold
 	$$
-		\lambda(\gamma) = \sum_{\{u, v\} \in E(I_\gamma, U_\gamma)} \frac{1}{d_u(\gamma)}
+		\lambda(\gamma) = \sum_{\{u, v\} \in E(I_\gamma, U_\gamma)} \frac{1}{d_u(\gamma)} + \frac{1}{d_v(\gamma)}
 	$$
 	% TODO: DIAGRAM HERE LABELLED WITH RATES
 	Let $S = I_\gamma$ if $\text{vol}(I_\gamma) \leq \text{vol}(I_\gamma)$, otherwise let $S = U_\gamma$. Then,
@@ -136,7 +134,8 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		\lambda(\gamma) \geq \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2}
 	\end{equation}
 
-	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
+	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. % TODO: Is this a poisson proccess? Independent increments
+	Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
 
 
 	By [CITE INHOMOGENOUS THEROEM], $N(\tau + \Delta(\alpha) + 2)$ has a Poission distribution with rate $\Lambda(\tau + \Delta(\alpha) + 2)$, where
@@ -148,7 +147,7 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		& = \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \lambda(\gamma) d\gamma \\
 		& \text{by splitting the integral into unit length intervals } \\
 		& \\
-		& = \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2} d\gamma \\
+		& \geq \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2} d\gamma \\
 		& \text{by applying Inequality } \ref{eq:RateBound} \\
 		& \\
 		& = \sum_{k=0}^{\Delta(\alpha)} \rho(G_{\ceil\tau + k})\Phi(G_{\ceil\tau + k})\frac{m(\tau)}{2} \\
@@ -184,7 +183,7 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	$$
 		\mathbb{P}(Y \leq \frac{r}{2}) \leq e^{-cr}
 	$$
-	where $c$ is the constant defined in the statement of the theorem.
+	where $c$ is the constant defined in the statement of Lemma \ref{AsyncIncreaseLemma}.
 
 	\noindent
 	\textit{Proof of Claim}
@@ -271,10 +270,10 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 
 	\textbf{Second Phase.} The second phase starts at $t_\text{half}$, when at least $\frac{n}{2}$ nodes have been made aware of the rumour. The phase ends at the first time all nodes are aware of the rumour, which we denote $t_\text{all}$. We again divide up the phase into intervals $[\tau_j, \tau_{j+1}]$, where $\tau_0 = t_\text{half}$ and $\tau_{j+1} = \tau_j'$ as in the first phase.
 
-	Note that since the number of informed nodes is at least $\frac{n}{2}$ during this is phase, the number of uniformed nodes is at most $\frac{n}{2}$. Thus for $\tau > t_\text{half}$, $m(\tau) = |U_\tau|$. Using this fact, we prove $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$ by induction.
+	Note that since the number of informed nodes is at least $\frac{n}{2}$ during this is phase, the number of uninformed nodes is at most $\frac{n}{2}$. Thus for $\tau > t_\text{half}$, $m(\tau) = |U_\tau|$. Using this fact, we prove $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$ by induction.
 
 	\underline{Base Case.}
-	From the definition of $t_\text{half}$, $|I_{\tau_0}| = |I_{t_\text{half}}| \geq \frac{n}{2}$, so $|U_{\tau_0}| \leq n(\frac{1}{2})^{0+1}$.
+	From the definition of $t_\text{half}$, $|I_{\tau_0}| = |I_{t_\text{half}}| \geq \frac{n}{2}$, so $|U_{\tau_0}| \leq \frac{n}{2}$.
 
 	\underline{Inductive Case.} Suppose $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$. Note that since $|I_\tau| + |U_\tau| = n$, we have that $|I_{\gamma}| \geq |I_\tau| + \frac{m(\tau)}{2} \iff |U_\gamma| \leq |U_\tau| - \frac{m(\tau)}{2}$. Hence by the defintion of $\tau_j'$,
 	\begin{align*}

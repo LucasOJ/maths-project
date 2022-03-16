@@ -1,28 +1,28 @@
 \section{Proof that the asynchronous rumour spreading time bound is almost tight}
 \label{section:AsyncLowerBound}
 
-In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is tight, by constructing an example where the spread time is close to the bound with high probability.
+In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is tight, by constructing an example of a dynamic network where the spread time is close to the bound with high probability.
 
 \begin{definition}\label{def:HkAB}
- 	Graph $H_k(A,B)$
+ 	Graph $H_{k, \Delta}(A,B)$
 
-	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\frac{n}{4} \leq |A| \leq \frac{3n}{4}$. % TODO: Reconsile floors and ceilings on bounds, want that B_0 > 3n/4 
-	Let B denote $V \setminus A$. Let $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ be arbitrary positive integers. We construct the graph $H_k(A,B)$ on the vertex set $V$ using the following steps
+	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\floor{\frac{n}{4}} \leq |A| \leq \ceil{\frac{3n}{4}}$. % TODO: Reconsile floors and ceilings on bounds, want that B_0 > 3n/4, floor n/4 cieling 3n/4?
+	Let B denote $V \setminus A$. The positive integers $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ are fixed. We construct the graph $H_{k, \Delta}(A,B)$ on the vertex set $V$ using the following steps
 
 	% TODO: Can we adjust k and delta slightly to work for k-regualr ends? 
 
-	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$ and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in Figure \ref{fig:HkAB_1}.
+	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$, and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in Figure \ref{fig:HkAB_1}.
 
 	%TODO: Graph after step 1 
 
     \begin{figure}[h]
         \centering
         \input{figures/HkAB_1.tex}
-        \caption{Construction of $H_k(A,B)$ after Step 1}
+        \caption{Construction of $H_{k, \Delta}(A,B)$ after Step 1}
         \label{fig:HkAB_1}
     \end{figure}
     
-	\textit{Step 2.} Let $G_A$ be an arbitrary m-regular %TODO: Fill in once decided on ending graphs
+	\textit{Step 2.} Let $G_A$ be an arbitrary m-regular % TODO: Fill in once decided on ending graphs
 	graph on $A \setminus S_0$ such that $\Phi(G_A) = \Theta(1)$. %TODO: remove this??
 
 	% TODO: m-regular graph 
@@ -42,12 +42,12 @@ In this section, we prove that the upper bound derived in Section \ref{AsyncUppe
 
 
 	\textit{Step 3.} Let $G_B$ be an arbitrary m-regular graph on $B \setminus \bigcup_{i=1}^k S_i$ such that $\Phi(G_B) = \Theta(1)$. 
-	We generate $G_B$ using the same construction as in Step 2. We then connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_k(A,B)$ illustrated in Figure \ref{fig:HkAB_3}.
+	We generate $G_B$ using the same construction as in Step 2. We then connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_{k, \Delta}(A,B)$ illustrated in Figure \ref{fig:HkAB_3}.
 
     \begin{figure}[h]
         \centering
         \input{figures/HkAB_3.tex}
-        \caption{Construction of $H_k(A,B)$ after Step 3}
+        \caption{Construction of $H_{k, \Delta}(A,B)$ after Step 3}
         \label{fig:HkAB_3}
     \end{figure}
 
@@ -55,14 +55,16 @@ In this section, we prove that the upper bound derived in Section \ref{AsyncUppe
 
 \end{definition}
 
-We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary sets of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_k(A,B)$ as a single graph as all graphs in the family have the same structural properties required for the proof. % TODO: Remove this paragraph? premature?
+We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary sets of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_{k, \Delta}(A,B)$ as a single graph as all graphs in the family have the same structural properties required for the proof, so we can choose any of them. % TODO: Remove this paragraph? premature?
+
+Using $H_{k, \Delta}(A,B)$, we now construct the following dynamic network for which Theorem \ref{theorem:AsyncUpperBound} is tight.
 
 \begin{definition}
 	$\rho$-diligent Dynamic Network
 	
 	First we define the sequences of node subsets $(A_t)_{t\geq 0}$ and $(B_t)_{t\geq0}$ with $A_t, B_t \subseteq V$ for all $t$. For each $t$, we construct $A_t$ and $B_t$ such that they partition $V$ into two subsets, as follows:
 
-	Let $A_0$ be an arbitrary subset of $V$ of size $\ceil{\frac{n}{4}}$ containing the first node to be aware of the rumour. % TODO: Any problem with ceiling function?
+	Let $A_0$ be an arbitrary subset of $V$ of size $\floor{\frac{n}{4}}$ containing the first node to be aware of the rumour. % TODO: Any problem with ceiling function?
 	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$. % TODO: Have we defined what I_t is?
 	Let $A_{t+1} = V \setminus A_t$, i.e. the set of nodes that were either in $A_0$ or informed of the rumour by round $t+1$.
 
@@ -73,10 +75,10 @@ We note that Definition \ref{def:HkAB} technically specifies a family of graphs,
 
 	Let $\Delta = \ceil{\frac{1}{\rho}}$, and $k = \mathcal{O}(\log n / \log \log n)$.
 	Let $G_t = H_{k, \Delta}(A_t, B_t)$ while $|B_t| \geq \frac{n}{4}$. Note that since $\Delta = \mathcal{O}(\sqrt{n})$ by the definition of $H_{k, \Delta}(A,B)$, we must have that $\rho = \Omega\left(\frac{1}{\sqrt{n}}\right)$.
-	Note also that $|B_t|$ is decreasing in $t$ since $B_t$ is a subset of the uniformed nodes at time $t$, so at some time step $l$ we have that $|B_l| < \frac{n}{4}$. For all time steps $t \geq l$, let $G_{t+1} = G_t$, since we cannot construct $H_\Delta(A,B)$ if $|B| < \frac{n}{4}$ as this would imply $|A| = |\comp{B}| > \frac{3n}{4}$. % TODO: Reword ending$
+	Note also that $|A_t|$ is increasing in $t$ since $A_t$ is a superset of the informed nodes at time $t$, so there may be some time step $l$ where $|A_l| > \ceil{\frac{3n}{4}}$. Thus, for all time steps $t \geq l$, we cannot construct $H_{k, \Delta}(A_t,B_t)$. Hence, for all $t \geq l$, let $G_{t+1} = G_t$.
 \end{definition}
 
-First we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network.
+In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network.
 
 \begin{theorem}
 	With high probability, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at most 
