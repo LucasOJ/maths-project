@@ -295,9 +295,34 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	Since $m(\tau_j) = |U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$.
 
 \end{proof}
-\subsection{Interpretation}
+
+In Theorem \ref{theorem:AsyncUpperBound}, we have successfully generalized standard results about the rumour spreading time to dynamic networks. Indeed, by using Theorem \ref{theorem:AsyncUpperBound} we can recover a standard result about rumour spreading on static networks. If we let $G_t = G$ for all $t$ (i.e. a static network), by Theorem \ref{theorem:AsyncUpperBound} the rumour spreading time $T$ satisfies 
+\begin{align*}
+	T &= \min \left\{t : \sum_{k=0}^t \Phi(G)\rho(G) \geq C \log n \right\} \\
+	&= \min \left\{t : t \Phi(G)\rho(G) \geq C \log n \right\}  \\
+	&= \min \left\{t : t \geq \frac{C \log n}{\Phi(G)\rho(G)}\right\}  \\
+	&= \mathcal{O}\left(\frac{\log n}{\Phi(G)\rho(G)}\right)
+\end{align*}
+with high probability. This result is almost identical to a standard result for rumour spreading on static networks.  % TODO: CITE https://people.maths.bris.ac.uk/~maajg/teaching/complexnets/rumours.pdf
+
+% TODO: "however, the real stregth comes from dynamic networks"
+
+% TODO: THIS IS A BIT OF A JUMP, SANITY CHECK?
+Theorem \ref{theorem:AsyncUpperBound} also expresses the relationship between success probability of the bound, and the size of the bound. We recall that the failure probability of the bound is $\mathcal{O}\left(\log(n) e^{-c \log(n)}\right)$, where $c$ is a chosen constant greater than 1. % TODO: Check greater than 1 constraint
+We also note that the constant $C$ in Theorem \ref{theorem:AsyncUpperBound} is monotone increasing in $c$. The greater $C$ is, the more terms of the summation will be required to exceed $C \log n$, which will yield a larger bound. Thus, the intuitive idea that the greater the success probability of the bound, the larger the bound needs to be holds.
+
+% BENEFITS
+
+% DRAWBACKS
+% CAN'T GET EXPLICIT RESULTS
+% - CONSTANT CASE
+% NOT DEPENDENT ON ADVERSARIAL REARRANGEMENTS (invariant on relabelling)
+% NOT VERY TIGHT IN GENERAL -> HOW CAN WE BE SURE IT GIVES THE CORRECT SCALING? 
+% Sequence needs to be known ahead of time - strong restriction
+
+% IN NEXT SECTION WE WILL SEE IT'S ALMOST TIGHT IN SCALING
+
  
-% TODO: TODAY C monotone in c -> tighter bound takes longer
 % TODO: TODAY How does diligence affect bound?
 
 \begin{enumerate}
