@@ -1,7 +1,7 @@
 \section{Proof that the asynchronous rumour spreading time bound is almost tight}
 \label{section:AsyncLowerBound}
 
-In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is tight, by constructing an example of a dynamic network where the spread time is close to the bound with high probability.
+In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is almost tight up to scaling in $n$, by constructing an example of a dynamic network where the spread time is close to the bound with high probability.
 
 \begin{definition}\label{def:HkAB}
  	Graph $H_{k, \Delta}(A,B)$
@@ -153,7 +153,7 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 
 Now we verify that the upper bound is tight by computing a lower bound on the spreading time for a $\rho$-diligent dynamic network that holds with high probability.
 
-First we prove a lemma about the spread of the rumour down the chain of bipartite graphs.
+First we prove a lemma about the spread of the rumour down the chain of bipartite subgraphs in $H_{k, \Delta}(A,B)$.
 
 \begin{lemma}\label{lemma:H_k,DeltaABOneStep}
 	Suppose we spread a rumour according to Algorithm \ref{NodeCentricAsyncAlgorithm} on $G = H_{k, \Delta}(A,B)$ for some $A, B$ with $\Delta = \ceil{\frac{1}{\rho}}$. Assume that every node in $S_0$ is aware of the rumour, and no node in $B$ is informed. Then the probability that at least one node of $S_k$ is informed after a unit length of time is at most

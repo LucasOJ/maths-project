@@ -106,9 +106,10 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 		T_i - T_{i-1} = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right) + \mathcal{O}(1) = \mathcal{O}(1)
 	\end{equation}
 	To understand why this bound is weak, and derive a stronger one, we inspect the inequality we assumed in this case. % TODO: link back to this 
-	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since the minimum number of informed nodes after round $T_{i-1}$ is $(1+k_i)h_{i-1}$, we see that the number of informed nodes "jumps" to more than $h_i$ nodes in a single time step. % TODO: Wrong, fix this
+	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since the minimum number of informed nodes after round $T_{i-1}$ is $(1+k_i)h_{i-1}$, we see that the number of informed nodes "jumps" to more than $h_i$ nodes in a single time step. % TODO: Wrong, fix this - are we sure we can do k_i expansion?, if we could to k expansion done in step?
 
-	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, from which we obtain $T_i = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 0. However, using equation (\ref{eq:Weak1StepBound}) to bound even the first increment $T_{i-1}$ to $T_i$ gives the bound of $\mathcal{O}(1)$. We would prefer a much tighter bound, so instead bound the whole jump interval as follows. %TODO: Reprase end of this sentance
+	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, from which we obtain $T_i = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 0. % TODO: hoes does T_i = T_{i+k} => time passed between T_{i-1} = 0?
+	However, using equation (\ref{eq:Weak1StepBound}) to bound even the first increment $T_{i-1}$ to $T_i$ gives the bound of $\mathcal{O}(1)$. We would prefer a much tighter bound, so instead bound the whole jump interval as follows. %TODO: Reprase end of this sentance
 	
 	% TODO: j doesn't exist case
 	Let $j$ be the index such that $h_{j-1} < (1+k_i)h_{i-1} \leq h_j$, i.e the first $j \geq i$ when $T_j \neq T_{i-1}$. % TODO: Check this equivalence

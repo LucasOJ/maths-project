@@ -1,5 +1,7 @@
-\section{Upper bounding the asynchronous rumour spreading time}
+\section{Bounding the asynchronous rumour spreading time}
 \label{AsyncUpperBoundSection}
+
+In this section we define an algorithm for rumour spreading on a dynamic network, and prove a bound on the associated spreading time that holds with high probability. We then investigate how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
 
 \subsection{Introducing the Rumour Spreading Model}
 Now we are ready to define our first asynchronous algorithm for rumour spreading on a given dynamic network.
@@ -18,7 +20,7 @@ An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{
 
 % TODO: Implications of this model
 
-\subsection{Result and Proof}
+\subsection{Proof of the bound}
 
 First we prove a lemma about how long it takes for the number of nodes aware of the rumour to increase by a multiplicative factor. 
 
@@ -63,13 +65,13 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 \begin{proof}
 	Fix a time $\gamma \in [\tau, \tau')$. 
 	We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. 
-	Let $\{u, v\} \in E(I_\gamma, U_\gamma)$. By the thinning property of Poisson processes, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_u(\gamma)}$. Similarly, node $v$ pulls the rumour from $u$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$. % TODO: Why does this hold?
-	Thus, by the superposition property of Poisson processes, the time until the first uniformed node is made aware of the rumour has an exponential distribution of rate % TODO: Why does this hold
+	Let $\{u, v\} \in E(I_\gamma, U_\gamma)$. By the thinning property of Poisson processes, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_u(\gamma)}$. Similarly, node $v$ pulls the rumour from $u$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$. % TODO: Why does this hold? - exposition
+	Thus, by the superposition property of Poisson processes, the time until the first uniformed node is made aware of the rumour has an exponential distribution of rate % TODO: Why does this hold - or minimum of exponentials
 	$$
 		\lambda(\gamma) = \sum_{\{u, v\} \in E(I_\gamma, U_\gamma)} \frac{1}{d_u(\gamma)} + \frac{1}{d_v(\gamma)}
 	$$
 	% TODO: DIAGRAM HERE LABELLED WITH RATES
-	Let $S = I_\gamma$ if $\text{vol}(I_\gamma) \leq \text{vol}(I_\gamma)$, otherwise let $S = U_\gamma$. Then,
+	Let $S = I_\gamma$ if $\text{vol}(I_\gamma) \leq \text{vol}(U_\gamma)$, otherwise let $S = U_\gamma$. Then,
 
 	%TODO: Justify all steps
 	\begin{align*}
@@ -134,7 +136,7 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		\lambda(\gamma) \geq \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2}
 	\end{equation}
 
-	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. % TODO: Is this a poisson proccess? Independent increments
+	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. % TODO: Is this a poisson proccess? Independent increments, rate function defined by realisation but still has independet increments, step talk about step function.
 	Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
 
 
@@ -169,11 +171,11 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	where the final implication holds since by the definition of $\tau'$, if $\tau' \geq \tau + \Delta(\alpha) + 2$ then the number of new nodes informed of the the rumour between time $\tau$ and $\tau + \Delta(\alpha) + 2$ must be less than or equal to $\frac{m(\tau)}{2}$. Hence we have that
 	\begin{align*}
 		\mathbb{P}(\tau' - \tau \geq \Delta(\alpha) + 2) & 
-		\leq \mathbb{P} (N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}) \\ %TODO: Make () brackets large
-		& \leq \mathbb{P}(X \leq \frac{m(\tau)}{2}) \\
+		\leq \mathbb{P}\left(N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}\right) \\
+		& \leq \mathbb{P}\left(X \leq \frac{m(\tau)}{2}\right) \\
 		& \text{since } X \text{ is stochastically dominated by } N(\tau + \Delta(\alpha) + 2) \\
 		& \\
-		& \leq \mathbb{P}(X \leq \frac{\alpha m(\tau)}{2}) \\
+		& \leq \mathbb{P}\left(X \leq \frac{\alpha m(\tau)}{2}\right) \\
 		& \text{since } \alpha \geq 1 \\ % TODO: Check this assumption
 	\end{align*}
 	To finish the proof we prove the following claim
@@ -191,7 +193,7 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\noindent
 	From the definition of the density function of Poisson random variables we have that 
 	\begin{align*}
-		\mathbb{P}(Y \leq \frac{r}{2}) & = e^{-r} \sum_{j=0}^\frac{r}{2} \frac{r^j}{j!} \\ % TODO: Assumes r/2 is integer? 
+		\mathbb{P}(Y \leq \frac{r}{2}) & = e^{-r} \sum_{j=0}^\frac{r}{2} \frac{r^j}{j!} \\ % TODO: Assumes r/2 is integer? - add floor to upper bond of sum
 		& = e^{-r} \sum_{j=0}^\frac{r}{2} \frac{2^j(\frac{r}{2})^j}{j!} \\
 		& \leq e^{-r} \sum_{j=0}^\frac{r}{2} \frac{2^\frac{r}{2}(\frac{r}{2})^j}{j!} \\
 		& \leq e^{-r} e^\frac{r \log 2}{2} \sum_{j=0}^\frac{r}{2} \frac{(\frac{r}{2})^j}{j!} \\
@@ -292,7 +294,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	Let $\beta_j = \ceil{\frac{c \log n}{c_0 n(1/2)^j}}$. % TODO: Are c_0 and C defined? 
 	By Lemma \ref{AsyncIncreaseLemma}, $\Delta(\beta_i) + 2$ is an upper bound for the length of the interval $[\tau_j, \tau_{j+1}]$ 
 	with probability at least $1 - e^{-c_0\beta_j m(\tau_j)}$. %TODO: RESTRICT to i \leq K
-	Since $m(\tau_j) = |U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$.
+	Since $m(\tau_j) = |U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$. % TODO: Need lower bound
 
 \end{proof}
 
@@ -308,8 +310,9 @@ with high probability. This result is almost identical to a standard result for 
 % TODO: "however, the real stregth comes from dynamic networks"
 
 % TODO: THIS IS A BIT OF A JUMP, SANITY CHECK?
-Theorem \ref{theorem:AsyncUpperBound} also expresses the relationship between success probability of the bound, and the size of the bound. We recall that the failure probability of the bound is $\mathcal{O}\left(\log(n) e^{-c \log(n)}\right)$, where $c$ is a chosen constant greater than 1. % TODO: Check greater than 1 constraint
-We also note that the constant $C$ in Theorem \ref{theorem:AsyncUpperBound} is monotone increasing in $c$. The greater $C$ is, the more terms of the summation will be required to exceed $C \log n$, which will yield a larger bound. Thus, the intuitive idea that the greater the success probability of the bound, the larger the bound needs to be holds.
+Theorem \ref{theorem:AsyncUpperBound} also expresses the relationship between the success probability of the bound, and the size of the bound. We recall that the failure probability of the bound is $\mathcal{O}\left(\log(n) e^{-c \log(n)}\right)$, where $c$ is a chosen constant greater than 1. % TODO: Check greater than 1 constraint
+We also note that the constant $C$ in Theorem \ref{theorem:AsyncUpperBound} is monotone increasing in $c$. The greater $C$ is, the more terms will be required for the summation to exceed $C \log n$, which will yield a larger bound. 
+Thus, the intuitive idea that the greater the success probability of the bound, the larger the bound needs to be, holds. % TODO: Reword this sentance
 
 % BENEFITS
 
@@ -333,7 +336,6 @@ We also note that the constant $C$ in Theorem \ref{theorem:AsyncUpperBound} is m
 
 \subsection{Simulations}
 
-TODO 
 
 \begin{enumerate}
 	\item Look at symmetrical graphs (complete, star, ring, path) and evaluate explicit bounds - evaluate tightness in each case with simulations
