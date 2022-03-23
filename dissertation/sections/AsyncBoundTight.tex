@@ -116,7 +116,10 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 	$$
 		\text{vol}(A) = 2 \mathcal{O}(\sqrt{n})^2 + \Theta(n) = \mathcal{O}(n) + \Theta(n) = \Theta(n)
 	$$ % TODO: Check adding theta and O gives theta
-	Since $|A| = \Theta(n)$ by construction we have that the average degree of $A$ $\bar{d}(A) = \frac{\text{vol}(A)}{|A|} = \frac{\Theta(n)}{\Theta(n)} = \Theta(1)$. To compute the diligence of $A$, we now consider the cut set $E(A, \comp{A})$. Since every endpoint of the cut set has degree $2\Delta$, we get that 
+	Since $|A| = \Theta(n)$ by construction we have that the average degree of $A$ satisfies $$
+		\bar{d}(A) = \frac{\text{vol}(A)}{|A|} = \frac{\Theta(n)}{\Theta(n)} = \Theta(1)
+	$$
+	To compute the diligence of $A$, we now consider the cut set $E(A, \comp{A})$. Since every endpoint of the cut set has degree $2\Delta$, we get that 
 	$$
 		\min_{\{u, v\} \in E(A, \comp{A})} \max \left\{ \frac{1}{d_u}, \frac{1}{d_v} \right\} = \frac{1}{2\Delta}
 	$$
@@ -124,8 +127,28 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 	$$
 		\rho(A) = \frac{\bar{d}(A)}{2\Delta} = \Theta\left(\frac{1}{\Delta}\right)
 	$$ 
-	% TODO: Prove no set with lower diligence exists
+	
+	Now we prove that no set with a smaller diligence exists. First note that we increase the degree of each node in $G_A$ by $\Theta(1)$ when joining them to $S_0$ and $S_1$ in Step 2 of the construction of $H_{k, \Delta}(A,B)$. To see this, we observe that the enumeration technique illustrated in Figure \ref{fig:HkAB_2} spreads the $\Delta^2$ additional edges evenly across $G_A$. Thus, the degree increase for an arbitrary node in $G_A$ is at most
+	$$
+		\ceil{\frac{\Delta^2}{|G_A|}}=\frac{\mathcal{O}(n)}{\Theta(n)} = \mathcal{O}(1)
+	$$
+	since $\Delta = \mathcal{O}(\sqrt{n})$ and $|G_A| = \Theta(n)$. 
+	
+	Since by construction, the internal edges in $G_A$ contribute $\Theta(1)$ degree to each node, we have that the degree for an arbitrary node in $G_A$ is $\Theta(1) + \mathcal{O}(1) = \Theta(1)$. As $G_B$ is connected to the string of bipartite graphs in an identical fashion during Step 2, all nodes of $G_B$ also have $\Theta(1)$ degree.  
+	
+	Let $S \subseteq V$ be an arbitrary subset of nodes. Since we have that all nodes in $G_A$ and $G_B$ have degree $\Theta(1)$, the maximum degree of any node in the graph is $2\Delta$. Hence 
 
+	$$
+	\min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\} \geq \frac{1}{2\Delta}
+	$$
+	Since all nodes have at least constant degree, we have that $\comp{d}(S) = \Omega(1)$. Thus 
+	$$
+		\rho(S) 
+		= \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
+		\geq \frac{\Omega(1)}{2\Delta}
+		= \Omega\left(\frac{1}{\Delta}\right)
+	$$
+	Thus, since no subset of nodes exists with a lower diligence than the set $A$, our claim holds.
 
 	We can now apply the bound from Theorem \ref{theorem:AsyncUpperBound}, to yield an upper bound on the spreading time of a $\rho$-diligent dynamic network $\mathcal{G}(n, \rho) = (G_t)_{t\geq 0}$. 
 	
@@ -253,5 +276,5 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	$$
 		\Omega\left(\frac{n}{4k\Delta}\right) = \Omega\left(\frac{n\rho}{k}\right)
 	$$
-	time to spread the rumour to all nodes of $\mathcal{G}(n, \rho)$, where $\Delta = \ceil{\frac{1}{\rho}}$
+	time to spread the rumour to all nodes of $\mathcal{G}(n, \rho)$, where $\Delta = \ceil{\frac{1}{\rho}}$.
 \end{proof}
