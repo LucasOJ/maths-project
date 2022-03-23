@@ -4,6 +4,12 @@ from discrete_simulations import one_neighbor_spread_function, spread_discrete_r
 from graph_generators import generate_ER_graph
 import numpy as np
 import matplotlib.pylab as plt
+from continuous_simulations import spread_continuous_rumour
+
+
+import networkx as nx
+from networkx import Graph
+
 
 from edge_expansion_simulation import spread_unit_edges_continuous_rumour
 from display_simulations import display_simulation
@@ -17,9 +23,18 @@ print("STARTED SIMULATION")
 
 # ax.hist(run_length, bins=40)
 
-events = spread_unit_edges_continuous_rumour(generate_ER_graph, 50, 0)
+# events = spread_unit_edges_continuous_rumour(generate_ER_graph, 50, 0)
 
-display_simulation(events)
+def ring_generator(number_of_nodes, timestep, informed_nodes) -> Graph:
+    return nx.cycle_graph(number_of_nodes)
+
+def shuffled_ring_generator(number_of_nodes, timestep, informed_nodes) -> Graph:
+    node_permutation = np.random.permutation(number_of_nodes)
+    return nx.cycle_graph(node_permutation)
+
+events = spread_continuous_rumour(ring_generator, 20, enable_event_log=True)
+anim = display_simulation(events)
+anim.save('ring-simulation.mp4')
 
 # plt.show()
 
