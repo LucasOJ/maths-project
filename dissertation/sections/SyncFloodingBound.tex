@@ -1,7 +1,13 @@
 \section{Bounding the synchronous flooding time}
 \label{SyncFloodingSection}
 
+In this section we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network. Then we introduce a new type of dynamic network, where the sequence of topologies is not deterministic, but instead follows a distribution. We generalise our bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound.
+
 \subsection{Model}
+
+First we introduce a new algorithm for rumour spreading in discrete rounds (referred to in 
+% TODO: CITE
+as synchronous spread).
 
 \begin{definition} \label{SyncFloodingAlgorithm}
 	Synchronous Flooding Rumour Spreading Algorithm
@@ -10,18 +16,19 @@
 	The synchronous rumour spreading algorithm proceeds in rounds on a dynamic network $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$. Initially a single node is aware of the rumour. In round $i$, every node that is aware of the rumour informs all of its neighbours in $G_i$, regardless of whether they already knew the rumour or not.
 \end{definition}
 
-We note that the asynchronous rumour spreading algorithm (algorithm \ref{NodeCentricAsyncAlgorithm}) was probabilistic since the algorithm depended on sources of randomness such as exponential clocks. In contrast, once the dynamic network and initial node from which the rumour spreads are chosen, algorithm \ref{SyncFloodingAlgorithm} is entirely deterministic. Since the trajectory of the rumour spread is completely determined by the initial conditions, it is reasonable to question why we would want bounds on the spreading time if we can simply simulate the rumour, and record how long it takes to inform all the nodes. However, some graphs may be so large that simulation is computationally infeasible. In such cases we need bounds in terms of the structural properties of graphs instead. Additionally, in section \ref{subsection:MEDNBound}
-we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of graphs is not fixed but instead follows some distribution. In this case, deterministic bounds will allow us to make claims about the spreading time over the distribution of graph sequences.
+We note that the asynchronous rumour spreading algorithm (Algorithm \ref{NodeCentricAsyncAlgorithm}) was probabilistic since the algorithm depended on sources of randomness such as exponential clocks. In contrast, once the dynamic network and initial node from which the rumour spreads are chosen, Algorithm \ref{SyncFloodingAlgorithm} is entirely deterministic. Since the trajectory of the rumour spread is completely determined by the initial conditions, it is reasonable to ask why we would want bounds on the spreading time if we can simply simulate the rumour, and record how long it takes to inform all the nodes. In some cases however, the graph may be so large that simulation is computationally infeasible. 
+In such cases, we may be able to take advantage of bounds in terms of the structural properties of graphs instead. % TODO: Said "cases" at beginning of both sentances
+Additionally, in section \ref{subsection:MEDNBound}
+we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of graphs is not fixed but instead follows some distribution. 
+In this case, deterministic bounds will allow us to bound spreading time over the distribution of graph sequences. %TODO: Said "case" again - change
 
 % TODO: Why study flooding time?
-% Flooding only works for synchronus
+% TODO: mention that Flooding only works for synchronus
 
-\begin{definition}
-	$(h, k)$-Expander
 
-	\noindent
-	A graph $G$ on a vertex set $V$ is a $(h, k)$-expander if for all subsets of nodes $S \subseteq V$ such that $|S| \leq h$ satisfy $|N(I)| \geq k$.
-\end{definition}
+\subsection{Bound on spreading time for the Flooding Algorithm}
+
+First we introduce the notion of an expander graph, which we need to express the bound.
 
 \begin{definition}
 	Boundary set $B(S)$
@@ -33,9 +40,16 @@ we analyse rumour spreading on a non-deterministic dynamic network, where the se
 	$$
 \end{definition}
 
-\subsection{Deriving the Deterministic Flooding Bound}
+\begin{definition}
+	$(h, k)$-Expander
 
-First we give a bound on the rumour spreading time for a deterministic sequence of graphs. 
+	\noindent
+	A graph $G$ on a vertex set $V$ is a $(h, k)$-expander if all subsets of the nodes $S \subseteq V$ such that $|S| \leq h$ satisfy $|B(I)| \geq k$.
+\end{definition}
+
+Intuitively, an $(h, k)$-Expander should be well-connected since each "small" subset of nodes is connected to at least $k$ other nodes.  
+
+We are now ready give a bound on the rumour spreading time for the flooding algorithm.
 
 \begin{theorem}\label{theorem:DeterministicFloodingBound}
 	\ModelIntro Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that for all $t \in \mathbb{N}$, $G_t$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the spreading time of $\mathcal{G}$ under algorithm \ref{SyncFloodingAlgorithm} is
@@ -44,7 +58,9 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 	$$
 \end{theorem}
 
-% TODO: Strength of assumptions, why bother considering?
+% TODO: Interpretation of how the bound varies for different (h_i, k_i) sequences, how do these emerge?
+
+We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$ expander for multiple $h$ and $k$. Initially these conditions may seem unreasonably strong, however in Section \ref{subsect:floodingBoundEdgeMarkovian} we will see an interesting example where this connectivity emerges through randomness.
 
 \begin{proof}
 	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$, i.e
@@ -53,7 +69,8 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 		T_i = \min \{ t \in \mathbb{N} : |I_t| > h_i \}
 	$$
 
-	First we bound the number of steps in the interval $[T_{i-1}, T_i]$. If $T_{i-1} = T_i$ then the length of the interval is trivially 0, so suppose instead that $T_{i-1} < T_i$.
+	First we upper-bound the number of steps in the interval $[T_{i-1}, T_i]$, % TODO: Generalise to [T_i, T_j], should all hold as expected
+	by bounding the number of informed nodes $t$ time-steps after $T_{i-1}$ from below.
 
 	By induction, we show that if $T_{i-1} + t < T_i$, then the number of informed nodes at time $T_{i-1} + t$ is greater than $(1+k_i)^t h_{i-1}$.
 	
@@ -61,11 +78,10 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 	
 	Then by the definition of $T_{i-1}$, the number of informed nodes at time $T_{i-1}$ is strictly greater than $h_{i-1}$
 
-	\underline{Inductive Case.} Suppose that $|I_{T_{i-1} + t}| > (1+k_i)^t h_{i-1}$.
+	\underline{Inductive Case.} For brevity, let $s = T_{i-1} + t$. Suppose that $|I_{T_{i-1} + t}| > (1+k_i)^t h_{i-1}$.
 
-	For brevity, let $s = T_{i-1} + t$. We notice that 
+	We notice that 
 	% TODO: Justify steps
-	% TODO: Define boundary of S, B(S)
 	\begin{align*}
 		|I_{s+1}| &= |I_s| + |B(I_s)| \\ %by operation of algo
 		& \geq |I_s| + k_i |I_s| \\ % since we assume s < T_i => |I_s| \leq h_s + (h_s, k_s)-expander
@@ -77,20 +93,22 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 	Let $\tau = T_{i-1} + \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}$. 
 	Suppose for contradiction that $\tau < T_i$. %TODO: Is contradicition overkill here?
 	Since we assumed $\tau < T_i$ we can apply the above inequality %TODO: label
-	to get that 
+	to get the following lower bound on the number of informed nodes at time $\tau$.
 	$$
 		|I_\tau| > 
 		(1+k_i)^{\ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}} h_{i-1}
 		\geq e^{\log (h_i/h_{i-1})} h_{i-1}
 		= h_i
 	$$
-	Thus we have a contradiction since the number of informed nodes at time $\tau$ is greater than $h_i$, so $\tau \geq T_i$. Rearranging this inequality gives us the following bound on the length of the interval $[T_{i-1}, T_i]$:
+	Thus we have a contradiction, since under the assumption that $\tau < T_i$, we get that the number of informed nodes at time $\tau$ is greater than $h_i$, i.e. by the definition of $T_i$, $\tau \geq T_i$. Hence, we have that $\tau \geq T_i$ i.e. $\ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}$ time-steps after $T_{i-1}$, the number of informed nodes is greater than $h_i$. Rearranging this inequality gives us the following bound on the length of the interval $[T_{i-1}, T_i]$:
 	\begin{equation} \label{eq:FloodingSingleStepBound}
 		T_i - T_{i-1} \leq \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}} \leq \frac{\log (h_i/h_{i-1})}{\log(1+k_i)} + 1
 	\end{equation}
 	% TODO: Make ceiling brackets fit
 	% TODO: Exposition about next steps + direction here
 	We now apply our bound in two cases
+
+	% TODO: Note that the source of the problems is the cieling function - aim to get into form like in thm statement, but can't naively add all togethe oterwise + O(S) error, requires deeper analysis
 
 	\textbf{Case 1.} Suppose $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$.
 
@@ -101,35 +119,42 @@ First we give a bound on the rumour spreading time for a deterministic sequence 
 
 	\textbf{Case 2.} Suppose $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} < 1$.
 
-	In this case we cannot achieve the same bound on $T_i - T_{i-1}$, since the additive 1 is the dominant term. By following the same reasoning as in Case 1, we can only obtain
+	In this case we cannot achieve the same bound on $T_i - T_{i-1}$, since the additive 1 is the dominant term. By following the same reasoning as in Case 1, instead we can only obtain that
 	\begin{equation}\label{eq:Weak1StepBound}
 		T_i - T_{i-1} = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right) + \mathcal{O}(1) = \mathcal{O}(1)
 	\end{equation}
-	To understand why this bound is weak, and derive a stronger one, we inspect the inequality we assumed in this case. % TODO: link back to this 
-	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since the minimum number of informed nodes after round $T_{i-1}$ is $(1+k_i)h_{i-1}$, we see that the number of informed nodes "jumps" to more than $h_i$ nodes in a single time step. % TODO: Wrong, fix this - are we sure we can do k_i expansion?, if we could to k expansion done in step?
+	To understand the situation that this case represents, we inspect the inequality we assumed.
+	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since we have assumed that $T_{i-1} < T_i$, % TODO: Assume this earlier
+	the number of informed nodes at the start of round $T_{i-1}$ satisfies
+	$$
+		|I_{T_{i-1}}| \leq h_i
+	$$
+	Hence, as the topology is an in $(h_i, k_i)$-expander, in round $T_{i-1}$ at least $|I_{T_{i-1}}|k_i$ new uninformed nodes on the boundary of the informed node set are informed. Thus, at the start of the next round, there are at least $(1+k_i)h_{i-1}$ informed nodes, since $|I_{T_{i-1}}| > h_{i-1}$ by the definition of $T_{i-1}$. Combining this with the rearranged form of the assumed inequality, we see that the number of informed nodes "jumps" to more than $h_i$ nodes in a single time step.
 
-	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, from which we obtain $T_i = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 0. % TODO: hoes does T_i = T_{i+k} => time passed between T_{i-1} = 0?
-	However, using equation (\ref{eq:Weak1StepBound}) to bound even the first increment $T_{i-1}$ to $T_i$ gives the bound of $\mathcal{O}(1)$. We would prefer a much tighter bound, so instead bound the whole jump interval as follows. %TODO: Reprase end of this sentance
+	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, %TODO: insert figure here of t vs |I_t|, for t = T_{i-1}, T_i, T_{i+1}, etc, maybe similar figure for steps in case 1.
+	from which we obtain $T_{i-1} + 1 = T_i = T_{i+1} = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 1, but applying our previous bound to each subinterval may give a weaker overall bound. Instead, we bound the whole jump interval as follows.
 	
 	% TODO: j doesn't exist case
-	Let $j$ be the index such that $h_{j-1} < (1+k_i)h_{i-1} \leq h_j$, i.e the first $j \geq i$ when $T_j \neq T_{i-1}$. % TODO: Check this equivalence
+	Let $j$ be the index such that $h_{j-1} < (1+k_i)h_{i-1} \leq h_j$, i.e. the first $j \geq i$ when $T_j \neq T_{i-1} + 1$. % TODO: Check this equivalence - think it does hold
+	% TODO: Figure here to illusttrate T_j, 
+	% TODO: "may be the same as before" - what does this mean??? 
 
 	Note that from rearranging the definition of j
 	\begin{align*}\label{eq:JumpBoundGeq1}
 		1 &\leq \frac{\log (h_j) - \log(h_{i-1})}{\log(1+k_i) } \\
 		& =\sum_{l=i}^j \frac{\log (h_{l}) - \log(h_{l-1})}{\log(1+k_i) } & \text{since the numerator forms a telescoping sum} \\
-		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } & \text{since the } k_i \text{s are a decreasing sequence and } i \leq l
+		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } & \text{since } k_i \geq k_l \text{ for all } l \geq i
 	\end{align*}
 	
 	Hence, we can bound the length of the interval $[T_{i-1}, T_j]$ as follows.
 	\begin{align*}
-		T_j - T_{i-1} &= T_j - T_{j-1} & \text{since by the definition of j } T_{i-1} = T_{j-1}\\
+		T_j - T_{i-1} &= T_j - T_{j-1} & \text{since by the definition of j, } T_{i-1} = T_{j-1}\\ % TODO: WRONG - Check this
 		& \leq \frac{\log (h_j/h_{j-1})}{\log(1+k_i)} + 1 & \text{by applying inequality }(\ref{eq:FloodingSingleStepBound}) \\
 		& \leq \frac{\log (h_j/h_{i-1})}{\log(1+k_i)} + 1 & \text{since the } h_i \text{s are increasing and } j \geq i \\
 		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } + 1 & \text{ by the previous inequality chain} \\
 		& = \mathcal{O}\left(\sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) }\right)
  	\end{align*}
-	where the final equality holds since by the previous inequality chain, the summation is greater than 1, so is the dominant term.
+	where the final equality holds since by the previous inequality chain, the summation is at least 1, so is the dominant term.
 
 	We now use this equality to bound the growth of $T_s$, the first time at which more than $h_s = \frac{n}{2}$ nodes are aware of the rumour. We can express $T_s$ as a telescoping sum of intervals as follows:
 	$$
@@ -199,7 +224,7 @@ We notice that in this theorem, instead of requiring every graph topology to sat
 
 \end{proof}
 
-\subsection{Applying the bound to Edge-Markovian evolution}
+\subsection{Applying the bound to the Edge Markovian MEDN}\label{subsect:floodingBoundEdgeMarkovian}
 
 TODO: Prove that stationary distribution of edge-markovian evolution is ER G(n, p/(p+q))
 
