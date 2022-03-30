@@ -69,50 +69,61 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 		T_i = \min \{ t \in \mathbb{N} : |I_t| > h_i \}
 	$$
 
-	First we upper-bound the number of steps in the interval $[T_{i-1}, T_i]$, % TODO: Generalise to [T_i, T_j], should all hold as expected
-	by bounding the number of informed nodes $t$ time-steps after $T_{i-1}$ from below.
+	First we upper-bound the number of steps in the interval $[T_i, T_j]$, % TODO: Generalise to [T_i, T_j], should all hold as expected
+	by bounding the number of informed nodes $t$ time-steps after $T_i$ from below.
 
-	By induction, we show that if $T_{i-1} + t < T_i$, then the number of informed nodes at time $T_{i-1} + t$ is greater than $(1+k_i)^t h_{i-1}$.
+	By induction, we show that if $T_i + t < T_j$, then the number of informed nodes at time $T_i + t$ is greater than $(1+k_j)^t h_i$.
 	
 	\underline{Base Case.} Suppose that $t=0$. 
 	
-	Then by the definition of $T_{i-1}$, the number of informed nodes at time $T_{i-1}$ is strictly greater than $h_{i-1}$
+	Then by the definition of $T_i$, the number of informed nodes at time $T_i$ is strictly greater than $h_i$
 
-	\underline{Inductive Case.} For brevity, let $s = T_{i-1} + t$. Suppose that $|I_{T_{i-1} + t}| > (1+k_i)^t h_{i-1}$.
+	\underline{Inductive Case.} For brevity, let $s = T_i + t$. Suppose that $|I_s| > (1+k_j)^t h_i$.
 
 	We notice that 
 	% TODO: Justify steps
 	\begin{align*}
 		|I_{s+1}| &= |I_s| + |B(I_s)| \\ %by operation of algo
-		& \geq |I_s| + k_i |I_s| \\ % since we assume s < T_i => |I_s| \leq h_s + (h_s, k_s)-expander
-		& = (1 + k_i)|I_s| \\
-		& > (1 + k_i)(1+k_i)^t h_{i-1} \\ % by induction hypotheis
-		& = (1+k_i)^{t+1} h_{i-1}
+		& \geq |I_s| + k_j |I_s| \\ % since we assume s < T_j => |I_s| \leq h_j + (h_j, k_j)-expander
+		& = (1 + k_j)|I_s| \\
+		& > (1 + k_j)(1+k_j)^t h_i \\ % by induction hypotheis
+		& = (1+k_j)^{t+1} h_i
 	\end{align*}
 	% TODO: boundary set picture here	
-	Let $\tau = T_{i-1} + \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}$. 
-	Suppose for contradiction that $\tau < T_i$. %TODO: Is contradicition overkill here?
-	Since we assumed $\tau < T_i$ we can apply the above inequality %TODO: label
+	Let $\tau = T_i + \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$. 
+	Suppose for contradiction that $\tau < T_j$. %TODO: Is contradicition overkill here?
+	Since we assumed $\tau < T_j$ we can apply the above inequality %TODO: label
 	to get the following lower bound on the number of informed nodes at time $\tau$.
 	$$
 		|I_\tau| > 
-		(1+k_i)^{\ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}} h_{i-1}
-		\geq e^{\log (h_i/h_{i-1})} h_{i-1}
-		= h_i
+		(1+k_j)^{\ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}} h_i
+		\geq e^{\log (h_j/h_i)} h_i
+		= h_j
 	$$
-	Thus we have a contradiction, since under the assumption that $\tau < T_i$, we get that the number of informed nodes at time $\tau$ is greater than $h_i$, i.e. by the definition of $T_i$, $\tau \geq T_i$. Hence, we have that $\tau \geq T_i$ i.e. $\ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}}$ time-steps after $T_{i-1}$, the number of informed nodes is greater than $h_i$. Rearranging this inequality gives us the following bound on the length of the interval $[T_{i-1}, T_i]$:
-	\begin{equation} \label{eq:FloodingSingleStepBound}
-		T_i - T_{i-1} \leq \ceil{ \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}} \leq \frac{\log (h_i/h_{i-1})}{\log(1+k_i)} + 1
+	Thus we have a contradiction, since under the assumption that $\tau < T_j$, we get that the number of informed nodes at time $\tau$ is greater than $h_j$, i.e. by the definition of $T_j$, $\tau \geq T_j$. Hence, we have that $\tau \geq T_j$ i.e. $\ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$ time-steps after $T_i$, the number of informed nodes is greater than $h_j$. Rearranging this inequality gives us the following bound on the length of the interval $[T_i, T_j]$:
+	\begin{equation} \label{eq:FloodingIntervalBound}
+		T_j - T_i \leq \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}} \leq \frac{\log (h_j/h_i)}{\log(1+k_j)} + 1
 	\end{equation}
 	% TODO: Make ceiling brackets fit
 	% TODO: Exposition about next steps + direction here
-	We now apply our bound in two cases
+
+	% TODO: What about time until first spread - must happen at timestep 2 since (h,k) expander so no isolated nodes.
+	Note that since $h_s = \frac{n}{2}$, at time $T_s$ at least half of the nodes will be aware of the rumour. Hence, if we can bound $[T_0, T_s]$, we will have bounded the time it takes for half of the nodes to be informed. 
+
+	To bound $[T_0, T_s]$, we bound each subinterval $[T_{i-1}, T_i]$. Naively applying the bound to each subinterval directly and taking the sum yields the overall bound 
+	$$
+		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)} + s\right)
+	$$ 
+	for the interval $[T_0,T_s]$. However, we can tighten the bound by removing the additive $s$ term through case analysis on the subinterval $[T_{i-1}, T_i]$, as follows.
+
+	% TODO: Link back to theorem, after since n/2 = h_s, after T_s at least n/2 nodes are informed
+
 
 	% TODO: Note that the source of the problems is the cieling function - aim to get into form like in thm statement, but can't naively add all togethe oterwise + O(S) error, requires deeper analysis
 
 	\textbf{Case 1.} Suppose $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$.
 
-	In this case $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)}$ term is the dominant term in inequality (\ref{eq:FloodingSingleStepBound}), thus
+	In this case $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)}$ term is the dominant term in inequality (\ref{eq:FloodingIntervalBound}), thus
 	$$
 		T_i - T_{i-1} = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right) + \mathcal{O}(1) = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right)
 	$$
@@ -131,36 +142,36 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	$$
 	Hence, as the topology is an in $(h_i, k_i)$-expander, in round $T_{i-1}$ at least $|I_{T_{i-1}}|k_i$ new uninformed nodes on the boundary of the informed node set are informed. Thus, at the start of the next round, there are at least $(1+k_i)h_{i-1}$ informed nodes, since $|I_{T_{i-1}}| > h_{i-1}$ by the definition of $T_{i-1}$. Combining this with the rearranged form of the assumed inequality, we see that the number of informed nodes "jumps" to more than $h_i$ nodes in a single time step.
 
-	It may be that after this jump there are also more than $h_{i+k}$ nodes for some $k \geq 0$, %TODO: insert figure here of t vs |I_t|, for t = T_{i-1}, T_i, T_{i+1}, etc, maybe similar figure for steps in case 1.
-	from which we obtain $T_{i-1} + 1 = T_i = T_{i+1} = \dots = T_{i+k}$. In this case the total time that has passed between $T_{i-1}$ and $T_{i+k}$ is 1, but applying our previous bound to each subinterval may give a weaker overall bound. Instead, we bound the whole jump interval as follows.
+	It may be that after this jump there are also more than $h_j$ nodes for some $j \geq i$, %TODO: insert figure here of t vs |I_t|, for t = T_{i-1}, T_i, T_{i+1}, etc, maybe similar figure for steps in case 1.
+	from which we obtain $T_{i-1} + 1 = T_i = T_{i+1} = \dots = T_j$. See Figure \ref{fig:floodingJump} for an illustration of this "jump" behaviour. 
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\textwidth]{./figures/flooding_jump.png}
+		\caption{Behaviour of the number of informed nodes in the "jump" case}
+		\label{fig:floodingJump}
+	\end{figure}
+	In this case the total time that has passed between $T_{i-1}$ and $T_j$ is 1, so we instead bound the whole jump interval as follows:
 	
 	% TODO: j doesn't exist case
-	Let $j$ be the index such that $h_{j-1} < (1+k_i)h_{i-1} \leq h_j$, i.e. the first $j \geq i$ when $T_j \neq T_{i-1} + 1$. % TODO: Check this equivalence - think it does hold
+	Let $j$ be the index such that $h_j < (1+k_i)h_{i-1} \leq h_{j+1}$, i.e. the last $j \geq i$ when $T_j = T_{i-1} + 1$, as in Figure \ref{fig:floodingJump}. % TODO: Check this equivalence - think it does hold
 	% TODO: Figure here to illusttrate T_j, 
 	% TODO: "may be the same as before" - what does this mean??? 
-
-	Note that from rearranging the definition of j
-	\begin{align*}\label{eq:JumpBoundGeq1}
-		1 &\leq \frac{\log (h_j) - \log(h_{i-1})}{\log(1+k_i) } \\
-		& =\sum_{l=i}^j \frac{\log (h_{l}) - \log(h_{l-1})}{\log(1+k_i) } & \text{since the numerator forms a telescoping sum} \\
-		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } & \text{since } k_i \geq k_l \text{ for all } l \geq i
-	\end{align*}
-	
-	Hence, we can bound the length of the interval $[T_{i-1}, T_j]$ as follows.
+	Hence, by the definition of $j$,
 	\begin{align*}
-		T_j - T_{i-1} &= T_j - T_{j-1} & \text{since by the definition of j, } T_{i-1} = T_{j-1}\\ % TODO: WRONG - Check this
-		& \leq \frac{\log (h_j/h_{j-1})}{\log(1+k_i)} + 1 & \text{by applying inequality }(\ref{eq:FloodingSingleStepBound}) \\
-		& \leq \frac{\log (h_j/h_{i-1})}{\log(1+k_i)} + 1 & \text{since the } h_i \text{s are increasing and } j \geq i \\
-		& \leq \sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } + 1 & \text{ by the previous inequality chain} \\
+		T_j - T_{i-1} &=1 \\ 
+		&\leq \frac{\log (h_{j+1}) - \log(h_{i-1})}{\log(1+k_i) } \\
+		& =\sum_{l=i}^{j+1} \frac{\log (h_{l}) - \log(h_{l-1})}{\log(1+k_i) } & \text{since the numerator forms a telescoping sum} \\
+		& \leq \sum_{l=i}^{j+1} \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } & \text{since } k_i \geq k_l \text{ for all } l \geq i \\
 		& = \mathcal{O}\left(\sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) }\right)
  	\end{align*}
-	where the final equality holds since by the previous inequality chain, the summation is at least 1, so is the dominant term.
 
 	We now use this equality to bound the growth of $T_s$, the first time at which more than $h_s = \frac{n}{2}$ nodes are aware of the rumour. We can express $T_s$ as a telescoping sum of intervals as follows:
 	$$
 		T_s = \sum_{i=1}^s T_i - T_{i-1}
 	$$
-	For the $i^\text{th}$ interval, if $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$, i.e. it takes at least one step then we can apply the bound from Case 1.
+	For the $i^\text{th}$ interval, if $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$, we can apply the result from Case 1. If $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} < 1$, we apply Case 2 to bound the whole jump interval $[T_{i-1}, T_j]$, and continue the summation from $T_j$. % TODO: CHeck, problems from j+1 on case 2 result?
+
+	TODO: FINISH PROOF
 	
 \end{proof}
 
