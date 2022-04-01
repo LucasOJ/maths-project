@@ -23,22 +23,28 @@ def flooding_spread_function(G: Graph, informed_nodes: set):
 
     return informed_nodes.union(newly_informed_nodes)
 
-def spread_discrete_rumour(graph_generator, spread_function, number_of_nodes, initial_node):
+def spread_discrete_rumour(graph_generator, number_of_nodes, initial_node=0, spread_function=flooding_spread_function, enable_event_log=False):
     informed_nodes = {initial_node}
     timestep = 0
     events = []
 
     while len(informed_nodes) < number_of_nodes:
-        G: Graph = graph_generator(number_of_nodes, timestep)
+        G: Graph = graph_generator(number_of_nodes, timestep, informed_nodes)
         assert(G.number_of_nodes() == number_of_nodes)
         
         informed_nodes: set = spread_function(G, informed_nodes)
+
+        if enable_event_log:
+            events.append({
+                'timestep': timestep,
+                'informed_nodes': informed_nodes,
+                'graph': G,
+                'activated_edge':(0,1)
+            })
         timestep += 1
 
-        events.append({
-            'timestep': timestep,
-            'informed_nodes': informed_nodes,
-            'graph': G
-        })
-
-    return events
+    if enable_event_log:
+        assert(len(events) == timestep) 
+        return events
+    else:
+        return timestep 
