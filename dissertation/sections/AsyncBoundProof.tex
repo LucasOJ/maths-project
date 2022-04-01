@@ -1,7 +1,7 @@
 \section{Bounding the asynchronous rumour spreading time}
 \label{AsyncUpperBoundSection}
 
-In this section we define an algorithm for rumour spreading on a dynamic network, and prove a bound on the associated spreading time that holds with high probability. We then investigate how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
+In this section we define an algorithm for rumour spreading on a dynamic network, and prove a bound from \cite{asyncPaper} on the associated spreading time that holds with high probability. We then investigate how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
 
 \subsection{Introducing the Rumour Spreading Model}
 Now we are ready to define our first asynchronous algorithm for rumour spreading on a given dynamic network.
@@ -21,6 +21,8 @@ An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{
 % TODO: Implications of this model
 
 \subsection{Proof of the bound}
+
+We follow a proof from \cite{asyncPaper}, explaining steps in greater detail than in the original paper.
 
 First we prove a lemma about how long it takes for the number of nodes aware of the rumour to increase by a multiplicative factor. 
 
@@ -334,10 +336,27 @@ Thus, the intuitive idea that the greater the success probability of the bound, 
 	\item Comparison between absolute and non-absolute  diligence results, when is each useful?
 \end{enumerate}
 
-\subsection{Simulations}
+\subsection{Evaluating the bound}
 
+In this section we gauge the quality of the bound by comparing it with simulated spreading times.
 
-\begin{enumerate}
-	\item Look at symmetrical graphs (complete, star, ring, path) and evaluate explicit bounds - evaluate tightness in each case with simulations
-	\item Simulations for random graphs/evolutions
-\end{enumerate}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{./figures/alternating_ring_simulation_results.png}
+	\caption{Results of alternating network spreading time simulations}
+	\label{fig:alternatingSimResults}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{./figures/shuffle_ring_simulation_results.png}
+	\caption{Results of shuffled ring spreading time simulations}
+	\label{fig:shuffleRingSimResults}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{./figures/static_ring_simulation_results.png}
+	\caption{Results of static ring spreading time simulations}
+	\label{fig:staticRingSimResults}
+\end{figure}

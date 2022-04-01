@@ -6,9 +6,12 @@
 \usepackage{graphicx}
 \usepackage{enumerate}
 \usepackage{mathtools}
+
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usetikzlibrary{fit}
+
+\usepackage{biblatex}
 
 %you can add more packages using the same code above
 
@@ -47,11 +50,12 @@
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
 \allowdisplaybreaks
+
+\addbibresource{bibliography.bib}
 %------------------
 
 %Everything before begin document is called the pre-amble and sets out how the document will look
 %It is recommended you don't touch the pre-amble until you are familiar with LateX
-
 \begin{document}
 
 \input{coverpage.tex}
@@ -79,5 +83,7 @@
 \input{sections/CheegerAsyncBound.tex}
 
 \input{sections/Conclusion.tex}
+
+\printbibliography
 
 \end{document}

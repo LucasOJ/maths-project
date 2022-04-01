@@ -15,3 +15,9 @@ share
 __pycache__
 *.cfg
 .ipynb_checkpoints
+
+*.bbl
+*.bcf
+*.blg
+*.xml
+*.txt
