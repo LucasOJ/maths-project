@@ -1,19 +1,17 @@
 \section{Bounding the synchronous flooding time}
 \label{SyncFloodingSection}
 
-In this section we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network. Then we introduce a new type of dynamic network, where the sequence of topologies is not deterministic, but instead follows a distribution. We generalise our bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound.
+In this section we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network from \cite{syncPaper}. Then we introduce a new type of dynamic network, where the sequence of topologies is not deterministic, but instead follows a distribution. We generalise our flooding bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound.
 
 \subsection{Model}
 
-First we introduce a new algorithm for rumour spreading in discrete rounds (referred to in 
-% TODO: CITE
-as synchronous spread).
+First we introduce a new algorithm for rumour spreading in discrete rounds (referred to in \cite{asyncPaper} as synchronous spread).
 
 \begin{definition} \label{SyncFloodingAlgorithm}
-	Synchronous Flooding Rumour Spreading Algorithm
+	Synchronous Flooding Algorithm
 
 	\noindent
-	The synchronous rumour spreading algorithm proceeds in rounds on a dynamic network $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$. Initially a single node is aware of the rumour. In round $i$, every node that is aware of the rumour informs all of its neighbours in $G_i$, regardless of whether they already knew the rumour or not.
+	The synchronous flooding algorithm proceeds in rounds on a dynamic network $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$. Initially a single node is aware of the rumour. In round $i$, every node that is aware of the rumour informs all of its neighbours in $G_i$, regardless of whether they already knew the rumour or not.
 \end{definition}
 
 We note that the asynchronous rumour spreading algorithm (Algorithm \ref{NodeCentricAsyncAlgorithm}) was probabilistic since the algorithm depended on sources of randomness such as exponential clocks. In contrast, once the dynamic network and initial node from which the rumour spreads are chosen, Algorithm \ref{SyncFloodingAlgorithm} is entirely deterministic. Since the trajectory of the rumour spread is completely determined by the initial conditions, it is reasonable to ask why we would want bounds on the spreading time if we can simply simulate the rumour, and record how long it takes to inform all the nodes. In some cases however, the graph may be so large that simulation is computationally infeasible. 
@@ -28,6 +26,8 @@ In this case, deterministic bounds will allow us to bound spreading time over th
 
 \subsection{Bound on spreading time for the Flooding Algorithm}
 
+In this section we prove a bound on the spreading time of the flooding algorithm from \cite{syncPaper}, adding details and expanding steps throughout.
+
 First we introduce the notion of an expander graph, which we need to express the bound.
 
 \begin{definition}
@@ -40,6 +40,8 @@ First we introduce the notion of an expander graph, which we need to express the
 	$$
 \end{definition}
 
+% TODO: Figure of boundary sets
+
 \begin{definition}
 	$(h, k)$-Expander
 
@@ -47,7 +49,7 @@ First we introduce the notion of an expander graph, which we need to express the
 	A graph $G$ on a vertex set $V$ is a $(h, k)$-expander if all subsets of the nodes $S \subseteq V$ such that $|S| \leq h$ satisfy $|B(I)| \geq k$.
 \end{definition}
 
-Intuitively, an $(h, k)$-Expander should be well-connected since each "small" subset of nodes is connected to at least $k$ other nodes.  
+Intuitively, an $(h, k)$-Expander should be well-connected since each "small" subset of nodes (i.e. less than $k$ nodes) is connected to at least $k$ other nodes outside the set.  
 
 We are now ready give a bound on the rumour spreading time for the flooding algorithm.
 
@@ -60,7 +62,7 @@ We are now ready give a bound on the rumour spreading time for the flooding algo
 
 % TODO: Interpretation of how the bound varies for different (h_i, k_i) sequences, how do these emerge?
 
-We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$ expander for multiple $h$ and $k$. Initially these conditions may seem unreasonably strong, however in Section \ref{subsect:floodingBoundEdgeMarkovian} we will see an interesting example where this connectivity emerges through randomness.
+We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$-expander for multiple $(h, k)$ pairs. Initially these conditions may seem unreasonably strong, however in Section \ref{subsect:floodingBoundEdgeMarkovian} we will see an interesting example where these properties emerge with high probability in a random graph.
 
 \begin{proof}
 	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$, i.e
@@ -156,7 +158,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	Let $j$ be the index such that $h_j < (1+k_i)h_{i-1} \leq h_{j+1}$, i.e. the last $j \geq i$ when $T_j = T_{i-1} + 1$, as in Figure \ref{fig:floodingJump}. % TODO: Check this equivalence - think it does hold
 	% TODO: Figure here to illusttrate T_j, 
 	% TODO: "may be the same as before" - what does this mean??? 
-	Hence, by the definition of $j$,
+	Hence, by the definition of $j$, h
 	\begin{align*}
 		T_j - T_{i-1} &=1 \\ 
 		&\leq \frac{\log (h_{j+1}) - \log(h_{i-1})}{\log(1+k_i) } \\
@@ -182,18 +184,31 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\item Stationary distribution definition and Interpretation
 \end{enumerate}
 
-\subsection{Generalising the bound to Markovian Evolving Dynamic Networks}
+\subsection{Flooding on Markovian Evolving Dynamic Networks}
+
+Until now, all the dynamic networks we have studied have been deterministic, in the sense that the evolution of topologies has been fixed. However, knowing the future topologies of the network may be unrealistic in practice. For example, when considering rumour spread on a real-world network such as the internet, we cannot say with certainty what connections will be present on a given time in the future. This motivates a generalistion of the dynamic network model where the sequence of topologies is drawn from some distribution. This distribution expresses our uncertainty in the future topologies of the network, but allows us to encode information about how we predict the shape of the network may evolve. Under this model, the dynamic network itself is a stochastic process, and a source of randomness. In this section, we analyse the rumour spreading time when a Markov chain is used to  generate the random sequence of topologies.
+
+First we introduce a variation of the original Dynamic Network definition.
+
 \label{subsection:MEDNBound}
 
 \begin{definition}
 	Markovian Evolving Dynamic Network (MEDN)
 
 	\noindent 
-	Let $A_n$ be the set of all possible graphs on n vertices.
-	A Markovian Evolving Dynamic Network is a random sequence of graphs $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$, such that $\mathcal{G}$ is a Markov chain with state space $A_n$.
+	Let $\mathcal{A}(V)$ be the set of all possible graphs on the vertex set $V$.
+	A Markovian Evolving Dynamic Network is a random sequence of graphs $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$, such that $\mathcal{G}$ is a Markov chain with state space $\mathcal{A}(V)$.
 \end{definition}
 
-We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0$ is a stationary distribution of $\mathcal{M}$. By the definition of a stationary distribution, in such an MEDN the probability that $G_t = G'$ for a given $G'$ is the probability that $G_t = G'$ under the stationary distribution, for any time step $t$. Hence, the evolution of the network essentially proceeds by independently sampling a topology from the stationary distribution at each time step. % TODO: Check if independent, get rid of "essentially"?
+We see that this definition adheres to the previous restriction that all topologies have the same vertex set. Since the network is Markovian, the distribution from which the next topology is draw depends only on the previous topology.
+
+We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0$ is a stationary distribution of $\mathcal{M}$. By the definition of a stationary distribution, in such an MEDN the probability that $G_t = G'$ for a given $G'$ is the probability that $G_t = G'$ under the stationary distribution, for any time step $t$. Hence, once the Markov chain associated with the network has reached equilibrium, % TODO: define "equalibrium"
+the future evolution of the network effectively proceeds by independently sampling a topology from the stationary distribution at each time step. % TODO: Check if independent, get rid of "effectively"?
+
+Under certain conditions, Markov chains converge to their stationary distributions. Thus, for the rest of this section we assume that our MEDNs have been running for a long enough such that when we inject the rumour the network is already in equilibrium. In this paper we don't discuss the conditions which allow for converge to the stationary distribution or how long the convergence takes, and assume that round 0 begins when we inject the rumour.
+% TODO: What about if we started not in the stationary distributuion?? Further exploration needed. Or close to stationary? 
+
+We now adapt the deterministic bound proved Theorem \ref{theorem:DeterministicFloodingBound} to a MEDN, by adding details to proof from \cite{syncPaper}
 
 % TODO: Is this a non-theorm? What does it acutally mean?
 
@@ -205,7 +220,10 @@ We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0
 	with high probability.
 \end{theorem}
 
-We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the expansion properties hold with high probability with respect to the stationary distribution. Since each topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will still hold, as long as the long-term proportion of topologies in our network without strong expansion properties is bounded by $\frac{1}{n^2}$.
+Note that in previous bounds the source of randomness in the spreading time has been the rumour spreading algorithm, however in this bound the only source of randomness is the network itself.
+
+We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the same expansion properties hold with high probability with respect to the stationary distribution. % TODO: REWORD??
+Since each topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will hold for MEDNs, as long as the long-term proportion of topologies in our network without strong expansion properties is bounded by $\frac{1}{n^2}$.
 
 % TODO: Review this proof for order that makes sense, and check it actually holds
 
@@ -258,5 +276,12 @@ TODO: Proof
 % TODO: Why can't generalise to varying t? (Non-homogenous MC)
 
 \subsection{Simulations}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{./figures/flooding_gnp_simulation_results.png}
+	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations}
+	\label{fig:floodingGnpSimResults}
+\end{figure}
 
 TODO: Evaluate tightness of bound for Edge-Markovian evolution
