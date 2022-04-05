@@ -40,7 +40,7 @@ First we introduce notation for expressing graph metrics. This notation will als
 
 % TODO: Explain Implications of Cut set defn?
 
-\subsection{Graph Metrics}
+\subsection{Graph Metrics}\label{subsect:graphMetrics}
 
 \begin{definition}
 	Conductance of a graph $G = (V, E)$
@@ -59,10 +59,10 @@ First we introduce notation for expressing graph metrics. This notation will als
 	where $\comp{d}(S) := \frac{\sum_{v \in S} d_v}{|S|}$ is the average degree of the vertices in $S$
 \end{definition}
 
-\begin{definition}
+\begin{definition} % TODO: This definition doesn't include size bounds on S
 	Diligence of a graph $G$
 	$$
-		\rho(G) = \min_{S \in V} \rho(S) 
+		\rho(G) = \min_{S \subseteq V} \rho(S) 
 	$$
 \end{definition}
 

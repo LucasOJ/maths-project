@@ -212,11 +212,10 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 
 \begin{theorem}\label{theorem:AsyncUpperBound}
 	\ModelIntro Then, with high probability, the rumour will have spread to all the nodes of $\mathcal{G}$ in time at most
-
 	$$
 		\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
 	$$
-
+	
 	\noindent
 	for a sufficiently large $C$
 \end{theorem}
@@ -271,6 +270,12 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		&\leq \min \{t : blah \geq 2 \sum_{i=0}^K \alpha_i \} \\ % TODO: Justify this step
 		&\leq \min \{t : blah \geq 2 \sum_{i=0}^N \alpha_i \} & %TODO: Mention \alpha_i need to be defined up to N
 	\end{align*}
+
+	% TODO: MAKE CLEAR HOW FIRST Phase contained within interval
+
+	% TODO: Why can choose time at which any number of nodes informed? (by defn of poisson proces, probability 2 processes fire at once is immediate, n distinct steps in |I_t|)
+
+	%TODO: Figure of m(t), derived by inverting second half of |I_t|
 
 	\textbf{Second Phase.} The second phase starts at $t_\text{half}$, when at least $\frac{n}{2}$ nodes have been made aware of the rumour. The phase ends at the first time all nodes are aware of the rumour, which we denote $t_\text{all}$. We again divide up the phase into intervals $[\tau_j, \tau_{j+1}]$, where $\tau_0 = t_\text{half}$ and $\tau_{j+1} = \tau_j'$ as in the first phase.
 
@@ -336,16 +341,96 @@ Thus, the intuitive idea that the greater the success probability of the bound, 
 	\item Comparison between absolute and non-absolute  diligence results, when is each useful?
 \end{enumerate}
 
-\subsection{Evaluating the bound}
+\subsection{Evaluating the quality of the bound}
 
-In this section we gauge the quality of the bound by comparing it with simulated spreading times.
+In this section we gauge the quality of the bound given in Theorem \ref{theorem:AsyncUpperBound}, by applying it to various networks, and comparing the results with simulated spreading times.
+
+\subsubsection{The Ring-Complete Alternating Dynamic Network}
+
+First we introduce the dynamic network. % TODO: Abrupt ending
+
+\begin{definition}
+	Ring-Complete Alternating Dynamic Network
+
+	\noindent
+	Let $R$ be a graph consisting of a single cycle on $n$ nodes, and $K$ be the complete graph on $n$ nodes. The Ring-Complete Alternating Dynamic Network $\mathcal{A} = (G_t)_{t \in \mathbb{N}}$ is defined as follows % TODO: t in \mathbb{N} is wrong (start from 1 not 0)
+	\begin{equation*}
+		G_t = 
+		\begin{cases*}
+			R & if $t = 0 \mod 2$ \\
+			K & if $t = 1 \mod 2$
+		  \end{cases*}
+	\end{equation*}
+	i.e. $\mathcal{A}$ alternates between the ring and complete graph topologies.
+\end{definition}
+
+% TODO: More explicit linking here
+
+Now we apply Theorem \ref{theorem:AsyncUpperBound} to bound the spreading time on the Ring-Complete Alternating Network. By Theorem \ref{theorem:AsyncUpperBound}, with high probability, the spreading time of the rumour on $\mathcal{A}$ is at most
+$$
+	\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
+$$
+By the definition of $\mathcal{A}$ we have that 
+\begin{align*}
+	&\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} \\
+	= &\min \left\{t : \underbrace{\Phi(R)\rho(R) + \Phi(K)\rho(K) + \Phi(R)\rho(R) + \dots}_{t + 1 \text{ terms}} \geq C \log n \right\} \\
+	\simeq &\min \left\{t : \frac{t}{2}\Phi(R)\rho(R) + \frac{t}{2}\Phi(K)\rho(K) \geq C \log n \right\} \\
+	= &\min \left\{t : t \geq \frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)} \right\} \\
+	= &\ceil{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}}
+\end{align*} %TODO: Recall what C is
+To calculate this quantity explicitly, we need to compute the conductance and diligence of $R$ and $K$. 
+
+\textbf{Claim 1.} $\Phi(R)=\frac{2}{n}$
+
+% TODO: Proof
+
+\textbf{Claim 2.} $\rho(R)=1$
+
+We recall from section \ref{subsect:graphMetrics} that the diligence of a subset of nodes $S$ is
+$$
+\rho(S) = \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
+$$ 
+In $R$ every node has degree 2, so for any node set $S$ the average degree $\comp{d}(S)$ is 2, and 
+$$
+	\min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
+	= 
+	\min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{2},\frac{1}{2} \right\} \right\}
+	=
+	\frac{1}{2}
+$$
+Hence, we obtain $\rho(S) = 2 \frac{1}{2} = 1$ for any $S$. Thus, 
+$$
+	\rho(R) =  \min_{S \subseteq V} \rho(S) = 1 
+$$
+where $V$ denotes the set of $n$ vertices of $R$.
+
+\textbf{Claim 3.}  $\Phi(K)=\frac{1}{2}$
+
+% TODO: Proof
+
+\textbf{Claim 4.}  $\rho(K)=1$
+
+In $K$ every node has degree $n - 1$. Thus, by identical reasoning to Claim 2, we have that for any $S \subseteq V$, $\rho(S) = (n-1)\frac{1}{n-1} = 1$ so $\rho(K) = 1$.
+
+Substituting the values of the connectivity metrics yields the bound
+$$ %TODO: Check when fully work out conductances
+	\ceil{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}} = \ceil{\frac{2C \log n}{\frac{1}{n} + \frac{1}{2}}}
+	= \ceil{\frac{2n}{2+n} 2C\log n}
+	\simeq \ceil{4C \log n}
+$$
+for large $n$
+
+% TODO: COMMENT THAT static bound gives log n spread, adding alternating with lower connectiity only increases spreading time by multaplicitive constant - how infrequent can high conductance grpah be and still preserve log n scaling? k \in O(1)
+
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{./figures/alternating_ring_simulation_results.png}
-	\caption{Results of alternating network spreading time simulations}
+	\caption{Results of Ring-Complete Alternating Network spreading time simulations}
 	\label{fig:alternatingSimResults}
 \end{figure}
+
+The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results rumour spreading on $\mathcal{A}$. Each blue point in the plot represents a single simulation, where the $x$ component is the number of nodes in the simulation, and the $y$ component is spreading time. Since the spreading time is random variable, 50 simulations were run for each network size we investigated. The mean of these 50 simulations are plotted in red. This allows us to see how the % TODO: 50 runs to eliminate varaince of indiviudal runs, bound w.h.p
 
 \begin{figure}[h]
 	\centering
