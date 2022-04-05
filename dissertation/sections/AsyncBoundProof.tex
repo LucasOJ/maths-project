@@ -366,7 +366,14 @@ First we introduce the dynamic network. % TODO: Abrupt ending
 
 % TODO: More explicit linking here
 
-Now we apply Theorem \ref{theorem:AsyncUpperBound} to bound the spreading time on the Ring-Complete Alternating Network. By Theorem \ref{theorem:AsyncUpperBound}, with high probability, the spreading time of the rumour on $\mathcal{A}$ is at most
+Now we apply Theorem \ref{theorem:AsyncUpperBound} to bound the spreading time on the Ring-Complete Alternating Network.
+
+\begin{theorem}
+	With high probability the spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on the Ring-Complete Alternating Network is at most $\mathcal{O}(\log n)$. 
+\end{theorem}
+
+\begin{proof}
+By Theorem \ref{theorem:AsyncUpperBound}, with high probability, the spreading time of the rumour on $\mathcal{A}$ is at most
 $$
 	\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
 $$
@@ -382,7 +389,43 @@ To calculate this quantity explicitly, we need to compute the conductance and di
 
 \textbf{Claim 1.} $\Phi(R)=\frac{2}{n}$
 
-% TODO: Proof
+We recall from section \ref{subsect:graphMetrics} that the definition of conductance for a graph $G$ is 
+$$
+	\Phi(G) 
+	= \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}} 
+$$
+We can restrict the domain the minimum optimises over to produce the following equivalent form of the conductance which is easier to work with.
+$$
+	\Phi(G) 
+	= \min_{0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}} \frac{|E(S, \comp{S})|}{\text{vol}(S)} 
+$$
+These expressions are equivalent since for any set $S$ in the original domain, but not the restricted domain, we have that $\text{vol}(S) > \frac{\text{vol}(V)}{2}$, so
+$$
+	\text{vol}(\comp{S}) 
+	= \text{vol}(V) - \text{vol}(S) 
+	\leq \frac{\text{vol}(V)}{2}
+$$
+and since $E(S, \comp{S}) = E(\comp{S}, S)$, we have that
+$$
+	\frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}} = \frac{|E(\comp{S}, S)|}{\text{vol}(\comp{S})} 
+	= 
+	\frac{|E(\comp{S}, \comp{\comp{S}})|}{\text{vol}(\comp{S})} 
+$$
+Thus, for any set of nodes any set $S$ with $\text{vol}(S) > \frac{\text{vol}(V)}{2}$ in the original optimisation domain, we note that the set $\comp{S}$ will be in the restricted optimisation  domain with the same conductance value. Hence, both expressions for the conductance minimise over the same set of conductance values so are equivalent.
+
+Using this simplified definition of the conductance, we can calculate the conductance of the ring graph $R$. 
+
+Let $S \subset V$.  We notice that each set of continuous nodes in $S$ contributes 2 edges between $S$ and $\comp{S}$, one for each endpoint of the contiguous set. % TODO: picture here?
+To minimise $|E(S, \comp{S})|$, we take $S$ to be a single contiguous set of $k$ nodes, which yields $|E(S, \comp{S})| = 2$. 
+
+Now we calculate what $k$ should be. Since every node has degree 2, we see that the condition $0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}$ is equivalent to the condition $0 < 2k \leq n$, as $\text{vol}(S) = 2|S'|$ for all $S' \subset V$. Hence,
+$$
+	\Phi(R) 
+	=\min_{0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}} \frac{|E(S, \comp{S})|}{\text{vol}(S)} 
+	= \min_{0 < k \leq \frac{n}{2}} \frac{2}{2k} 
+	= \min_{0 < k \leq \frac{n}{2}} \frac{1}{k} 
+	= \frac{2}{n}
+$$
 
 \textbf{Claim 2.} $\rho(R)=1$
 
@@ -400,25 +443,35 @@ $$
 $$
 Hence, we obtain $\rho(S) = 2 \frac{1}{2} = 1$ for any $S$. Thus, 
 $$
-	\rho(R) =  \min_{S \subseteq V} \rho(S) = 1 
+	\rho(R) =  \min_{0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}} \rho(S) = 1 
 $$
 where $V$ denotes the set of $n$ vertices of $R$.
 
 \textbf{Claim 3.}  $\Phi(K)=\frac{1}{2}$
 
-% TODO: Proof
+Suppose $S \subset V$ with $|S| = k$. Each of the $k$ nodes in $S$ is connected to all $n - k$ nodes in $\comp{S}$, so $|E(S, \comp{S})| = k(n - k)$. Each node in $S$ is connected to all the remaining $n - 1$ nodes in $V$, so $\text{vol}(S) = k(n-1)$. Since all nodes have the same degree, as in Claim 1, for $K$ the condition that $0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}$ is equivalent to the condition that $S$ can consist of at most half the nodes in $K$. Combining the three previous observations together yields that
+$$
+	\Phi(K) = \min_{0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}} \frac{|E(S, \comp{S})|}{\text{vol}(S)} 
+	= \min_{0 < k \leq \frac{n}{2}} \frac{k(n-k)}{k(n-1)} 
+	= \frac{\frac{n}{2}}{n-1}
+	\simeq \frac{1}{2}
+$$
+for large $n$.
 
 \textbf{Claim 4.}  $\rho(K)=1$
 
 In $K$ every node has degree $n - 1$. Thus, by identical reasoning to Claim 2, we have that for any $S \subseteq V$, $\rho(S) = (n-1)\frac{1}{n-1} = 1$ so $\rho(K) = 1$.
 
-Substituting the values of the connectivity metrics yields the bound
+Substituting the values of the connectivity metrics from the previous 4 claims yields the bound
 $$ %TODO: Check when fully work out conductances
-	\ceil{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}} = \ceil{\frac{2C \log n}{\frac{1}{n} + \frac{1}{2}}}
-	= \ceil{\frac{2n}{2+n} 2C\log n}
+	\ceil{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}} = \ceil{\frac{2C \log n}{\frac{2}{n} + \frac{1}{2}}}
+	= \ceil{\frac{2n}{4+n} 2C\log n}
 	\simeq \ceil{4C \log n}
 $$
-for large $n$
+for large $n$.
+
+\end{proof}
+
 
 % TODO: COMMENT THAT static bound gives log n spread, adding alternating with lower connectiity only increases spreading time by multaplicitive constant - how infrequent can high conductance grpah be and still preserve log n scaling? k \in O(1)
 

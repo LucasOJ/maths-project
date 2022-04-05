@@ -44,7 +44,6 @@ First we introduce notation for expressing graph metrics. This notation will als
 
 \begin{definition}
 	Conductance of a graph $G = (V, E)$
-
 	$$
 		\Phi(G) = \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}}
 	$$
@@ -55,14 +54,13 @@ First we introduce notation for expressing graph metrics. This notation will als
 	$$
 		\rho(S) = \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
 	$$ 
-
 	where $\comp{d}(S) := \frac{\sum_{v \in S} d_v}{|S|}$ is the average degree of the vertices in $S$
 \end{definition}
 
 \begin{definition} % TODO: This definition doesn't include size bounds on S
 	Diligence of a graph $G$
 	$$
-		\rho(G) = \min_{S \subseteq V} \rho(S) 
+		\rho(G) = \min_{0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}} \rho(S) 
 	$$
 \end{definition}
 
