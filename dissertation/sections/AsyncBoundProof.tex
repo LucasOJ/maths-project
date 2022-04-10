@@ -493,7 +493,7 @@ The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results 
 
 We now consider an example of a dynamic network where the bound is not tight in scaling. % TODO: Reword
 
-\subsubsection{Shuffled Ring}
+\subsubsection{Shuffled Ring}\label{subsect:shuffledRingAsyncApplication}
 
 We start by introducing the Shuffled Ring Network.
 
@@ -559,9 +559,32 @@ Now we compare the bound we have obtained with simulated spreading times on the 
 \end{figure}
 
 We see from Figure \ref{fig:shuffledRingExample} that the spreading times of the Shuffled Ring Network grow logarithmically in the size of the network. % TODO: Justify rigourouly, generate "closeness" metric to true log n?
-Thus, the $\mathcal{O}(n \log n)$ bound given by Theorem $\ref{theorem:AsyncUpperBound}$ is larger by a factor of $n$ in scaling. % TODO: Justify more - bound is weak, doesn't give much information, less useful, motivates investigation into why the bound is weak in this case, and are there other cases where it is also weak?, can we tighten it?
+Thus, the $\mathcal{O}(n \log n)$ bound given by Theorem $\ref{theorem:AsyncUpperBound}$ is larger by a factor of $n$ in scaling. 
+% TODO: Justify more - bound is weak, doesn't give much information, less useful, motivates investigation into why the bound is weak in this case, and are there other cases where it is also weak?, can we tighten it?
+But why is it the case that the bound is weak for the Shuffled Ring Network? 
 
-\subsubsection{Adversarial Ring}
+To answer this question, we investigate the spreading time on the static ring graph.
+
+\subsubsection{Static Ring}
+
+\begin{definition}
+	Static Ring Network $\mathcal{R}$
+
+	\noindent
+	Let $R$ be a cycle graph on $n$ nodes. The Static Ring Network is the network consisting of the same ring $R$ for every topology, i.e. $\mathcal{R} = (G_t)_{t \in \mathbb{N}}$ where $G_t = R$ for all $t \in \mathbb{N}$. 
+\end{definition}
+
+\begin{theorem}\label{theorem:staticRingAsyncBound}
+	With high probability the spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on the Static Ring Network is at most $\mathcal{O}(n \log n)$.
+\end{theorem}
+
+\begin{proof}
+	We notice that in each round the topologies of Shuffled Ring Network and Static Ring Network networks are identical up to the renaming of nodes. Since these two networks have the same structure (namely a ring graph for all topologies), they also have the same conductance and diligence in each round. Hence, Theorem \ref{theorem:AsyncUpperBound} yields the same bound for the Static Ring Network as the Shuffled Ring Network. % TODO: More details
+\end{proof}
+
+% TODO: OUR bound holds for all networks with the same topologies up to renaming of nodes. 
+
+Now we investigate the simulated spreading times on the Static Ring Graph.
 
 \begin{figure}[h]
 	\centering
@@ -569,6 +592,75 @@ Thus, the $\mathcal{O}(n \log n)$ bound given by Theorem $\ref{theorem:AsyncUppe
 	\caption{Results of static ring spreading time simulations}
 	\label{fig:staticRingSimResults}
 \end{figure}
+
+We see from the simulations on the Static Ring Graph that the spreading time grows linearly with the number of nodes in the network. Notice that this is significantly slower than the logarithmic growth seen in the Shuffled Ring simulations, despite both networks having isomorphic topologies. %TODO: Define ismorhpic for graphs and then networks
+
+In this case, the $\mathcal{O}(n \log n)$ bound given by Theorem \ref{theorem:AsyncUpperBound} is much tighter, and is only a factor of $\mathcal{O}(\log n)$ larger than the simulated spreading times.
+% TODO: Finish above when established link between bound holding w.h.p and being in line with simulations.
+
+We investigate why the rumour spreads faster on the Shuffled Ring Network by comparing how the rumour spreads in the Shuffled Ring and Static Ring networks. % TODO: Redundant sentance?
+
+% TODO: Talk about the general behaviour when dicussing how made simulations earlier? Bit of a jump here
+By Theorem [TODO:CITE EXPONENTIAL CLOCK THEOREM], we can interpret the operation of Algorithm \ref{NodeCentricAsyncAlgorithm} as picking a node at random when an exponential clock of rate $n$ ticks, % TODO: Change ticks?
+then picking a random neighbour to exchange the rumour with. If one of the nodes is aware of the rumour and the other is not, the uninformed node is made aware of the rumour, which we call a "spreading event". We denote the edges along which the rumour can spread (i.e. the edges connecting informed and uninformed nodes) as "active", and the remaining edges as "inactive".
+% TODO: INCLUDE THIS? Recall that the rumour only spreads if the chosen edge connects an informed node to an uninformed node. 
+In the ring topology all nodes have the same degree, so we can further simplify the interpretation of the spreading process as choosing an edge uniformly at random when an exponential clock of rate $n$ ticks. Thus, the greater the proportion of active edges to inactive edges, the greater the probability that the chosen edge is active, and triggers a spreading event. More frequent spreading events in turn yield lower spreading times. 
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.49\textwidth]{./figures/static_ring_example_spread.png}
+	\caption{Example rumour spread on the Static Ring Network}
+	\label{fig:staticRingExampleSpread}
+\end{figure}
+
+% TODO: Introduce active edges in static network section
+
+In the Static Ring Network, we find that at all times there are only two active edges, namely the two edges connecting the contiguous set of informed nodes to the uninformed nodes.  This is illustrated in Figure \ref{fig:staticRingExampleSpread}, where red nodes are aware of the rumour, blue nodes are not aware of the rumour, and green edges highlight active connections along which the rumour could spread.
+
+% TODO: Each edge chosen uniformly at random as all same degree. static graph always 2 "active" edges. huffled grpah number of active edges can increase
+
+\begin{figure}[h]
+	\centering
+    \begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./figures/static_ring_example_spread.png}
+		\caption*{$t=1 - \epsilon$, for all small $\epsilon > 0$}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{./figures/shuffled_ring_example_spread.png}
+		\caption*{$t=1$}
+	\end{subfigure}
+	\caption{Example rumour spread on the Shuffled Ring Network}
+	\label{fig:shuffledRingExampleSpread}
+\end{figure}
+
+Within a round, in the Shuffled Ring Network, the rumour spreads similarly to the Static Network, i.e. by extending the contiguous set of informed nodes. We see this behaviour in the $t = 1 - \epsilon$ case of Figure \ref{fig:shuffledRingExampleSpread}. However, when the network is shuffled at the start of the new round, it is likely that the continuous set of informed nodes is broken up and distributed around the ring, forming multiple continuous sets of informed nodes as seen in the $t=1$ case of Figure \ref{fig:shuffledRingExampleSpread}. Each of these new sets of adjacent informed nodes contributes an additional two active edges.
+
+Hence, since the Static Ring Network is limited to 2 active edges at any time, whereas the Shuffled Ring Network could have many more, the spreading time is longer for the Static Ring Network.
+
+% TODO: Diagram of the number of newly informed nodes over time for static ring and shuffled ring
+
+We can now answer our original question posed in section \ref{subsect:shuffledRingAsyncApplication} - why is the bound given by Theorem \ref{theorem:AsyncUpperBound} weak for the Shuffled Ring? We saw in the proof of Theorem \ref{theorem:staticRingAsyncBound} that the $\mathcal{O}(n \log n)$ bound must hold with high probability for both the Static Ring and Shuffled Ring, since they have identical structures. However, we have seen from simulations that the spreading time of the Static ring grows like $\mathcal{O}(n)$, so our bound for both the Static Ring and Shuffled Ring can be no better than $\mathcal{O}(n)$. 
+
+We can interpret the Static Ring as a version of the Shuffled Ring in which the nodes have been relabelled. This example shows that such a renaming has no effect on the bound, but has a significant impact on the spreading time, hence the bound must accommodate for the network with the worse spreading time. We refer to such a network as "adversarial", in the sense that it is the network which aims to slow the spread of the rumour by relabelling nodes.
+
+We refer to networks with the same topologies in each round up to the relabelling of nodes as "isomorphic". This example demonstrates a limitation of the bound: given a network, the bound can be no better than the spreading time of the corresponding adversarial network (the isomorphic network with the slowest spreading time).
+
+For example, all other networks isomorphic but not equal to the Static Ring Network (such as the Shuffle Ring Network) involve some relabelling of nodes between rounds, which could introduce additional active edges. Thus, the Static Ring minimises the number of active edges at all time steps so is in fact the adversarial network for the Shuffle Ring Network. 
+
+We saw in this example that the bound was only a factor of $\mathcal{O}(\log n)$ worse than the best possible bound in the adversarial case.  A natural question to ask is whether this is true in general: 
+% TODO: Finish this
+
+% TODO: introduce defns of active, inactive, ismorphism properly
+
+% TODO: Example where the adversarial network doesn't impact - less symmmetry = more adverse effects??
+
+% In adversarial cases bound is good - can it be better in general?
+% TODO: Generalise
+
+% TODO: Is the static always the adversarial? - No, about connectivity as well (shown in chapter 3)
 
 % TODO: Adversarial not "figting back" but one of the possibilites the bound has to account for
 
