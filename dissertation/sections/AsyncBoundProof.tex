@@ -636,13 +636,36 @@ In the Static Ring Network, we find that at all times there are only two active 
 	\label{fig:shuffledRingExampleSpread}
 \end{figure}
 
-Within a round, in the Shuffled Ring Network, the rumour spreads similarly to the Static Network, i.e. by extending the contiguous set of informed nodes. We see this behaviour in the $t = 1 - \epsilon$ case of Figure \ref{fig:shuffledRingExampleSpread}. However, when the network is shuffled at the start of the new round, it is likely that the continuous set of informed nodes is broken up and distributed around the ring, forming multiple continuous sets of informed nodes as seen in the $t=1$ case of Figure \ref{fig:shuffledRingExampleSpread}. Each of these new sets of adjacent informed nodes contributes an additional two active edges.
+Within a round, in the Shuffled Ring Network, the rumour spreads similarly to the Static Network, i.e. by extending the contiguous set of informed nodes. We see this behaviour in the $t = 1 - \epsilon$ case of Figure \ref{fig:shuffledRingExampleSpread}. However, when the network is shuffled at the start of the new round, it is likely that the continuous set of informed nodes is broken up and scattered around the ring, forming multiple continuous sets of informed nodes as seen in the $t=1$ case of Figure \ref{fig:shuffledRingExampleSpread}. Each of these new sets of adjacent informed nodes contributes an additional two active edges.
 
-Hence, since the Static Ring Network is limited to 2 active edges at any time, whereas the Shuffled Ring Network could have many more, the spreading time is longer for the Static Ring Network.
+Hence, the spreading time is longer for the Static Ring Network, as the Static Ring Network is limited to 2 active edges at any time, whereas the Shuffled Ring Network could have many more.
 
-% TODO: Diagram of the number of newly informed nodes over time for static ring and shuffled ring
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./figures/static_ring_informed_node_growth.png}
+	\caption{Simulated informed node growth over time in the Static Ring Network}
+	\label{fig:staticRingInformedNodeGrowth}
+\end{figure}
 
-We can now answer our original question posed in section \ref{subsect:shuffledRingAsyncApplication} - why is the bound given by Theorem \ref{theorem:AsyncUpperBound} weak for the Shuffled Ring? We saw in the proof of Theorem \ref{theorem:staticRingAsyncBound} that the $\mathcal{O}(n \log n)$ bound must hold with high probability for both the Static Ring and Shuffled Ring, since they have identical structures. However, we have seen from simulations that the spreading time of the Static ring grows like $\mathcal{O}(n)$, so our bound for both the Static Ring and Shuffled Ring can be no better than $\mathcal{O}(n)$. 
+We observe the described behaviour in the simulations. % TODO: Change this
+Figure \ref{fig:staticRingInformedNodeGrowth} shows the number of informed nodes at each time during a rumour spread simulation on the Static Ring Network with 500 nodes. Notice that the rate at which the number of informed nodes increases is constant, since at all times there are exactly 2 active edges capable of spreading the rumour.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./figures/shuffled_ring_informed_node_growth.png}
+	\caption{Simulated informed node growth over time in the Shuffled Ring Network}
+	\label{fig:shuffledRingInformedNodeGrowth}
+\end{figure}
+
+Figure \ref{fig:shuffledRingInformedNodeGrowth} is a similar plot for a rumour spread on the Shuffled Ring Network. In this figure we note that the rate at which the number of informed nodes increases varies over time. In the first 3 rounds there are few informed nodes and only 3 opportunities for shuffling, hence the number of active edges is still close to 2. This is reflected in Figure \ref{fig:shuffledRingInformedNodeGrowth} by the initial slow growth in the number of informed nodes. However, after round 4 we see a rapid increase in the rate at which nodes are informed of the rumour, since there are a sufficient number of informed nodes for the shuffling to scatter informed nodes all around the ring, adding many active edges. 
+As the network becomes saturated with informed nodes around time 7, the number of active edges begins to decrease as it becomes more likely that informed nodes will still be adjacent to other informed nodes after shuffling. Hence, in Figure \ref{fig:shuffledRingInformedNodeGrowth}, we see the rate of growth begins to decrease.
+
+% TODO: Remove branching process - out of nowhere and unjustified?
+This growth is similar to a branching process, where each set of contiguous informed nodes (the parent) has a probability of being split into multiple contiguous sets (the children). In this process the offspring distribution would change over time as the network becomes saturated. An interesting area for further study could be fully characterising this growth as a branching process.
+
+Note that since Algorithm \ref{NodeCentricAsyncAlgorithm} is a random process, the individual simulations analysed in Figures \ref{fig:staticRingInformedNodeGrowth} and \ref{fig:shuffledRingInformedNodeGrowth} are not necessarily characteristic of how the rumour spreads on each network. However, after running the simulations multiple times, we see the same general structures we have discussed in both plots, hence these displays are useful illustrations.
+
+We now return to the question posed in section \ref{subsect:shuffledRingAsyncApplication} - why is the bound given by Theorem \ref{theorem:AsyncUpperBound} weak for the Shuffled Ring? We saw in the proof of Theorem \ref{theorem:staticRingAsyncBound} that the $\mathcal{O}(n \log n)$ bound must hold with high probability for both the Static Ring and Shuffled Ring, since they have identical structures. However, we have seen from simulations that the spreading time of the Static ring grows like $\mathcal{O}(n)$, so our bound for both the Static Ring and Shuffled Ring can be no better than $\mathcal{O}(n)$. 
 
 We can interpret the Static Ring as a version of the Shuffled Ring in which the nodes have been relabelled. This example shows that such a renaming has no effect on the bound, but has a significant impact on the spreading time, hence the bound must accommodate for the network with the worse spreading time. We refer to such a network as "adversarial", in the sense that it is the network which aims to slow the spread of the rumour by relabelling nodes.
 
