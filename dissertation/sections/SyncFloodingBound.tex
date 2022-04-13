@@ -212,7 +212,7 @@ We now adapt the deterministic bound proved Theorem \ref{theorem:DeterministicFl
 
 % TODO: Is this a non-theorm? What does it acutally mean?
 
-\begin{theorem}
+\begin{theorem}\label{theorem:markovSyncBound}
 	Let $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$  be a stationary Markovian evolving graph. Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that with probability $1-\frac{1}{n^2}$, the stationary distribution of $\mathcal{M}$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the spreading time of $\mathcal{G}$ under algorithm \ref{SyncFloodingAlgorithm} is
 	$$
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
@@ -255,13 +255,67 @@ Since each topology is sampled from the stationary distribution, these propertie
 
 \subsection{Applying the bound to the Edge Markovian MEDN}\label{subsect:floodingBoundEdgeMarkovian}
 
-TODO: Prove that stationary distribution of edge-markovian evolution is ER G(n, p/(p+q))
+In this section, we apply the bound proved in Theorem \ref{theorem:markovSyncBound} to a specific MEDN called the Edge-Markovian Network. We will also evaluate the quality of the bound by proving a lower bound on the spreading time, and comparing the results with simulations. 
+
+First, we introduce and motivate the model.
+\begin{definition}
+	Edge-Markovian Network $\mathcal{M}(n, p, q)$
+
+	\noindent
+	Let $V$ be a vertex set, and $E = \left\{e : e \subseteq V, |e| = 2 \right\}$ be the set of all possible edges between vertices in $V$. 
+	Let $\left\{X_t(e) : e \in E \right\}$ be a set of independent Markov chains each with the transition matrix
+	\begin{center}
+		\begin{tabular}{ c | c c }
+		   & 0     & 1 \\ 
+		\hline
+		 0 & $1 - p$ & $p$ \\  
+		 1 & $q$     & $1 - q$  
+		\end{tabular}
+	\end{center}
+	An Edge-Markovian Evolving Network $\mathcal{M}(n, p, q) = \left\{(V, E_t) : t \in \mathbb{N} \right\}$ is a random sequence of graphs on the vertex set $V$ where $E_t = \left\{ e \in E : X_t(e) = 1 \right\}$
+\end{definition}
+The Edge-Markovian Network models the situation when connections between nodes independently fail or are restored. The "birth" and "death" of each edge $e$ is dictated by its associated Markov chain $X(e)$, where in each round, a present edge has probability $q$ of failing, and a missing edge has probability $p$ of restoration. % TODO: WHAT DO FAILING AND RESTORATION MEAN
+
+Since the future state of each edge is only dependent on current time, this Network is appropriate for modelling memoryless Networks where we can assume each edge acts independently with identical dynamics to other edges. For example, in a computer network we could imagine each  connection is randomly disrupted by an issue with probability $q$, and the affected connection is fixed with probability $p$ in subsequent time steps.
+
+Now we will see that the set of Markov chains associated with the edges induces a Markov chain over the set of possible graphs on $V$, thus the Edge-Markovian Network is an MEDN.
+
+% TODO: REPAIR-DELAY NETWORKS - any edge could fail, takes a few steps to fix, how to model, what is the stationary distribution?
+
+\begin{lemma}
+	The Edge-Markovian Network is a MEDN
+\end{lemma}
+
+\begin{proof}
+	% State of the next network depends only the current state
+	% Set of Markov chains induces new markov chain
+	% Transition probabilites = numeber of edges to add or remove by indepence
+\end{proof}
+
+% TODO: Proof that it is a MEG 
+
+% TODO: Proof of stationary distribution - plug into
+
+Since the Edge-Markovian Network is an MEDN, we can apply Theorem \ref{theorem:markovSyncBound} to bound the spreading time of Algorithm \ref{SyncFloodingAlgorithm}. Before applying the bound, we need to establish the stationary distribution of this network.
+
+\begin{lemma}
+	The stationary distribution of $\mathcal{M}(n, p, q)$
+\end{lemma}
+
+\begin{proof}
+	Let 
+	$$
+		\pi = \left(\frac{q}{p+q}, \frac{p}{p+q}\right)
+	$$ 
+	be a distribution over the starting states of $X_t(e)$ for any $t \in \mathbb{N}, e \in E$ % TODO: E not defined here
+\end{proof}
+% TODO: Prove that stationary distribution of edge-markovian evolution is ER G(n, p/(p+q))
 
 \begin{theorem}
-	Let $\mathcal{M}(n, p, q)$ be an Edge-Markovian Dynamic Network in its stationary distribution. If $p \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the flooding time in $\mathcal{M}(n, p, q)$ is 
+	Let $\mathcal{M}(n, p, q)$ be an Edge-Markovian Dynamic Network in its stationary distribution. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the flooding time in $\mathcal{M}(n, p, q)$ is 
 
 	$$
-		\mathcal{O}\left(\frac{\log n}{\log np} + \log \log np \right)
+		\mathcal{O}\left(\frac{\log n}{\log n\hat{p}} + \log \log n\hat{p} \right)
 	$$
 \end{theorem}
 
@@ -270,6 +324,10 @@ TODO: Proof
 \begin{proof}
 	
 \end{proof}
+
+\begin{lemma}
+	Let $\hat{p} \geq c\frac{\log n}{n}$ for a sufficiently large $c$.
+\end{lemma}
 
 % TODO: What happens if p < c logn/n?
 % lower bound on mixing time
