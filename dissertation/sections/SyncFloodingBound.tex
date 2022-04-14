@@ -263,7 +263,7 @@ First, we introduce and motivate the model.
 
 	\noindent
 	Let $V$ be a vertex set, and $E = \left\{e : e \subseteq V, |e| = 2 \right\}$ be the set of all possible edges between vertices in $V$. 
-	Let $\left\{X_t(e) : e \in E \right\}$ be a set of independent Markov chains each with the transition matrix
+	Let $\left\{\{X_e(t)\}_{t \in \mathbb{N}} : e \in E \right\}$ be a set of independent Markov chains on the state space $\{0,1\}$, each with the transition matrix
 	\begin{center}
 		\begin{tabular}{ c | c c }
 		   & 0     & 1 \\ 
@@ -272,11 +272,11 @@ First, we introduce and motivate the model.
 		 1 & $q$     & $1 - q$  
 		\end{tabular}
 	\end{center}
-	An Edge-Markovian Evolving Network $\mathcal{M}(n, p, q) = \left\{(V, E_t) : t \in \mathbb{N} \right\}$ is a random sequence of graphs on the vertex set $V$ where $E_t = \left\{ e \in E : X_t(e) = 1 \right\}$
+	An Edge-Markovian Evolving Network $\mathcal{M}(n, p, q) = \left\{(V, E_t) : t \in \mathbb{N} \right\}$ is a random sequence of graphs on the vertex set $V$ where $E_t = \left\{ e \in E : X_e(t) = 1 \right\}$, i.e. each edge $e$ is only present in the time steps when its associated Markov chain $X_e$ is in state 1.
 \end{definition}
-The Edge-Markovian Network models the situation when connections between nodes independently fail or are restored. The "birth" and "death" of each edge $e$ is dictated by its associated Markov chain $X(e)$, where in each round, a present edge has probability $q$ of failing, and a missing edge has probability $p$ of restoration. % TODO: WHAT DO FAILING AND RESTORATION MEAN
+The Edge-Markovian Network models the situation when connections between nodes independently fail or are restored. The "birth" and "death" of each edge $e$ is dictated by its associated Markov chain $X_e$, where in each round, a present edge has probability $q$ of failing, and a missing edge has probability $p$ of restoration. Hence, for any given edge, after a geometrically distributed time with parameter $q$, a failure occurs. Restoring the edge takes a geometrically distributed time with parameter $p$ % TODO: WHAT DO FAILING AND RESTORATION MEAN
 
-Since the future state of each edge is only dependent on current time, this Network is appropriate for modelling memoryless Networks where we can assume each edge acts independently with identical dynamics to other edges. For example, in a computer network we could imagine each  connection is randomly disrupted by an issue with probability $q$, and the affected connection is fixed with probability $p$ in subsequent time steps.
+Since the future state of each edge is only dependent on current state, this Network is appropriate for modelling memoryless Networks where we can assume each edge acts independently with identical dynamics to other edges. For example, in a computer network we could imagine each  connection is randomly disrupted by an issue with probability $q$, and the affected connection is fixed with probability $p$ in each of the subsequent time steps. 
 
 Now we will see that the set of Markov chains associated with the edges induces a Markov chain over the set of possible graphs on $V$, thus the Edge-Markovian Network is an MEDN.
 
@@ -287,9 +287,10 @@ Now we will see that the set of Markov chains associated with the edges induces 
 \end{lemma}
 
 \begin{proof}
-	% State of the next network depends only the current state
-	% Set of Markov chains induces new markov chain
-	% Transition probabilites = numeber of edges to add or remove by indepence
+	Since all the edges are memoryless, the distribution of which edges will be present in the subsequent round is only dependent on which edges are present currently. %TODO: Reword this
+	Thus, the distribution over possible topologies in the following round is only dependent on the topology in the current round.
+	Hence, the sequence of topologies is a Markov chain, so the network is an MEDN.
+	% TODO: Include transition probabilities
 \end{proof}
 
 % TODO: Proof that it is a MEG 
@@ -307,9 +308,29 @@ Since the Edge-Markovian Network is an MEDN, we can apply Theorem \ref{theorem:m
 	$$
 		\pi = \left(\frac{q}{p+q}, \frac{p}{p+q}\right)
 	$$ 
-	be a distribution over the starting states of $X_t(e)$ for any $t \in \mathbb{N}, e \in E$ % TODO: E not defined here
+	be a distribution over the starting states of $X_e$ for any $t \in \mathbb{N}, e \in E$, % TODO: E not defined here
+	where the first component is the probability of starting in state 0, and the second component is the probability of starting in state 1. First we show that $\pi$ is the stationary distribution for all the edge Markov chains.
+
+	Let $M$ be the transition matrix for any of the edge Markov chains. We calculate the distribution over $\{0,1\}$ after a single round starting in distribution $\pi$. Observe that
+	$$
+		\pi M =
+		\begin{bmatrix}
+			\frac{q}{p+q} & \frac{p}{p+q}
+		\end{bmatrix}
+		\begin{bmatrix}
+			1 - p & p \\
+			q & 1 - q 
+		\end{bmatrix}
+		= \begin{bmatrix}
+			\frac{q}{p+q} & \frac{p}{p+q}
+		\end{bmatrix}
+		= \pi
+	$$
+	thus $\pi$ is the stationary distribution of any $X_e$.
+	Now we formulate the stationary distribution of the topology Markov chain. When all edges start in the stationary distribution, at any time step $t$, $X_e(t) = 1$ with probability $\frac{p}{p+q}$ by the stationarity of $\pi$. Hence, under this initial distribution, each edge is present with probability $\frac{p}{p+q}$ in any time step. Note that this distribution over the possible topologies is not dependent on the topology of the network at any other time, hence it is stationary.
 \end{proof}
 % TODO: Prove that stationary distribution of edge-markovian evolution is ER G(n, p/(p+q))
+% DEFINE DISTRIBUTUI
 
 \begin{theorem}
 	Let $\mathcal{M}(n, p, q)$ be an Edge-Markovian Dynamic Network in its stationary distribution. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the flooding time in $\mathcal{M}(n, p, q)$ is 
