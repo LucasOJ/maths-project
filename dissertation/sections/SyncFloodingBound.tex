@@ -297,10 +297,34 @@ Now we will see that the set of Markov chains associated with the edges induces 
 
 % TODO: Proof of stationary distribution - plug into
 
-Since the Edge-Markovian Network is an MEDN, we can apply Theorem \ref{theorem:markovSyncBound} to bound the spreading time of Algorithm \ref{SyncFloodingAlgorithm}. Before applying the bound, we need to establish the stationary distribution of this network.
+Since the Edge-Markovian Network is an MEDN, we can apply Theorem \ref{theorem:markovSyncBound} to bound the spreading time of Algorithm \ref{SyncFloodingAlgorithm}. Before applying the bound, we need to establish the stationary distribution of this network. First we establish when a stationary distribution exists for the Edge-Markovian MEDN.
 
 \begin{lemma}
-	The stationary distribution of $\mathcal{M}(n, p, q)$
+	An Edge-Markovian MEDN $\mathcal{M}(n, p, q)$ has a unique stationary distribution if $0 < p, q < 1$.
+\end{lemma}
+
+\begin{proof}
+	If either $p=0$ or $q=0$, then the edges could get stuck in a present or not-present state, but if $0 < p, q$ then the Markov chain can always move to a new state. When we also have that $p, q < 1$, any set of insertions and deletions from an arbitrary state has non-zero probability. Thus, under these conditions, it is possible to transition between any two states in a single time step. Hence, the Markov chain is irreducible when $0 < p, q < 1$. 
+
+	If $p=q=1$, then the Markov chain is periodic as edges alternate between present and non-present each time step. However, if $p, q < 1$ no such periodic behaviour can take place with certainty, so the Markov chain is aperiodic.
+
+	Hence, if $0 < p, q < 1$, then the Markov chain is irreducible and aperiodic, thus by % TODO: CITE markov chain theorem
+	it has a unique stationary distribution.
+\end{proof}
+
+For convenience, we assume that $0 < p, q < 1$ for the remainder of this section. Now we introduce the unique stationary distribution for the Edge-Markovian MEDN. 
+
+\begin{definition}
+	Erdős-Rényi Random Graph $G(n,\tilde{p})$
+
+	\noindent	
+	The Erdős-Rényi (ER) Random Graph is a distribution over all the possible graphs on a vertex set of size $n$, where each edge is present with probability $\tilde{p}$.
+\end{definition}
+
+Now we prove that the ER distribution $G(n,\tilde{p})$ is the stationary distribution for the Edge-Markovian MEDN for a specific $\tilde{p}$.
+
+\begin{lemma}
+	The stationary distribution of $\mathcal{M}(n, p, q)$ is the Erdős-Rényi distribution $G(n, \frac{p}{p+q})$ 
 \end{lemma}
 
 \begin{proof}
@@ -327,8 +351,14 @@ Since the Edge-Markovian Network is an MEDN, we can apply Theorem \ref{theorem:m
 		= \pi
 	$$
 	thus $\pi$ is the stationary distribution of any $X_e$.
-	Now we formulate the stationary distribution of the topology Markov chain. When all edges start in the stationary distribution, at any time step $t$, $X_e(t) = 1$ with probability $\frac{p}{p+q}$ by the stationarity of $\pi$. Hence, under this initial distribution, each edge is present with probability $\frac{p}{p+q}$ in any time step. Note that this distribution over the possible topologies is not dependent on the topology of the network at any other time, hence it is stationary.
+	
+	Now we formulate the stationary distribution of the topology Markov chain. Note that this is a distribution over possible topologies on the vertex set $V$. When all edges start in the stationary distribution, at any time step $t$, $X_e(t) = 1$ with probability $\frac{p}{p+q}$ by the stationarity of $\pi$. Hence, under this initial distribution, each edge is present with probability $\frac{p}{p+q}$ in any time step. Note that this distribution over the possible topologies is not dependent on the topology of the network at any other time, hence it is stationary. % TODO: IS this clear direction -> distribution is stationary
+
+	We recognise this distribution as the $G(n, \frac{p}{p+q})$ ER Random Graph distribution.
 \end{proof}
+
+Thus, when we start the Markov chain in a topology chosen at random according to the $G(n, \frac{p}{p+q})$ distribution, the distribution of topologies for the next step is again the $G(n, \frac{p}{p+q})$ distribution. Inductively, the distribution of the topology of the network at any time step is $G(n, \frac{p}{p+q})$.
+
 % TODO: Prove that stationary distribution of edge-markovian evolution is ER G(n, p/(p+q))
 % DEFINE DISTRIBUTUI
 
