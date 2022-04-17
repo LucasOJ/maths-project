@@ -214,8 +214,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 		\mathbb{E}[N_k(\tau)|I_{k-1}(\gamma), \gamma \in [0, \tau]] &= \mathbb{E}\int_0^\tau 2 I_{k-1}(\gamma) d\gamma \\
 		&= 2 \int_0^\tau \mathbb{E}I_{k-1}(\gamma) d\gamma \\ % TODO: How can we swap integral and expectation? Fubinis theorem since I_{k-1}(\gamma) \leq \Delta
 		& \leq 2 \int_0^\tau \frac{2^{k-1} \gamma^{k-1}}{(k-1)!} \Delta d\gamma \\
-		& \text{by the induction hypothesis}\\
-		\\
+		\intertext{by the induction hypothesis}
 		& = \frac{2^k \tau^k}{k!} \Delta
 	\end{align*}
 	Hence 

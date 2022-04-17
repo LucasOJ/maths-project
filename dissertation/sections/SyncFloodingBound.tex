@@ -83,12 +83,14 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\underline{Inductive Case.} For brevity, let $s = T_i + t$. Suppose that $|I_s| > (1+k_j)^t h_i$.
 
 	We notice that 
-	% TODO: Justify steps
 	\begin{align*}
-		|I_{s+1}| &= |I_s| + |B(I_s)| \\ %by operation of algo
+		|I_{s+1}| &= |I_s| + |B(I_s)| \\
+		\intertext{by the operation of Algorithm \ref{SyncFloodingAlgorithm}}
 		& \geq |I_s| + k_j |I_s| \\ % since we assume s < T_j => |I_s| \leq h_j + (h_j, k_j)-expander
+		\intertext{as $G_t$ is a $(h_j, k_j)$-expander, so we observe that $|B(I_s)| \leq h_j$ since $s < T_j$}
 		& = (1 + k_j)|I_s| \\
-		& > (1 + k_j)(1+k_j)^t h_i \\ % by induction hypotheis
+		& > (1 + k_j)(1+k_j)^t h_i \\
+		\intertext{by the induction hypothesis}
 		& = (1+k_j)^{t+1} h_i
 	\end{align*}
 	% TODO: boundary set picture here	

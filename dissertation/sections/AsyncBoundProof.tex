@@ -81,24 +81,26 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		& \geq \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)}  \max \left\{ \frac{1}{d_{u'}(\gamma)},\frac{1}{d_{v'}(\gamma)} \right\} \\ 
 		% TODO: Justify above
 		& \geq \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)} \min_{\{u, v\} \in E(I_\gamma, U_\gamma) } \left\{ \max \left\{ \frac{1}{d_u(\gamma)},\frac{1}{d_v(\gamma)} \right\} \right\} & \\ 
+		\intertext{by replacing all terms in the summation with the minimum term}
 		& = \min_{\{u, v\} \in E(I_\gamma, U_\gamma) } 
 		\left\{ \max \left\{ \frac{1}{d_u(\gamma)},\frac{1}{d_v(\gamma)} \right\} \right\} |E(I_\gamma, U_\gamma)| \\
+		\intertext{since there are  $|E(I_\gamma, U_\gamma)|$ identical terms in the summation}	
 		%TODO: Mention degrees indexed by time above?
 		& = \rho(S) \frac{|S|}{\text{vol}(S)} |E(I_\gamma, U_\gamma)| \\
+		\intertext{by the definition of $\rho$}
 		& = \rho(S) |S| \frac{|E(I_\gamma, U_\gamma)|}{ 
 			\min\{\text{vol}(I_\gamma), \text{vol}(U_\gamma)\}
 		} \\
+		\intertext{by the definition of $S$}
 		& \geq \rho(G_\gamma)\Phi(G_\gamma)|S| \\ 
-		% TODO: Since We instantiate at specific sets
-		& \\
+		\intertext{since $\rho$ and $\Phi$ minimise over all valid sets of nodes (including $S$)}
 		& \geq \rho(G_\gamma)\Phi(G_\gamma) \min\{|I_\gamma|, |U_\gamma|\} \\
-		& \text{since } S = I_\gamma \text { or } U_\gamma \\
-		& \\
-		& = \rho(G_\gamma)\Phi(G_\gamma) m(\gamma) \\
-		& \text{by the definition of } m(\gamma)
+		\intertext{since $S = I_\gamma$ or $ U_\gamma$}
+		& = \rho(G_\gamma)\Phi(G_\gamma) m(\gamma)
+		\intertext{by the definition of $m(\gamma)$}
 	\end{align*}
 	% TODO: Brief exposition here
-	We now procceed to prove the following claim, by performing case analysis on $m(\gamma)$
+	We now proceed to prove the following claim, by performing case analysis on $m(\gamma)$
 
 	\textbf{Claim.} $m(\gamma) \geq \frac{m(\tau)}{2}$. % Inutive explanation
 
@@ -114,7 +116,7 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\textbf{Case 2.} Suppose instead that $m(\gamma) = |U_\gamma|$
 
 	\noindent
-	By the defintion of $\tau'$, since $\gamma < \tau'$ we have that $|I_{\gamma}| < |I_\tau| + \frac{m(\tau)}{2}$.
+	By the definition of $\tau'$, since $\gamma < \tau'$ we have that $|I_{\gamma}| < |I_\tau| + \frac{m(\tau)}{2}$.
 
 	Since $|I_t| + |U_t| = n$ for all times $t$, note that
 	$$
@@ -128,7 +130,7 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\begin{align*}
 		|U_\gamma| & > |U_\tau| - \frac{m(\tau)}{2} & \text{since }\gamma < \tau' \\
 		& \geq |U_\tau| - \frac{|U_\tau|}{2} & \text{since } m(\tau) \leq |U_\tau| \\
-		& = \frac{|U_\tau|}{2} \\
+		& = \frac{|U_\tau|}{2} 
 	\end{align*}
 	Thus the claim holds in this case also.
 	
@@ -137,7 +139,6 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\begin{equation} \label{eq:RateBound}
 		\lambda(\gamma) \geq \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2}
 	\end{equation}
-
 	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. % TODO: Is this a poisson proccess? Independent increments, rate function defined by realisation but still has independet increments, step talk about step function.
 	Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
 
@@ -146,20 +147,15 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\begin{align*}
 		\Lambda(\tau + \Delta(\alpha) + 2) &= \int_\tau^{\tau + \Delta(\alpha) + 2} \lambda(\gamma) d\gamma \\
 		& \geq \int_{\ceil\tau}^{{\ceil\tau} + \Delta(\alpha) + 1} \lambda(\gamma) d\gamma \\
-		& \text{since } \lambda(\gamma) \geq 0 \text{ as it is a rate function}\\
-		& \\
+		\intertext{where we note  that $\tau \leq \ceil{\tau}$ and $\tau > \ceil{\tau} - 1$, so $[\ceil{\tau}, {\ceil\tau} + \Delta(\alpha) + 1] \subseteq [\tau, \tau + \Delta(\alpha) + 2]$. Also note that since $\lambda$ is a rate function, $\lambda(\gamma) \geq 0$. Since we integrate over a smaller range of a non-negative function, the inequality holds.} % TODO: Reword 
 		& = \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \lambda(\gamma) d\gamma \\
-		& \text{by splitting the integral into unit length intervals } \\
-		& \\
+		\intertext{by splitting the integral into unit length intervals between integers} 
 		& \geq \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2} d\gamma \\
-		& \text{by applying Inequality } \ref{eq:RateBound} \\
-		& \\
+		\intertext{by applying Inequality \ref{eq:RateBound}}
 		& = \sum_{k=0}^{\Delta(\alpha)} \rho(G_{\ceil\tau + k})\Phi(G_{\ceil\tau + k})\frac{m(\tau)}{2} \\
-		& \text{since } G_\gamma = G_{\floor\gamma} \\
-		& \\
+		\intertext{since $G_\gamma = G_{\floor\gamma}$}
 		& \geq 2\alpha\frac{m(\tau)}{2} \\
-		& \text{by the definition of } \Delta(\alpha) \\
-		& \\
+		\intertext{by the definition of $\Delta(\alpha)$}
 		& = \alpha m(\tau)
 	\end{align*}
 	Let $X$ be a random variable with a $\text{Poisson}(\alpha m(\tau))$ distribution. 
@@ -170,20 +166,19 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		\tau' \geq \tau + \Delta(\alpha) + 2 \implies 
 		N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}
 	$$
-	where the final implication holds since by the definition of $\tau'$, if $\tau' \geq \tau + \Delta(\alpha) + 2$ then the number of new nodes informed of the the rumour between time $\tau$ and $\tau + \Delta(\alpha) + 2$ must be less than or equal to $\frac{m(\tau)}{2}$. Hence we have that
+	where the final implication holds since by the definition of $\tau'$, if $\tau' \geq \tau + \Delta(\alpha) + 2$ then the number of new nodes informed of the the rumour between time $\tau$ and $\tau + \Delta(\alpha) + 2$ must be less than or equal to $\frac{m(\tau)}{2}$. Hence, we have that
 	\begin{align*}
 		\mathbb{P}(\tau' - \tau \geq \Delta(\alpha) + 2) & 
 		\leq \mathbb{P}\left(N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}\right) \\
 		& \leq \mathbb{P}\left(X \leq \frac{m(\tau)}{2}\right) \\
-		& \text{since } X \text{ is stochastically dominated by } N(\tau + \Delta(\alpha) + 2) \\
-		& \\
-		& \leq \mathbb{P}\left(X \leq \frac{\alpha m(\tau)}{2}\right) \\
-		& \text{since } \alpha \geq 1 \\ % TODO: Check this assumption
+		\intertext{since $X$ is stochastically dominated by $N(\tau + \Delta(\alpha) + 2)$} 
+		& \leq \mathbb{P}\left(X \leq \frac{\alpha m(\tau)}{2}\right)
+		\intertext{since $\alpha \geq 1$} % TODO: Check this assumption
 	\end{align*}
 	To finish the proof we prove the following claim
 
 	\noindent
-	\textbf{Claim.} For a Poisson($r$) distributed random random variable $Y$, 
+	\textbf{Claim.} For a Poisson($r$) distributed random variable $Y$, 
 	$$
 		\mathbb{P}(Y \leq \frac{r}{2}) \leq e^{-cr}
 	$$
@@ -257,10 +252,10 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		& \mathbb{P}(\text{Any interval has length at least } \Delta(\alpha_i) + 2) \\
 		&= \mathbb{P}(\bigcup_{i=0}^K \{\tau_{i+1} - \tau_i \geq \Delta(\alpha_i) + 2\}) \\
 		&\leq \sum_{i=0}^K \mathbb{P}(\tau_{i+1} - \tau_i \geq \Delta(\alpha_i) + 2) \\
+		\intertext{by the union bound}
 		&\leq \sum_{i=0}^K e^{-c \log n} \\
-		&\leq \sum_{i=0}^N e^{-c \log n} 
-		%% TODO: PUT IN REASONING& \text{since } K < N 
-		\\
+		&\leq \sum_{i=0}^N e^{-c \log n} \\
+		\intertext{since $K < N$}
 		&= N e^{-c \log n} \\
 		&\to 0 \text { as } n \to \infty
 	\end{align*}
