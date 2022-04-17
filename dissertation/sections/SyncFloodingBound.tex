@@ -46,7 +46,7 @@ First we introduce the notion of an expander graph, which we need to express the
 	$(h, k)$-Expander
 
 	\noindent
-	A graph $G$ on a vertex set $V$ is a $(h, k)$-expander if all subsets of the nodes $S \subseteq V$ such that $|S| \leq h$ satisfy $|B(I)| \geq k$.
+	A graph $G$ on a vertex set $V$ is a $(h, k)$-expander if all subsets of the nodes $S \subseteq V$ such that $|S| \leq h$ satisfy $|B(S)| \geq k|S|$.
 \end{definition}
 
 Intuitively, an $(h, k)$-Expander should be well-connected since each "small" subset of nodes (i.e. less than $k$ nodes) is connected to at least $k$ other nodes outside the set.  
@@ -359,26 +359,73 @@ Now we prove that the ER distribution $G(n,\tilde{p})$ is the stationary distrib
 
 Thus, when we start the Markov chain in a topology chosen at random according to the $G(n, \frac{p}{p+q})$ distribution, the distribution of topologies for the next step is again the $G(n, \frac{p}{p+q})$ distribution. Inductively, the distribution of the topology of the network at any time step is $G(n, \frac{p}{p+q})$.
 
-% TODO: Prove that stationary distribution of edge-markovian evolution is ER G(n, p/(p+q))
-% DEFINE DISTRIBUTUI
+To apply Theorem \ref{theorem:markovSyncBound}, we need to compute expansion properties of the stationary distribution that hold with high probability.
 
-\begin{theorem}
-	Let $\mathcal{M}(n, p, q)$ be an Edge-Markovian Dynamic Network in its stationary distribution. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the flooding time in $\mathcal{M}(n, p, q)$ is 
-
+\begin{lemma}\label{lemma:GnpExpansion}
+	Let $\hat{p} \geq c\frac{\log n}{n}$ for a sufficiently large constant $c$. For a $G(n, \hat{p})$ graph we have that for all $S \subseteq V$ such that $|S| \leq \frac{n}{2}$
 	$$
-		\mathcal{O}\left(\frac{\log n}{\log n\hat{p}} + \log \log n\hat{p} \right)
+		|B(S)| \geq \frac{n}{c} \min \left\{ |S|\hat{p}, 1 \right\} 
 	$$
-\end{theorem}
+	with probability at least $1 - \frac{1}{n^2}$, for large $n$. 
+\end{lemma}
 
-TODO: Proof
+% TODO: mention OMit proof citing elementary probability + not relevant
 
-\begin{proof}
-	
-\end{proof}
+Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology according to the $G(n, \hat{p})$ distribution, with high probability the boundaries of all "small" sets are large. Using this lemma, we establish expansion properties for the $G(n,p)$ distribution.
+
+% TODO: Interpretation of lemma in terms of expander graphs
 
 \begin{lemma}
-	Let $\hat{p} \geq c\frac{\log n}{n}$ for a sufficiently large $c$.
+	Let $\hat{p} \geq c\frac{\log n}{n}$ for a sufficiently large constant $c$, and large $n$. With probability at least $1- n^2$, a topology $G$ drawn from the $G(n, \hat{p})$ distribution is a $(h, \hat{p}\frac{n}{c})$-expander for all $1 \leq h \leq \frac{1}{\hat{p}}$ and a $(h, \frac{1}{h}\frac{n}{c})$-expander for all $\frac{1}{\hat{p}} \leq h \leq \frac{n}{2}$
 \end{lemma}
+
+\begin{proof}
+	Suppose 
+	\begin{equation}\label{eq:GnpExpansionBound}
+		|B(S)| \geq \frac{n}{c} \min \left\{ h \hat{p}, 1 \right\} 
+	\end{equation}
+	holds for all $S$ such that $1 \leq |S| \leq \frac{n}{2}$. 
+	Let $1 \leq h \leq \frac{n}{2}$. We consider 2 cases. 
+
+	\textbf{Case 1.} $1 \leq h \leq \frac{1}{\hat{p}}$. 
+
+	Consider an arbitrary subset $S$ such that $h' = |S| \leq h$.
+	By equation \ref{eq:GnpExpansionBound}, 
+	$$
+		|B(S)| \geq \frac{n}{c} \min \left\{ h' \hat{p}, 1 \right\} = \frac{n}{c}h'\hat{p} = \hat{p}\frac{n}{c} |S|
+	$$
+	thus $G$ is a $(h, \hat{p}\frac{n}{c})$-expander.
+	Consider an arbitrary subset $S$ such that $h' = |S| \leq h$. 
+
+	\textbf{Case 2.} $\frac{1}{\hat{p}} \leq h \leq \frac{n}{2}$
+
+	Consider an arbitrary subset $S$ such that $h' = |S| \leq h$.
+
+	\textbf{Case 2a.}
+	Suppose $1 \leq h' \leq \frac{1}{\hat{p}}$. 
+	
+	Similarly to Case 1, 
+	$$
+		|B(S)| \geq \hat{p}\frac{n}{c} |S|
+	$$
+	Since $h \geq \frac{1}{\hat{p}}$, we observe that 
+	$$
+		|B(S)| \geq \frac{1}{h}  \frac{n}{c} |S|
+	$$ 
+
+	\textbf{Case 2b.} Suppose $\frac{1}{\hat{p}} \leq h' \leq \frac{n}{2}$
+	By equation \ref{eq:GnpExpansionBound}, 
+	$$
+		|B(S)| 
+		\geq \frac{n}{c} \min \left\{ h' \hat{p}, 1 \right\} 
+		= \frac{n}{c}\frac{|S|}{h'} 
+		\geq \frac{1}{h} \frac{n}{c}|S|
+	$$
+
+	Hence, $G$ is a $(h, \frac{1}{h} \frac{n}{c})$-expander.
+
+	By Lemma \ref{lemma:GnpExpansion}, equation \ref{eq:GnpExpansionBound} holds with probability at least $1 - \frac{1}{n^2}$, hence the expansion properties also hold with probability at least $1 - \frac{1}{n^2}$.
+\end{proof}
 
 % TODO: What happens if p < c logn/n?
 % lower bound on mixing time
