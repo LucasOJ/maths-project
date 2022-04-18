@@ -243,7 +243,7 @@ Since each topology is sampled from the stationary distribution, these propertie
 
 	Now we combine the previous two claims. By the first claim if $A_k$ holds for all $k \leq n$ we have that $T \leq n$, thus $A_k$ holds for all $k \leq T$. In this case, by the second claim we obtain that  $T=\mathcal{O}\left(\sum_{i=1}^s \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}\right)$.
 
-	Since we have shown that the event $\bigcap_{t=0}^n A_t \implies B$, we have that $\comp{B} \implies \comp{ \bigcap_{t=0}^n A_t} = \bigcup_{t=0}^n \comp{A_t}$. To finish the proof, we show that the event $\comp{B}$ happens with vanishing probability, thus $B$ happens with high probability.
+	Since we have shown that the event $\bigcap_{t=0}^n A_t \implies B$, we have that $\comp{B} \implies \comp{ \bigcap_{t=0}^n A_t} = \bigcup_{t=0}^n \comp{A_t}$. To finish the proof, we show that the event $\comp{B}$ occurs with vanishing probability, thus $B$ occurs with high probability.
 
 	\begin{align*}
 		\mathbb{P}(\comp{B}) &\leq \mathbb{P}(\bigcup_{t=0}^n \comp{A_t}) & \text{by the inferred implication} \\ 
@@ -429,11 +429,170 @@ Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology acco
 	By Lemma \ref{lemma:GnpExpansion}, equation \ref{eq:GnpExpansionBound} holds with probability at least $1 - \frac{1}{n^2}$, hence the expansion properties also hold with probability at least $1 - \frac{1}{n^2}$.
 \end{proof}
 
+Now we apply Theorem \ref{theorem:DeterministicFloodingBound} to the Edge-Markovian Dynamic Network.
+
+\begin{theorem}
+	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Dynamic Network. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} in $\mathcal{M}(n, p, q)$ is at most
+	$$
+		\mathcal{O}\left(\frac{\log n}{\log n\hat{p}} + \log \log n\hat{p} \right)
+	$$
+\end{theorem}
+
+\begin{proof}
+	Let $\hat{p}$ denote $\frac{p}{p+q}$. 
+	By Lemma \ref{lemma:GnpExpansion}, the stationary distribution of $\mathcal{M}(n, p, q)$ is an $(i, k_i)$-expander for $1 \leq i \leq \frac{n}{2}$ where 
+	\begin{equation*}
+		k_i = 
+		\begin{cases*}
+			\frac{n\hat{p}}{c} & $1 \leq i \leq \floor{\frac{1}{\hat{p}}}$ \\
+			\frac{n}{ci} & $\floor{\frac{1}{\hat{p}}} \leq i \leq \frac{n}{2}$
+		\end{cases*}
+	\end{equation*}
+	By Theorem \ref{theorem:DeterministicFloodingBound} we have that the spreading time is at most
+	$$
+		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{\log \frac{i}{\max\{i-1,1\}}}{\log(1+k_i)}\right)
+	$$
+	with high probability.
+	Since $\log \frac{i}{i-1} \leq \frac{1}{i}$ for $i \geq 2$, % TODO: Justify
+	this quantity is bounded above by 
+	$$
+		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{1}{i\log(1+k_i)}\right)
+	$$
+	By substituting for $k_i$ in the summation, we have the that the order of the spreading time is bounded with high probability by
+	$$
+		\sum_{i=1}^{\floor{1/\hat{p}}} \frac{1}{i\log(1+\frac{n\hat{p}}{c})} 
+		+
+		\sum_{i=\floor{1/\hat{p}} + 1}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
+	$$
+	We bound each of the sums separately.
+
+	\textbf{First Sum.}
+
+	Using that $\sum_{i=1}^m 1/i \leq \log m + 1$, %TODO: Justify
+	we observe that
+	$$
+		\frac{1}{\log(1+\frac{n\hat{p}}{c})} \sum_{i=1}^{\floor{1/\hat{p}}} \frac{1}{i} 
+		\leq 
+		\frac{\log \frac{1}{\hat{p}} + 1}{\log(1+\frac{n\hat{p}}{c})} 
+		= 
+		\mathcal{O}\left(\frac{\log n}{\log(n\hat{p})}\right)
+	$$
+	where the final equality holds since $\hat{p} \geq \frac{c \log n}{\log n}$
+
+	\textbf{Second Sum.}
+
+	We split the second sum again into
+	$$	
+		\sum_{i=\floor{1/\hat{p}} + 1}^{\ceil{n/c}-1} \frac{1}{i\log(1+\frac{n}{ci})} 
+		+ 
+		\sum_{i=\ceil{n/c}}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
+	$$
+	Note that
+	\begin{align*}
+		\sum_{i=\floor{1/\hat{p}} + 1}^{\ceil{n/c}-1} \frac{1}{i\log(1+\frac{n}{ci})} 
+		& \leq \sum_{i=\floor{1/\hat{p}} + 1}^{\ceil{n/c}-1} \frac{1}{i\log(\frac{n}{ci})} \\
+		& \leq \int_{\floor{1/\hat{p}}}^{\ceil{n/c}-1} \frac{1}{x\log(1+\frac{n}{cx})} dx \\
+		\intertext{since $f(x) = x\log(1+\frac{n}{cx})$ is non-negative and concave on the interval $[\floor{1/\hat{p}}, \ceil{n/c}]$ }
+		& = \left[-\log\log \frac{n}{cx}\right]_{\floor{1/\hat{p}}}^{\ceil{n/c}-1} \\
+		&= \mathcal{O}(\log \log (n \hat{p}))
+	\end{align*}
+	Since $\log(1+x) \geq \frac{x}{1+x}$ for $x < 1$ we observe that
+	\begin{align*}
+		\sum_{i=\ceil{n/c}}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
+		& \leq 
+		\sum_{i=\ceil{n/c}}^\frac{n}{2} \frac{(1 + \frac{n}{ci})}{i\frac{n}{ci}} 
+		= 
+		\sum_{i=\ceil{n/c}}^\frac{n}{2} \left( \frac{c}{n} + \frac{1}{i} \right) \\
+		& \leq 
+		\sum_{i=\ceil{n/c}}^\frac{n}{2} \left( \frac{c}{n} + \frac{c}{n} \right)
+		= \mathcal{O}(1)
+	\end{align*}
+
+	To obtain the result, we recombine the summations
+	$$
+		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{\log \frac{i}{\max\{i-1,1\}}}{\log(1+k_i)}\right) =
+		\mathcal{O}\left(\frac{\log n}{\log (n\hat{p})} + \log \log (n\hat{p})\right)
+	$$
+
+\end{proof}
+
+\subsection{Evaluating the quality of the bound}
+
+% TODO: Note \hat{p} is a function of n
 % TODO: What happens if p < c logn/n?
 % lower bound on mixing time
 % TODO: Why can't generalise to varying t? (Non-homogenous MC)
 
-\subsection{Simulations}
+\begin{theorem}
+	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Dynamic Network. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} in $\mathcal{M}(n, p, q)$ is at least 
+	$$
+		\Omega\left(\frac{\log n}{\log (n \hat{p})}\right)
+	$$
+\end{theorem}
+
+\begin{proof}
+	Let $\delta_{v,t}$ be the degree of node $v \in V$ at time $t$. Since each topology is distributed according to the ER $G(n, \hat{p})$ distribution, $\delta_{v,t} \sim \text{Binomial}(n-1,\hat{p})$, as each of the $n-1$ other nodes have probability $\hat{p}$ of sharing an edge with $v$ in $G_t$. Thus,
+	\begin{align*}
+		\mathbb{P}(\delta_{v,t} \geq 2n\hat{p}) 
+		& \leq \mathbb{P}(\text{Binomial}(n, \hat{p}) \geq 2n\hat{p}) \\ 
+		\intertext{since the $\text{Binomial}(n, \hat{p})$ distribution stochastically dominates the $\text{Binomial}(n-1, \hat{p})$ distribution} % TODO: Prove in prelims and cite
+		& \leq \exp(-\frac{n\hat{p}}{3}) \\
+		\intertext{by the Chernoff bound. We omit the proof of the Chernoff bound for brevity, but refer the reader to \cite{binomialChernoff} for a full proof.}
+		& \leq \exp(-\frac{c \log n}{3}) = n^{-\frac{c}{3}}
+		\intertext{since $\hat{p} \geq \frac{c \log n}{n}$}
+	\end{align*}
+	By taking $c=9$, we obtain $\mathbb{P}(\delta_{v,t} > 2n\hat{p}) \leq n^{-3}$.
+	We use this result to bound the probability that for a given time $t$, there exists a node with degree at least $2n\hat{p}$.
+	$$
+		\mathbb{P}\left(\bigcup_{v \in V} \left\{ \delta_{v,t} \geq 2n\hat{p}\right\} \right) 
+		\leq 
+		\sum_{v \in V}
+		\mathbb{P}(\delta_{v,t} \geq 2n\hat{p}) 
+		=
+		n \mathbb{P}(\delta_{v,t} \geq 2n\hat{p}) 
+		\leq
+		n^{-2} 
+	$$
+	Denote maximum degree of $G_t$ as $\Delta_t$. Thus, by the previous union bound, the probability that $\Delta_t$ is at least $2n\hat{p}$ is at most $n^{-2}$ for all $t$. Now we use another union bound to bound the probability that the maximum degree of the network is at least $2n\hat{p}$ at any time step in the first $n$ rounds. % TODO: Exceeds is wrong word.
+	$$
+		\mathbb{P}\left(\bigcup_{t \in [n]} \left\{ \Delta_t > 2n\hat{p}\right\} \right) 
+		\leq 
+		\sum_{t \in [n]}
+		\mathbb{P}(\Delta_t \geq 2n\hat{p}) 
+		=
+		n \mathbb{P}(\Delta_t \geq 2n\hat{p}) 
+		\leq
+		\frac{1}{n}
+	$$
+	Hence, with high probability, in the first $n$ time steps all nodes have degree less than $2n\hat{p}$.
+
+	For the remainder of the proof, we assume the high probability scenario where all nodes have degree less than $2n\hat{p}$ for the first $n$ rounds.
+	Observe that in the first $n$ rounds, each node can spread the rumour to at most $2n\hat{p} - 1$ other nodes, since it has at most $2n\hat{p} - 1$ neighbours.
+	Thus, in round $t$ the number of newly informed nodes is at most $(2n\hat{p} - 1)|I_t|$, since each of the $|I_t|$ informed nodes can spread the rumour to at most $2n\hat{p} - 1$ uninformed nodes. Hence, by induction at time $t < n$ the number of informed nodes is at most $(2n\hat{p})^t$.
+
+	\textbf{Base Case.} $t=0$.
+
+	Initially only one node is aware of the rumour, so $|I_0| = 1 = (2n\hat{p})^0$, hence the claim holds in this case.
+
+	\textbf{Inductive Case.} $t=k+1$.
+
+	We assume that $|I_k| \leq (2n\hat{p})^k$. Then 
+	$$
+		|I_{k+1}| \leq |I_k| + (2n\hat{p} - 1)|I_k| = (2n\hat{p})|I_k| \leq (2n\hat{p})^{k+1}
+	$$
+	by the induction hypothesis, hence the claim holds in this case.
+
+	Let $\tau = \frac{\log (n/2)}{\log(2n\hat{p})}$. Note that for sufficiently large $n$, $\tau < n$. Hence, we obtain that for all times $t < \tau = \frac{\log (n/2)}{\log(2n\hat{p})}$, the number of informed nodes is at most $\frac{n}{2}$. Thus, the spreading time is at least 
+	$$
+		\tau = \mathcal{O}\left(\frac{\log n}{\log(n \hat{p})}\right)
+	$$
+\end{proof}
+
+% TODO: DEFINE WHP in prelims
+
+% TODO: implications, bound tight when log n/ log(np) is dominant term,
+ 
+% TODO: simulations outside tight range p like ((logn)^k)/n
 
 \begin{figure}[h]
 	\centering
@@ -442,4 +601,4 @@ Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology acco
 	\label{fig:floodingGnpSimResults}
 \end{figure}
 
-TODO: Evaluate tightness of bound for Edge-Markovian evolution
+% TODO: Tight in means, takes discrete values
