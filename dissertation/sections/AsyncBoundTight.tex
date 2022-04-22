@@ -1,7 +1,7 @@
 \section{Proof that the asynchronous rumour spreading time bound is almost tight}\label{section:asyncBoundTight}
 \label{section:AsyncLowerBound}
 
-In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is almost tight up to scaling in $n$, by constructing an example of a dynamic network given in \cite{asyncPaper}, where the spread time is close to the bound with high probability.
+In this section, we prove that the upper bound derived in Section \ref{AsyncUpperBoundSection} is almost tight up to scaling in $n$, by constructing an example of a dynamic network given in \cite{asyncPaper}, where the spread time is close to the bound w.h.p.
 
 \begin{definition}\label{def:HkAB}
  	Graph $H_{k, \Delta}(A,B)$
@@ -81,7 +81,7 @@ Using $H_{k, \Delta}(A,B)$, we now construct the following dynamic network for w
 In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network.
 
 \begin{theorem}
-	With high probability, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at most 
+	w.h.p, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at most 
 	$$
 		\mathcal{O}\left(\left(\rho n + \frac{k}{\rho}\right)\log n\right)
 	$$
@@ -152,7 +152,7 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 
 	We can now apply the bound from Theorem \ref{theorem:AsyncUpperBound}, to yield an upper bound on the spreading time of a $\rho$-diligent dynamic network $\mathcal{G}(n, \rho) = (G_t)_{t\geq 0}$. 
 	
-	From Theorem \ref{theorem:AsyncUpperBound}, we have that the first $T$ for which $\sum_t^T \Phi(G_t)\rho(G_t)$ exceeds $C \log n = \mathcal{O}(\log n)$ is an upper bound on the spreading time with high probability.  Note that 
+	From Theorem \ref{theorem:AsyncUpperBound}, we have that the first $T$ for which $\sum_t^T \Phi(G_t)\rho(G_t)$ exceeds $C \log n = \mathcal{O}(\log n)$ is an upper bound on the spreading time w.h.p.  Note that 
 	$$
 		\sum_t^T \Phi(G_t)\rho(G_t)
 		= 
@@ -174,7 +174,7 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 	% 		- why choice of log n / log log n for k?
 \end{proof}
 
-Now we verify that the upper bound is tight by computing a lower bound on the spreading time for a $\rho$-diligent dynamic network that holds with high probability.
+Now we verify that the upper bound is tight by computing a lower bound on the spreading time for a $\rho$-diligent dynamic network that holds w.h.p.
 
 First we prove a lemma about the spread of the rumour down the chain of bipartite subgraphs in $H_{k, \Delta}(A,B)$.
 
@@ -228,7 +228,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 
 % TODO: Talk about restrictions on rho and k later?
 \begin{theorem}
-	With high probability, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at least 
+	w.h.p, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at least 
 	$$
 		\Omega\left(\frac{n \rho}{k}\right)
 	$$
@@ -239,7 +239,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 \begin{proof} 
 	Let $T_0$ be the first time that all the nodes of $S_0$ are aware of the rumour. To simplify our analysis, suppose that we are at time $T_0$, hence for all remaining time steps we can assume that every node in $S_0$ is aware of the rumour. % TODO: Check this - we choose S_0 artibitratily, instead consider first time all nodes of A are aware of the rumour? (changes size of B?)
 
-	By the definition of a $\rho$-diligent network, at time $t=0$  we have that all the informed nodes are located in $A_0$, and no node of $B_0$ knows the rumour. Thus, by Lemma \ref{lemma:H_k,DeltaABOneStep}, with high probability at time $t = 1$, no node of $S_k$ is informed of the rumour. Since the only way the rumour can reach the node set $G_B = B \setminus \bigcup_{i=1}^k S_i$ is through $S_k$ (see Figure \ref{fig:HkAB_3}), we can conclude that with high probability after the first time step no node of $G_B$ is aware of the rumour. Equivalently we can say that the set of nodes $B_0 \cap I_1 \subseteq \bigcup_i^k S_i$, i.e. all nodes of $B_0$ that are aware of the rumour after one time step are confined to the set of $S_i$s in $G_1$. Hence, 
+	By the definition of a $\rho$-diligent network, at time $t=0$  we have that all the informed nodes are located in $A_0$, and no node of $B_0$ knows the rumour. Thus, by Lemma \ref{lemma:H_k,DeltaABOneStep}, w.h.p at time $t = 1$, no node of $S_k$ is informed of the rumour. Since the only way the rumour can reach the node set $G_B = B \setminus \bigcup_{i=1}^k S_i$ is through $S_k$ (see Figure \ref{fig:HkAB_3}), we can conclude that w.h.p after the first time step no node of $G_B$ is aware of the rumour. Equivalently we can say that the set of nodes $B_0 \cap I_1 \subseteq \bigcup_i^k S_i$, i.e. all nodes of $B_0$ that are aware of the rumour after one time step are confined to the set of $S_i$s in $G_1$. Hence, 
 	\begin{equation}\label{eq:firstStepinfectedNodesOfB}
 		|B_0 \cap I_1| \leq \left|\bigcup_{i=1}^k S_i\right| = k\Delta
 	\end{equation}
@@ -250,7 +250,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	where the final inequality holds due to inequality (\ref{eq:firstStepinfectedNodesOfB}) and the fact that $|B_0| \geq \frac{3n}{4}$. 
 	% TODO: Mention S, G_A, G_B different each timestep - chosen arbitrarily
 
-	We now repeat this analysis for the first $\frac{n}{4k\Delta}$ time steps, by first showing that with high probability no node in $S_k$ is made aware of the rumour in the first $\frac{n}{4k\Delta}$ time steps. Let $\mathcal{A}_t$ denote the event that in time step $t$ some node in $S_k$ is made aware of the rumour. Note that the event 
+	We now repeat this analysis for the first $\frac{n}{4k\Delta}$ time steps, by first showing that w.h.p no node in $S_k$ is made aware of the rumour in the first $\frac{n}{4k\Delta}$ time steps. Let $\mathcal{A}_t$ denote the event that in time step $t$ some node in $S_k$ is made aware of the rumour. Note that the event 
 	$$\mathcal{A} = \left\{S_k \text{ is informed of the rumour any time step } t \leq \frac{n}{4k\Delta} \right\} = \bigcup_{t=1}^\frac{n}{4k\Delta} \mathcal{A}_t
 	$$
 	hence by the union bound and Lemma \ref{lemma:H_k,DeltaABOneStep},
@@ -261,7 +261,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 		= \frac{n^{1-c}}{4k\Delta} \leq n^{1-c}
 	$$
 	as $k, \Delta \geq 1$. Since $c > 1$ % TODO: Introduce this restriction earlier
-	we have that with high probability in the first $\frac{n}{4k\Delta}$ time steps the rumour does not reach $S_k$. 
+	we have that w.h.p in the first $\frac{n}{4k\Delta}$ time steps the rumour does not reach $S_k$. 
 
 	Thus, for $m \leq \frac{n}{4k\Delta}$ we can repeat the previous analysis inductively as follows % TODO: Rephrase this
 	$$
@@ -271,7 +271,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	$$
 		|B_m| \geq \frac{3n}{4} - \frac{nk\Delta}{4k\Delta} = \frac{n}{2}
 	$$
-	Thus, with high probability after $\frac{n}{4k\Delta}$ time steps, there are still at least $\frac{n}{2}$ nodes who are not aware of the rumour (since no node in $B_i$ is aware of the rumour at the beginning of each time step by construction). Hence, we can conclude the algorithm takes at least 
+	Thus, w.h.p after $\frac{n}{4k\Delta}$ time steps, there are still at least $\frac{n}{2}$ nodes who are not aware of the rumour (since no node in $B_i$ is aware of the rumour at the beginning of each time step by construction). Hence, we can conclude the algorithm takes at least 
 	$$
 		\Omega\left(\frac{n}{4k\Delta}\right) = \Omega\left(\frac{n\rho}{k}\right)
 	$$
