@@ -62,7 +62,7 @@ We are now ready give a bound on the rumour spreading time for the flooding algo
 
 % TODO: Interpretation of how the bound varies for different (h_i, k_i) sequences, how do these emerge?
 
-We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$-expander for multiple $(h, k)$ pairs. Initially these conditions may seem unreasonably strong, however in Section \ref{subsect:floodingBoundEdgeMarkovian} we will see an interesting example where these properties emerge with high probability in a random graph.
+We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$-expander for multiple $(h, k)$ pairs. Initially these conditions may seem unreasonably strong, however in Section \ref{subsect:floodingBoundEdgeMarkovian} we will see an interesting example where these properties emerge w.h.p in a random graph.
 
 \begin{proof}
 	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$, i.e
@@ -210,7 +210,7 @@ the future evolution of the network effectively proceeds by independently sampli
 Under certain conditions, Markov chains converge to their stationary distributions. Thus, for the rest of this section we assume that our MEDNs have been running for a long enough such that when we inject the rumour the network is already in equilibrium. In this paper we don't discuss the conditions which allow for converge to the stationary distribution or how long the convergence takes, and assume that round 0 begins when we inject the rumour.
 % TODO: What about if we started not in the stationary distributuion?? Further exploration needed. Or close to stationary? 
 
-We now adapt the deterministic bound proved Theorem \ref{theorem:DeterministicFloodingBound} to a MEDN, by adding details to proof from \cite{syncPaper}
+We now adapt the deterministic bound proved in Theorem \ref{theorem:DeterministicFloodingBound} to a MEDN, by adding details to proof from \cite{syncPaper}
 
 % TODO: Is this a non-theorm? What does it acutally mean?
 
@@ -219,12 +219,12 @@ We now adapt the deterministic bound proved Theorem \ref{theorem:DeterministicFl
 	$$
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
 	$$
-	with high probability.
+	w.h.p.
 \end{theorem}
 
 Note that in previous bounds the source of randomness in the spreading time has been the rumour spreading algorithm, however in this bound the only source of randomness is the network itself.
 
-We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the same expansion properties hold with high probability with respect to the stationary distribution. % TODO: REWORD??
+We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the same expansion properties hold w.h.p with respect to the stationary distribution. % TODO: REWORD??
 Since each topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will hold for MEDNs, as long as the long-term proportion of topologies in our network without strong expansion properties is bounded by $\frac{1}{n^2}$.
 
 % TODO: Review this proof for order that makes sense, and check it actually holds
@@ -243,7 +243,7 @@ Since each topology is sampled from the stationary distribution, these propertie
 
 	Now we combine the previous two claims. By the first claim if $A_k$ holds for all $k \leq n$ we have that $T \leq n$, thus $A_k$ holds for all $k \leq T$. In this case, by the second claim we obtain that  $T=\mathcal{O}\left(\sum_{i=1}^s \frac{\log (h_i/h_{i-1})}{\log(1+k_i)}\right)$.
 
-	Since we have shown that the event $\bigcap_{t=0}^n A_t \implies B$, we have that $\comp{B} \implies \comp{ \bigcap_{t=0}^n A_t} = \bigcup_{t=0}^n \comp{A_t}$. To finish the proof, we show that the event $\comp{B}$ occurs with vanishing probability, thus $B$ occurs with high probability.
+	Since we have shown that the event $\bigcap_{t=0}^n A_t \implies B$, we have that $\comp{B} \implies \comp{ \bigcap_{t=0}^n A_t} = \bigcup_{t=0}^n \comp{A_t}$. To finish the proof, we show that the event $\comp{B}$ occurs with vanishing probability, thus $B$ occurs w.h.p.
 
 	\begin{align*}
 		\mathbb{P}(\comp{B}) &\leq \mathbb{P}(\bigcup_{t=0}^n \comp{A_t}) & \text{by the inferred implication} \\ 
@@ -361,65 +361,67 @@ Now we prove that the ER distribution $G(n,\tilde{p})$ is the stationary distrib
 
 Thus, when we start the Markov chain in a topology chosen at random according to the $G(n, \frac{p}{p+q})$ distribution, the distribution of topologies for the next step is again the $G(n, \frac{p}{p+q})$ distribution. Inductively, the distribution of the topology of the network at any time step is $G(n, \frac{p}{p+q})$.
 
-To apply Theorem \ref{theorem:markovSyncBound}, we need to compute expansion properties of the stationary distribution that hold with high probability.
+To apply Theorem \ref{theorem:markovSyncBound}, we need to compute expansion properties of the stationary distribution that hold w.h.p. We do this for an arbitrary $G(n, p)$ distribution.
 
 \begin{lemma}\label{lemma:GnpExpansion}
-	Let $\hat{p} \geq c\frac{\log n}{n}$ for a sufficiently large constant $c$. For a $G(n, \hat{p})$ graph we have that for all $S \subseteq V$ such that $|S| \leq \frac{n}{2}$
+	Let $p \geq c\frac{\log n}{n}$ for a sufficiently large constant $c$. For a $G(n, p)$ graph we have that for all $S \subseteq V$ such that $|S| \leq \frac{n}{2}$
 	$$
-		|B(S)| \geq \frac{n}{c} \min \left\{ |S|\hat{p}, 1 \right\} 
+		|B(S)| \geq \frac{n}{c} \min \left\{ |S|p, 1 \right\} 
 	$$
 	with probability at least $1 - \frac{1}{n^2}$, for large $n$. 
 \end{lemma}
 
 % TODO: mention OMit proof citing elementary probability + not relevant
 
-Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology according to the $G(n, \hat{p})$ distribution, with high probability the boundaries of all "small" sets are large. Using this lemma, we establish expansion properties for the $G(n,p)$ distribution.
+Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology according to the $G(n, p)$ distribution with a suitably large $p$, w.h.p the boundaries of all "small" sets are large. Note that the condition on $p$ scales with the number of nodes $n$. % TODO: Expanding
+
+In Lemma \ref{lemma:GnpExpander}, we use Lemma \ref{lemma:GnpExpansion}, to establish expansion properties for the $G(n,p)$ distribution.
 
 % TODO: Interpretation of lemma in terms of expander graphs
 
-\begin{lemma}
-	Let $\hat{p} \geq c\frac{\log n}{n}$ for a sufficiently large constant $c$, and large $n$. With probability at least $1- n^2$, a topology $G$ drawn from the $G(n, \hat{p})$ distribution is a $(h, \hat{p}\frac{n}{c})$-expander for all $1 \leq h \leq \frac{1}{\hat{p}}$ and a $(h, \frac{1}{h}\frac{n}{c})$-expander for all $\frac{1}{\hat{p}} \leq h \leq \frac{n}{2}$
+\begin{lemma}\label{lemma:GnpExpander}
+	Let $p \geq c\frac{\log n}{n}$ for a sufficiently large constant $c$, and large $n$. With probability at least $1- n^2$, a topology $G$ drawn from the $G(n, p)$ distribution is a $(h, p\frac{n}{c})$-expander for all $1 \leq h \leq \frac{1}{p}$ and a $(h, \frac{1}{h}\frac{n}{c})$-expander for all $\frac{1}{p} \leq h \leq \frac{n}{2}$
 \end{lemma}
 
 \begin{proof}
 	Suppose 
 	\begin{equation}\label{eq:GnpExpansionBound}
-		|B(S)| \geq \frac{n}{c} \min \left\{ h \hat{p}, 1 \right\} 
+		|B(S)| \geq \frac{n}{c} \min \left\{ h p, 1 \right\} 
 	\end{equation}
 	holds for all $S$ such that $1 \leq |S| \leq \frac{n}{2}$. 
 	Let $1 \leq h \leq \frac{n}{2}$. We consider 2 cases. 
 
-	\textbf{Case 1.} $1 \leq h \leq \frac{1}{\hat{p}}$. 
+	\textbf{Case 1.} $1 \leq h \leq \frac{1}{p}$. 
 
 	Consider an arbitrary subset $S$ such that $h' = |S| \leq h$.
 	By equation \ref{eq:GnpExpansionBound}, 
 	$$
-		|B(S)| \geq \frac{n}{c} \min \left\{ h' \hat{p}, 1 \right\} = \frac{n}{c}h'\hat{p} = \hat{p}\frac{n}{c} |S|
+		|B(S)| \geq \frac{n}{c} \min \left\{ h' p, 1 \right\} = \frac{n}{c}h'p = p\frac{n}{c} |S|
 	$$
-	thus $G$ is a $(h, \hat{p}\frac{n}{c})$-expander.
+	thus $G$ is a $(h, p\frac{n}{c})$-expander.
 	Consider an arbitrary subset $S$ such that $h' = |S| \leq h$. 
 
-	\textbf{Case 2.} $\frac{1}{\hat{p}} \leq h \leq \frac{n}{2}$
+	\textbf{Case 2.} $\frac{1}{p} \leq h \leq \frac{n}{2}$
 
 	Consider an arbitrary subset $S$ such that $h' = |S| \leq h$.
 
 	\textbf{Case 2a.}
-	Suppose $1 \leq h' \leq \frac{1}{\hat{p}}$. 
+	Suppose $1 \leq h' \leq \frac{1}{p}$. 
 	
 	Similarly to Case 1, 
 	$$
-		|B(S)| \geq \hat{p}\frac{n}{c} |S|
+		|B(S)| \geq p\frac{n}{c} |S|
 	$$
-	Since $h \geq \frac{1}{\hat{p}}$, we observe that 
+	Since $h \geq \frac{1}{p}$, we observe that 
 	$$
 		|B(S)| \geq \frac{1}{h}  \frac{n}{c} |S|
 	$$ 
 
-	\textbf{Case 2b.} Suppose $\frac{1}{\hat{p}} \leq h' \leq \frac{n}{2}$
+	\textbf{Case 2b.} Suppose $\frac{1}{p} \leq h' \leq \frac{n}{2}$
 	By equation \ref{eq:GnpExpansionBound}, 
 	$$
 		|B(S)| 
-		\geq \frac{n}{c} \min \left\{ h' \hat{p}, 1 \right\} 
+		\geq \frac{n}{c} \min \left\{ h' p, 1 \right\} 
 		= \frac{n}{c}\frac{|S|}{h'} 
 		\geq \frac{1}{h} \frac{n}{c}|S|
 	$$
@@ -429,14 +431,20 @@ Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology acco
 	By Lemma \ref{lemma:GnpExpansion}, equation \ref{eq:GnpExpansionBound} holds with probability at least $1 - \frac{1}{n^2}$, hence the expansion properties also hold with probability at least $1 - \frac{1}{n^2}$.
 \end{proof}
 
-Now we apply Theorem \ref{theorem:DeterministicFloodingBound} to the Edge-Markovian Dynamic Network.
+Now we apply Theorem \ref{theorem:markovSyncBound} to the Edge-Markovian Dynamic Network.
 
-\begin{theorem}
-	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Dynamic Network. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} in $\mathcal{M}(n, p, q)$ is at most
+\begin{theorem}\label{theorem:edgeMarkovianFloodingBound}
+	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Dynamic Network. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then w.h.p, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} in $\mathcal{M}(n, p, q)$ is at most
 	$$
 		\mathcal{O}\left(\frac{\log n}{\log n\hat{p}} + \log \log n\hat{p} \right)
 	$$
 \end{theorem}
+
+We take a moment to consider the role of $\hat{p}$. Note that since $\hat{p} = \frac{p}{p+q}$ and $\hat{p} \geq c \frac{\log n}{n}$, $p$ and $q$ may be functions of $n$. However, since both quantities are constants once $n$ has been fixed, we omit function notation for brevity.
+
+In the context of the Edge-Markovian model, the larger the ratio between $p$ and $q$, the less often edges fail, and the faster edges recover. %TODO: Could be misinterpreted
+This in turn improves the likelihood that a typical topology contains many edges, increasing the speed at which the rumour spreads. This intuition is reflected in the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound}: the closer $\hat{p}$ is to 1, the smaller the $\frac{\log n}{\log n \hat{p}}$ term will be. However, interestingly the $\log \log n \hat{p}$ term increases with $\hat{p}$, which goes against our intuition, as this term will be larger for denser graphs. This indicates that our bound may not always be tight, which we will explore in Section \ref{subsect:edgeMarkovianFloodingBoundEvaluation}.
+%TODO: Restriction means p and q functions of n
 
 \begin{proof}
 	Let $\hat{p}$ denote $\frac{p}{p+q}$. 
@@ -452,13 +460,13 @@ Now we apply Theorem \ref{theorem:DeterministicFloodingBound} to the Edge-Markov
 	$$
 		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{\log \frac{i}{\max\{i-1,1\}}}{\log(1+k_i)}\right)
 	$$
-	with high probability.
+	w.h.p.
 	Since $\log \frac{i}{i-1} \leq \frac{1}{i}$ for $i \geq 2$, % TODO: Justify
 	this quantity is bounded above by 
 	$$
 		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{1}{i\log(1+k_i)}\right)
 	$$
-	By substituting for $k_i$ in the summation, we have the that the order of the spreading time is bounded with high probability by
+	By substituting for $k_i$ in the summation, we have the that the order of the spreading time is bounded w.h.p by
 	$$
 		\sum_{i=1}^{\floor{1/\hat{p}}} \frac{1}{i\log(1+\frac{n\hat{p}}{c})} 
 		+
@@ -516,15 +524,25 @@ Now we apply Theorem \ref{theorem:DeterministicFloodingBound} to the Edge-Markov
 
 \end{proof}
 
-\subsection{Evaluating the quality of the bound}
+Theorem \ref{theorem:edgeMarkovianFloodingBound} holds if $\hat{p}$ is at least $c \frac{\log n}{n}$ for a sufficiently large constant $c$, but what happens if $\hat{p} = o(\frac{\log n}{n})$? % TODO: Is mixing little o and concrete inequalities confusing?
+It turns out that in this case we are unable to apply Theorem \ref{theorem:markovSyncBound}, so the assumption that $\hat{p} \geq c \frac{\log n}{n}$ is necessary for the proof as well as sufficient.
+
+For the $G(n, \hat{p})$ distribution, it is well known that if $\hat{p} = o(\frac{\log n}{n})$, then w.h.p the graph will be disconnected \cite{complexNetworksRandomGraphs}. Since the graph can be split into at least two connected components, we notice that the smaller component is a set of size at most $\frac{n}{2}$ with an empty boundary. Hence, w.h.p, the graph is not a $(\frac{n}{2}, k)$-expander for any positive $k$. This is a condition for Theorem \ref{theorem:markovSyncBound}, hence we cannot apply the bound in cases where $\hat{p} = o(\frac{\log n}{n})$.
+
+Bounding the spreading time of the Edge-Markovian Network in cases where $\hat{p} = o(\frac{\log n}{n})$ could be an interesting area for further study. Each topology will be disconnected w.h.p, but unlike the static $G(n,p)$ graph, the changing edges allow the rumour to spread between sets of nodes which were previously disconnected, and eventually inform all nodes in the network.
+% TODO: Define "w.h.p"
+
+\subsection{Evaluating the quality of the bound}\label{subsect:edgeMarkovianFloodingBoundEvaluation}
 
 % TODO: Note \hat{p} is a function of n
-% TODO: What happens if p < c logn/n?
 % lower bound on mixing time
 % TODO: Why can't generalise to varying t? (Non-homogenous MC)
 
+In this subsection we evaluate how tight the bound in Theorem \ref{theorem:edgeMarkovianFloodingBound} is, using lower bounds on the spreading time and simulations. % TODO: Rephrase 
+We start with a lower bound on the spreading time of Algorithm \ref{SyncFloodingAlgorithm} on the stationary Edge-Markovian Network.
+
 \begin{theorem}
-	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Dynamic Network. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then with high probability, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} in $\mathcal{M}(n, p, q)$ is at least 
+	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Dynamic Network. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then w.h.p, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} in $\mathcal{M}(n, p, q)$ is at least 
 	$$
 		\Omega\left(\frac{\log n}{\log (n \hat{p})}\right)
 	$$
@@ -537,7 +555,7 @@ Now we apply Theorem \ref{theorem:DeterministicFloodingBound} to the Edge-Markov
 		& \leq \mathbb{P}(\text{Binomial}(n, \hat{p}) \geq 2n\hat{p}) \\ 
 		\intertext{since the $\text{Binomial}(n, \hat{p})$ distribution stochastically dominates the $\text{Binomial}(n-1, \hat{p})$ distribution} % TODO: Prove in prelims and cite
 		& \leq \exp(-\frac{n\hat{p}}{3}) \\
-		\intertext{by the Chernoff bound. We omit the proof of the Chernoff bound for brevity, but refer the reader to \cite{binomialChernoff} for a full proof.}
+		\intertext{by the Chernoff bound. We omit the proof of the Chernoff bound for brevity, but refer the reader to \cite{binomialChernoff} for a full proof.} % TODO: Move earlier if used there
 		& \leq \exp(-\frac{c \log n}{3}) = n^{-\frac{c}{3}}
 		\intertext{since $\hat{p} \geq \frac{c \log n}{n}$}
 	\end{align*}
@@ -564,7 +582,7 @@ Now we apply Theorem \ref{theorem:DeterministicFloodingBound} to the Edge-Markov
 		\leq
 		\frac{1}{n}
 	$$
-	Hence, with high probability, in the first $n$ time steps all nodes have degree less than $2n\hat{p}$.
+	Hence, w.h.p, in the first $n$ time steps all nodes have degree less than $2n\hat{p}$.
 
 	For the remainder of the proof, we assume the high probability scenario where all nodes have degree less than $2n\hat{p}$ for the first $n$ rounds.
 	Observe that in the first $n$ rounds, each node can spread the rumour to at most $2n\hat{p} - 1$ other nodes, since it has at most $2n\hat{p} - 1$ neighbours.
@@ -584,7 +602,7 @@ Now we apply Theorem \ref{theorem:DeterministicFloodingBound} to the Edge-Markov
 
 	Let $\tau = \frac{\log (n/2)}{\log(2n\hat{p})}$. Note that for sufficiently large $n$, $\tau < n$. Hence, we obtain that for all times $t < \tau = \frac{\log (n/2)}{\log(2n\hat{p})}$, the number of informed nodes is at most $\frac{n}{2}$. Thus, the spreading time is at least 
 	$$
-		\tau = \mathcal{O}\left(\frac{\log n}{\log(n \hat{p})}\right)
+		\tau = \Omegaq\left(\frac{\log n}{\log(n \hat{p})}\right)
 	$$
 \end{proof}
 
