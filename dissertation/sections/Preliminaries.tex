@@ -92,8 +92,19 @@ $G_t$ represents the topology of the network at the discrete time step $t$. Howe
 In this subsection we introduce Poisson processes, which will be needed to specify the first asynchronous rumour spread algorithm.
 
 The Poisson process ...
+%%% COUNTING PROCCESS START
+\begin{definition}
+	Counting Process
 
-TODO
+	\noindent
+	A counting process $\left\{ N(t), t \geq 0 \right\}$ is a right-continuous non-decreasing random function $N$ from non-negative reals to non-negative integers such that $N(0) = 0$.
+\end{definition}
+
+We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as "arrivals".  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$. Note that the arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
+%%% COUNTING PROCCESS END
+
+The Poission process is a type of counting process that satisfies additional conditions.  
+
 
 \begin{enumerate}
 	\item Definition
@@ -101,14 +112,50 @@ TODO
 	\item Superposition
 \end{enumerate}
 
+\subsection{Inhomogeneous Poisson Processes}
+
+In this section we introduce a generalisation of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}.
+
+\begin{definition}
+	Inhomogeneous Poisson process
+
+	\noindent
+	An Inhomogeneous Poisson process ${N(t), t \geq 0}$ with rate function $\lambda(t) > 0$ is a counting process such that
+	\begin{enumerate}
+		\item $N(t)$ has independent increments
+		\item for all $t \geq 0$, 
+		\begin{align*}
+			\mathbb{P}(N(t + \delta) - N(t) = 0) &= 1 - \lambda(t)\delta + o(\delta) \\
+			\mathbb{P}(N(t + \delta) - N(t) = 1) &= \lambda(t)\delta + o(\delta) \\
+			\mathbb{P}(N(t + \delta) - N(t) > 0) &= o(\delta)
+		\end{align*}
+	\end{enumerate}
+\end{definition}
+
+% TODO: Equivalent formulations + proofs
+% TODO: Introduce indepdendent increments
 
 \subsection{Order statistics of exponential random variables}
 
-TODO: Prove that minimum of exponentials is exponential, where the probability each exponential that attains the minimum is dependent on each exponentials' rate, and independent of the value of the min
+\begin{theorem}
+	
+\end{theorem}
+
 
 
 \subsection{Stochastic Domination}
-Coupling proof of stochastic domination of poisson
+Coupling proof of stochastic domination of poisson 
+
+\begin{definition}
+	First-order Stochastic Domination
+
+	\noindent
+	Let $X$ and $Y$ be random variables that take values in the reals. $Y$ has a first-order stochastic dominance over $X$ if \begin{enumerate}
+		\item for all $x \in R$, $\mathbb{P}(Y \geq x) \geq \mathbb{P}(X \geq x)$
+		\item there exists an $x_0$ such that $\mathbb{P}(Y \geq x) > \mathbb{P}(X \geq x)$
+	\end{enumerate}
+\end{definition}
+
 
 
 % TODO: Discuss implications for async rumour spreading - interpreting poission process as exponential clock, not interested in value of the process
