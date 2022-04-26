@@ -440,11 +440,12 @@ Now we apply Theorem \ref{theorem:markovSyncBound} to the Edge-Markovian Dynamic
 	$$
 \end{theorem}
 
-We take a moment to consider the role of $\hat{p}$. Note that since $\hat{p} = \frac{p}{p+q}$ and $\hat{p} \geq c \frac{\log n}{n}$, $p$ and $q$ may be functions of $n$. However, since both quantities are constants once $n$ has been fixed, we omit function notation for brevity.
+We take a moment to consider the role of $\hat{p}$. Note that $p$ and $q$ may be functions of $n$. However, since both quantities are constants once $n$ has been fixed, we omit function notation for brevity.
 
-In the context of the Edge-Markovian model, the larger the ratio between $p$ and $q$, the less often edges fail, and the faster edges recover. %TODO: Could be misinterpreted
-This in turn improves the likelihood that a typical topology contains many edges, increasing the speed at which the rumour spreads. This intuition is reflected in the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound}: the closer $\hat{p}$ is to 1, the smaller the $\frac{\log n}{\log n \hat{p}}$ term will be. However, interestingly the $\log \log n \hat{p}$ term increases with $\hat{p}$, which goes against our intuition, as this term will be larger for denser graphs. This indicates that our bound may not always be tight, which we will explore in Section \ref{subsect:edgeMarkovianFloodingBoundEvaluation}.
-%TODO: Restriction means p and q functions of n
+In the context of the Edge-Markovian model, the larger the ratio $\frac{p}{p+q}$, the less often edges fail, and the faster edges recover. %TODO: Could be misinterpreted
+This in turn improves the likelihood that each topology contains many edges, increasing the speed at which the rumour spreads. This intuition is reflected in the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound}: the closer $\hat{p}$ is to 1, the smaller the $\frac{\log n}{\log n \hat{p}}$ term will be. However, interestingly the $\log \log n \hat{p}$ term increases with $\hat{p}$, which goes against our intuition, as this term will be larger for denser graphs. 
+This indicates that our bound may not always be tight, which we will explore in Section \ref{subsect:edgeMarkovianFloodingBoundEvaluation}. % TODO: IS THIS TRUE?
+
 
 \begin{proof}
 	Let $\hat{p}$ denote $\frac{p}{p+q}$. 
@@ -600,11 +601,14 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 	$$
 	by the induction hypothesis, hence the claim holds in this case.
 
-	Let $\tau = \frac{\log (n/2)}{\log(2n\hat{p})}$. Note that for sufficiently large $n$, $\tau < n$. Hence, we obtain that for all times $t < \tau = \frac{\log (n/2)}{\log(2n\hat{p})}$, the number of informed nodes is at most $\frac{n}{2}$. Thus, the spreading time is at least 
+	Let $\tau = \frac{\log (n/2)}{\log(2n\hat{p})}$. Note that for sufficiently large $n$, $\tau < n$, since $\hat{p} \geq c \frac{\log n}{n}$.  %TODO: Check if this is true - what if \hat{p} grows slowly in n??
+	Hence, we obtain that for all times $t < \tau = \frac{\log (n/2)}{\log(2n\hat{p})}$, the number of informed nodes is at most $\frac{n}{2}$. Thus, the spreading time is at least 
 	$$
 		\tau = \Omega\left(\frac{\log n}{\log(n \hat{p})}\right)
 	$$
 \end{proof}
+
+Note that the lower bound on the spreading time is exactly the first term of the bound proved in Theorem \ref{theorem:edgeMarkovianFloodingBound}. Hence, when $\frac{\log n}{\log (n\hat{p})}$ is the dominant term, the bound is tight. Indeed, when $\hat{p} = \frac{c \log n}{n}$, % TODO: finish this 
 
 % TODO: DEFINE WHP in prelims
 
@@ -615,8 +619,13 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{./figures/flooding_gnp_simulation_results.png}
-	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations}
-	\label{fig:floodingGnpSimResults}
+	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = \frac{c \log n}{n}$}
+	\label{fig:floodingGnpSimResultsTight}
 \end{figure}
+
+Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{c \log n}{n}$. 
+Since the rumour spreads in discrete rounds, each of the simulation results in blue falls on an integer value. Each simulation was repeated 50 times for each network size, with the means displayed in red. In green, we have plotted the bound from Theorem \ref{theorem:edgeMarkovianFloodingBound}. As we expected, the mean simulation times closely follow the bound once an appropriate $c$ has been chosen. %TODO: Why expected, tidy this paragrpah
+
+% random variable, from network
 
 % TODO: Tight in means, takes discrete values
