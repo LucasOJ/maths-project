@@ -137,26 +137,72 @@ In this section we introduce a generalisation of the Poisson process which will 
 
 \subsection{Order statistics of exponential random variables}
 
-\begin{theorem}
-	
-\end{theorem}
-
 
 
 \subsection{Stochastic Domination}
 Coupling proof of stochastic domination of poisson 
 
+
+
 \begin{definition}
 	First-order Stochastic Domination
 
 	\noindent
-	Let $X$ and $Y$ be random variables that take values in the reals. $Y$ has a first-order stochastic dominance over $X$ if \begin{enumerate}
-		\item for all $x \in R$, $\mathbb{P}(Y \geq x) \geq \mathbb{P}(X \geq x)$
-		\item there exists an $x_0$ such that $\mathbb{P}(Y \geq x) > \mathbb{P}(X \geq x)$
-	\end{enumerate}
+	Let $X$ and $Y$ be real random variables. $Y$ has a first-order stochastic dominance over $X$, denoted by $X \preceq Y$, if for all $x \in R$, 
+	$$
+		\mathbb{P}(Y \geq x) \geq \mathbb{P}(X \geq x)
+	$$
 \end{definition}
 
+% TODO: interpretation as partial order and PDFs vs CDFS (gamma figure) 
+% Not always the case
 
+\begin{definition} % TODO: Check definition
+	Coupling
+
+	\noindent
+	A  coupling of the real random variables $X$ and $Y$ is a joint random variable $(\tilde{X}, \tilde{Y})$ such that the marginal distribution of $\tilde{X}$ is the same as $X$, and the marginal distribution of $\tilde{Y}$ is the same as $Y$.
+\end{definition}
+
+% TODO: when allowed different samples spaces, interpreation
+
+\begin{theorem}\label{theorem:couplingDomination}
+	The real random variable $X$ is stochastically dominated by the real random variable $Y$ if and only if there exists a coupling $(\tilde{X}, \tilde{Y})$ of $X$ and $Y$ such that
+	$$
+		\mathbb{P}(\tilde{Y} \geq \tilde{X}) = 1
+	$$
+\end{theorem}
+
+\begin{proof}
+	We prove the forwards implication. Suppose there exists a coupling $(\tilde{X}, \tilde{Y})$ of $X$ and $Y$ such that $\mathbb{P}(\tilde{Y} \geq \tilde{X}) = 1$. Then for all $x \in \mathbb{R}$
+	\begin{align*}
+		\mathbb{P}(X \geq x) &= \mathbb{P}(\tilde{X} \geq x) & \text{since } \tilde{X} \stackrel{d}{=} X \\
+		&\leq \mathbb{P}(\tilde{Y} \geq x) & \text{since with probability 1, } \tilde{Y} \geq \tilde{X} \\
+		&= \mathbb{P}(Y \geq x) & \text{since } \tilde{Y} \stackrel{d}{=} Y 
+	\end{align*}
+
+	We omit the proof for the reverse implication as we only use the forwards implication. For the proof of the reverse implication, see \cite{coupling}.
+\end{proof}
+
+% TODO, introduce equal in distribution in coupling definition
+
+We omit the proof, but refer the reader to \cite{coupling} for details.
+
+\begin{theorem}
+	Let $0 < \lambda < \mu$. If $X \sim \text{Poisson}(\lambda)$ and $Y \sim \text{Poisson}(\mu)$ are independent random variables, then $X \preceq Y$. 
+\end{theorem}
+
+\begin{proof}
+	Let $\tilde{X} \sim \text{Poisson}(\lambda)$, $\tilde{Z} \sim \text{Poisson}(\mu - \lambda)$ be independent random variables. Hence, we have that $\tilde{Y} := \tilde{X} + \tilde{Z} \sim \text{Poisson}(\mu)$. Note that since $\tilde{Z} \geq 0$, the value taken by $\tilde{Y}$ is always at least the value taken by $\tilde{X}$. Since we have found a coupling $(\tilde{X}, \tilde{Y})$ of $X$ and $Y$ where $\mathbb{P}(\tilde{Y} \geq \tilde{X}) = 1$, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
+\end{proof}
+
+\begin{theorem}
+	Let $X \sim \text{Binomial}(n_1, p)$ and $Y \sim \text{Binomial}(n_2, p)$ with $n_1 < n_2$. Then $X$ is stochastically dominated by $Y$.
+\end{theorem}
+
+\begin{proof}
+	Let $X_1, \dots, X_{n_2}$ be an iid sequence of Bernoulli random variables where $\mathbb{P}(X_i = 1) = p$. We observe that $\tilde{X} := \sum_{i=1}^{n_1} X_i \sim \text{Binomial}(n_1, p)$ and $\tilde{Y} := \sum_{i=1}^{n_2} X_i \sim \text{Binomial}(n_2, p)$. Since $X_i \geq 0$ for all $i$, and $\tilde{Y} = \tilde{X} + X_{n_1 + 1} + \dots + X_{n_2}$, we have that $\tilde{X} \leq \tilde{Y}$. Hence, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
+\end{proof}
 
 % TODO: Discuss implications for async rumour spreading - interpreting poission process as exponential clock, not interested in value of the process
 
