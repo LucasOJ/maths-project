@@ -252,7 +252,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		&\leq \sum_{i=0}^K e^{-c \log n} \\
 		&\leq \sum_{i=0}^N e^{-c \log n} \\
 		\intertext{since $K < N$}
-		&= N e^{-c \log n} \\ % TODO: Want n^{-c} not tends to 0!! change w.h.p defn to O((log x) ^l n^(-c))??
+		&= N e^{-c \log n} \\ % TODO: Want n^{-c} not tends to 0!! change w.h.p defn to O((log x) ^l n^(-c))?? -> n^{1-c}
 		&\to 0 \text { as } n \to \infty
 	\end{align*}
 	Thus w.h.p all intervals have length at least $\Delta(\alpha_i) + 2$, hence

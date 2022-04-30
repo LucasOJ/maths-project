@@ -171,28 +171,116 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 
 	We now use this equality to bound the growth of $T_s$, the first time at which more than $h_s = \frac{n}{2}$ nodes are aware of the rumour. We can express $T_s$ as a telescoping sum of intervals as follows:
 	$$
-		T_s = \sum_{i=1}^s T_i - T_{i-1}
+		T_s = \sum_{i=2}^s T_i - T_{i-1}
 	$$
+	% TODO: T_1 = 0 is this consistent??
 	For the $i^\text{th}$ interval, if $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$, we can apply the result from Case 1. If $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} < 1$, we apply Case 2 to bound the whole jump interval $[T_{i-1}, T_j]$, and continue the summation from $T_j$. % TODO: CHeck, problems from j+1 on case 2 result?
+	Thus, $T_s$ can be bounded above by
+	\begin{equation}\label{eq:floodingBoundExpression}
+		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
+	\end{equation}
+	Recall that $T_s$ is the first time that the number of informed nodes exceeds $h_s = \frac{n}{2}$. We now bound the time it takes until all nodes are aware of the rumour (which we denote $T_\text{all}$) from $T_s$.
 
-	TODO: FINISH PROOF
+	We argue that the length of the interval $[T_s, T_\text{all}]$ is also bounded by equation \ref{eq:floodingBoundExpression} using symmetry. Consider the set of uninformed nodes a time $t$, $U_t$. Note that if some node in $B(U_t)$ was aware of rumour in the previous time step, we would have a contradiction, since a node in $U_t$ would have been made aware of the rumour in round $t$ following Algorithm \ref{SyncFloodingAlgorithm}.
+	Thus, at the end of the previous time step, none of nodes in $B(U_t)$ can have been aware of the rumour.
+	Hence, at time $t-1$, $(U_t \cup B(U_t)) \subseteq U_{t-1}$, so $|U_t| + |B(U_t)| \leq |U_{t-1}|$.
 	
+	Let $i \leq s$ be the index such that $h_{i-1}< |U_t| \leq h_i$. Then since $G_t$ is an $(h_i, k_i)$-expander, 
+	\begin{equation} \label{eq:floodingReverseBound}
+		|U_{t-1}| \geq (1 + k_i)|U_t|
+	\end{equation}
+	Suppose we observe the rumour spreading process in reverse, starting at time $T_\text{all} - 1$ and finishing at the first time there are at least $\frac{n}{2}$ uninformed nodes (from the reverse perspective). We notice from equation \ref{eq:floodingReverseBound} that the growth in the number of uninformed nodes when watching the spreading process in reverse is subject to the same conditions as the growth in the number of informed nodes when watching the process forwards. Thus, by symmetry, the length of the interval $[T_s, T_\text{all}]$ can also be bounded by expression \ref{eq:floodingBoundExpression} in exactly the same way as the interval $[T_0, T_s]$. Hence, the spreading time $T_\text{all}$ is at most
+	$$
+		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
+	$$
+	% TODO : Think about the stralling -1, T_0 vs T_1, need to bound [T_0, T_all]
 \end{proof}
 
-\subsection{Review of Markov Chains}
+\subsection{Review of Discrete-time Markov Chains}
 
-\begin{enumerate}
-	\item Definition
-	\item Stationary distribution definition and Interpretation
-\end{enumerate}
+In this section we give a brief review of Markov chains and associated results needed for Section \ref{subsection:MEDNBound}. We assume that the reader is familiar with finite Discrete-time Markov chains, so omit the proofs in this section. For a full treatment of the subject see \cite{grimmetBook}.
 
-\subsection{Flooding on Markovian Evolving Dynamic Networks}
+% TODO: Make sure all motivated by intuition at least, specify definitions to establish conventions/terminology more than educate
+
+\begin{definition}
+	Markov Chain
+
+	\noindent A stochastic process $\{X_n, n \geq 0 \}$ on a state space $S$ is a Markov chain if 
+	$$
+		\mathbb{P}(X_n = s_n | X_0 = s_0, \dots,  X_{n-1} = s_{n-1}) 
+		= \mathbb{P}(X_n = s_n | X_{n-1} = s_{n-1})
+	$$
+	for all $n \geq 1$ and $s_0, \dots, s_n \in S$.
+\end{definition}
+
+All the Markov chains we study in this section will operate on state spaces with a finite number of elements, so henceforth all results assume that the state space is finite. For simplicity, we also restrict our study to time homogenous Markov chains, that is Markov chains $\{X_n, n \geq 0 \}$ which satisfy
+$$
+	\mathbb{P}(X_{n+1} = i | X_n = j)
+	= \mathbb{P}(X_1 = i | X_0 = j)
+$$
+for all $n \geq 1$ and $i, j \in S$.
+
+\begin{definition}
+	Transition Matrix
+
+	The transition matrix of a Markov chain $\{X_n, n \geq 0 \}$ on a state space $S$ is an $|S| \times |S|$ matrix $P=(p_{ij})_{i, j \in S}$ such that
+	$$
+		p_{ij} = \mathbb{P}(X_1 = j | X_0 = i)
+	$$
+\end{definition}
+
+\begin{definition}
+	Stationary Distribution
+
+	\noindent
+	A row vector $\pi=(\pi_i)_{i \in S}$ is a stationary distribution of a Markov chain on a state space $S$ with transition matrix $P$ if
+	\begin{enumerate}
+		\item $p_i \geq 0$ for all $i \in S$
+		\item $\sum_{i \in S} p_i = 1$
+		\item $\pi P = \pi$
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}
+	Irreducibility
+
+	\noindent
+	A Markov chain on a state space $S$ is irreducible if for all $i, j \in S$, there exists an $n \geq 0$ such that 
+	$$
+		\mathbb{P}(X_n = i | X_0 = j) > 0
+	$$
+\end{definition}
+
+Intuitively, a Markov chain is irreducible if there is a non-zero probability of reaching any state after some finite number of time steps, regardless of which state the chain started in.
+
+\begin{theorem}\label{theorem:uniqueStationaryDistribution}
+	An irreducible Markov chain has a unique stationary distribution.
+\end{theorem}
+
+\begin{definition}
+	Period
+
+	\noindent
+	The period of state $s \in S$ in a Markov chain $\{X_n, n \geq 0 \}$ is
+	$$
+		\gcd\{ n \geq 1 : \mathbb{P}(X_n = s | X_0 = s)\}
+	$$
+	If all states have period 1, we call the Markov chain aperiodic.
+\end{definition}
+
+% TODO: Intution - interested in how to prove??
+
+\begin{theorem}\label{theorem:markovChainConvergence}
+	If a Markov chain if irreducible and aperiodic, then the distribution of its current state after $n$ time steps converges to its stationary distribution as $n$ tends to infinity.
+\end{theorem}
+
+% TODO: ROUGH - not told how converges, but should define "distribution of its current state after $n$ time steps", rely on intuituion
+
+\subsection{Flooding on Markovian Evolving Dynamic Networks}\label{subsection:MEDNBound}
 
 Until now, all the dynamic networks we have studied have been deterministic, in the sense that the evolution of topologies has been fixed. However, knowing the future topologies of the network may be unrealistic in practice. For example, when considering rumour spread on a real-world network such as the internet, we cannot say with certainty what connections will be present on a given time in the future. This motivates a generalistion of the dynamic network model where the sequence of topologies is drawn from some distribution. This distribution expresses our uncertainty in the future topologies of the network, but allows us to encode information about how we predict the shape of the network may evolve. Under this model, the dynamic network itself is a stochastic process, and a source of randomness. In this section, we analyse the rumour spreading time when a Markov chain is used to  generate the random sequence of topologies.
 
 First we introduce a variation of the original Dynamic Network definition.
-
-\label{subsection:MEDNBound}
 
 \begin{definition}
 	Markovian Evolving Dynamic Network (MEDN)
@@ -295,23 +383,19 @@ Now we will see that the set of Markov chains associated with the edges induces 
 	% TODO: Include transition probabilities
 \end{proof}
 
-% TODO: Proof that it is a MEG 
-
-% TODO: Proof of stationary distribution - plug into
-
 Since the Edge-Markovian Network is an MEDN, we can apply Theorem \ref{theorem:markovSyncBound} to bound the spreading time of Algorithm \ref{SyncFloodingAlgorithm}. Before applying the bound, we need to establish the stationary distribution of this network. First we establish when a stationary distribution exists for the Edge-Markovian MEDN.
 
 \begin{lemma}
-	An Edge-Markovian MEDN $\mathcal{M}(n, p, q)$ has a unique stationary distribution if $0 < p, q < 1$.
+	An Edge-Markovian MEDN $\mathcal{M}(n, p, q)$ converges to a unique stationary distribution if $0 < p, q < 1$.
 \end{lemma}
 
 \begin{proof}
-	If either $p=0$ or $q=0$, then the edges could get stuck in a present or not-present state, but if $0 < p, q$ then the Markov chain can always move to a new state. When we also have that $p, q < 1$, any set of insertions and deletions from an arbitrary state has non-zero probability. Thus, under these conditions, it is possible to transition between any two states in a single time step. Hence, the Markov chain is irreducible when $0 < p, q < 1$. 
+	If either $p=0$ or $q=0$, then the edges could get stuck in a present or not-present state, but if $0 < p, q$ then the Markov chain can always move to a new state. When we also have that $p, q < 1$, any set of edge insertions and deletions from an arbitrary state has non-zero probability. Thus, under these conditions, it is possible to transition between any two states in a single time step. Hence, the Markov chain is irreducible when $0 < p, q < 1$, so by Theorem \ref{theorem:uniqueStationaryDistribution}, a unique stationary distribution exists.
 
 	If $p=q=1$, then the Markov chain is periodic as edges alternate between present and non-present each time step. However, if $p, q < 1$ no such periodic behaviour can take place with certainty, so the Markov chain is aperiodic.
 
-	Hence, if $0 < p, q < 1$, then the Markov chain is irreducible and aperiodic, thus by % TODO: CITE markov chain theorem
-	it has a unique stationary distribution.
+	Hence, if $0 < p, q < 1$ the Markov chain is irreducible and aperiodic, thus by Theorem \ref{theorem:markovChainConvergence}
+	it converges to a unique stationary distribution.
 \end{proof}
 
 For convenience, we assume that $0 < p, q < 1$ for the remainder of this section. Now we introduce the unique stationary distribution for the Edge-Markovian MEDN. 
@@ -621,6 +705,14 @@ Note that the lower bound on the spreading time is exactly the first term of the
 	\includegraphics[width=1\textwidth]{./figures/flooding_gnp_simulation_results.png}
 	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = \frac{c \log n}{n}$}
 	\label{fig:floodingGnpSimResultsTight}
+\end{figure}
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{./figures/flooding_simulation_1.5log.png}
+	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = c\frac{(\log n)^\frac{3}{2}}{n}$}
+	\label{fig:floodingSimResults1.5Log}
 \end{figure}
 
 Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{c \log n}{n}$. 
