@@ -1,5 +1,5 @@
 \section{Bounding the asynchronous rumour spreading time}
-\label{AsyncUpperBoundSection}
+\label{section:AsyncUpperBound}
 
 In this section we define an algorithm for rumour spreading on a dynamic network, and prove a bound from \cite{asyncPaper} on the associated spreading time that holds w.h.p. We then investigate how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
 
@@ -75,17 +75,14 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	% TODO: DIAGRAM HERE LABELLED WITH RATES
 	Let $S = I_\gamma$ if $\text{vol}(I_\gamma) \leq \text{vol}(U_\gamma)$, otherwise let $S = U_\gamma$. Then,
 
-	%TODO: Justify all steps
 	\begin{align*}
 		\lambda(\gamma) &= \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)} \left\{ \frac{1}{d_{u'}(\gamma)} + \frac{1}{d_{v'}(\gamma)} \right\}\\
 		& \geq \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)}  \max \left\{ \frac{1}{d_{u'}(\gamma)},\frac{1}{d_{v'}(\gamma)} \right\} \\ 
-		% TODO: Justify above
 		& \geq \sum_{\{u', v'\} \in E(I_\gamma, U_\gamma)} \min_{\{u, v\} \in E(I_\gamma, U_\gamma) } \left\{ \max \left\{ \frac{1}{d_u(\gamma)},\frac{1}{d_v(\gamma)} \right\} \right\} & \\ 
 		\intertext{by replacing all terms in the summation with the minimum term}
 		& = \min_{\{u, v\} \in E(I_\gamma, U_\gamma) } 
 		\left\{ \max \left\{ \frac{1}{d_u(\gamma)},\frac{1}{d_v(\gamma)} \right\} \right\} |E(I_\gamma, U_\gamma)| \\
 		\intertext{since there are  $|E(I_\gamma, U_\gamma)|$ identical terms in the summation}	
-		%TODO: Mention degrees indexed by time above?
 		& = \rho(S) \frac{|S|}{\text{vol}(S)} |E(I_\gamma, U_\gamma)| \\
 		\intertext{by the definition of $\rho$}
 		& = \rho(S) |S| \frac{|E(I_\gamma, U_\gamma)|}{ 
@@ -99,10 +96,10 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		& = \rho(G_\gamma)\Phi(G_\gamma) m(\gamma)
 		\intertext{by the definition of $m(\gamma)$}
 	\end{align*}
-	% TODO: Brief exposition here
+	% TODO: Brief exposition here??
 	We now proceed to prove the following claim, by performing case analysis on $m(\gamma)$
 
-	\textbf{Claim.} $m(\gamma) \geq \frac{m(\tau)}{2}$. % Inutive explanation
+	\textbf{Claim.} $m(\gamma) \geq \frac{m(\tau)}{2}$. % Inutive explanation - bounds on gamma
 
 	\textbf{Case 1.} Suppose $m(\gamma) = |I_\gamma|$
 
@@ -142,7 +139,6 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. % TODO: Is this a poisson proccess? Independent increments, rate function defined by realisation but still has independet increments, step talk about step function.
 	Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
 
-
 	By [CITE INHOMOGENOUS THEROEM], $N(\tau + \Delta(\alpha) + 2)$ has a Poission distribution with rate $\Lambda(\tau + \Delta(\alpha) + 2)$, where
 	\begin{align*}
 		\Lambda(\tau + \Delta(\alpha) + 2) &= \int_\tau^{\tau + \Delta(\alpha) + 2} \lambda(\gamma) d\gamma \\
@@ -159,14 +155,14 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		& = \alpha m(\tau)
 	\end{align*}
 	Let $X$ be a random variable with a $\text{Poisson}(\alpha m(\tau))$ distribution. 
-	By the previous chain of inequalities we have that $X$ is stochastically dominated by $N(\tau + \Delta(\alpha) + 2)$. % TODO: Talk about stochastic domination
+	Since $\Lambda(\tau + \Delta(\alpha) + 2) \geq \alpha m(\tau)$, we have that $X$ is first-order stochastically dominated by $N(\tau + \Delta(\alpha) + 2)$.
 	Note that
 	$$
 		\tau' - \tau \geq \Delta(\alpha) + 2 \iff 
 		\tau' \geq \tau + \Delta(\alpha) + 2 \implies 
 		N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}
 	$$
-	where the final implication holds since by the definition of $\tau'$, if $\tau' \geq \tau + \Delta(\alpha) + 2$ then the number of new nodes informed of the the rumour between time $\tau$ and $\tau + \Delta(\alpha) + 2$ must be less than or equal to $\frac{m(\tau)}{2}$. Hence, we have that
+	where the final implication holds since by the definition of $\tau'$, if $\tau' \geq \tau + \Delta(\alpha) + 2$ then the number of new nodes informed of the rumour between time $\tau$ and $\tau + \Delta(\alpha) + 2$ must be less than or equal to $\frac{m(\tau)}{2}$. Hence, we have that
 	\begin{align*}
 		\mathbb{P}(\tau' - \tau \geq \Delta(\alpha) + 2) & 
 		\leq \mathbb{P}\left(N(\tau + \Delta(\alpha) + 2) \leq \frac{m(\tau)}{2}\right) \\
@@ -256,7 +252,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		&\leq \sum_{i=0}^K e^{-c \log n} \\
 		&\leq \sum_{i=0}^N e^{-c \log n} \\
 		\intertext{since $K < N$}
-		&= N e^{-c \log n} \\
+		&= N e^{-c \log n} \\ % TODO: Want n^{-c} not tends to 0!! change w.h.p defn to O((log x) ^l n^(-c))??
 		&\to 0 \text { as } n \to \infty
 	\end{align*}
 	Thus w.h.p all intervals have length at least $\Delta(\alpha_i) + 2$, hence
