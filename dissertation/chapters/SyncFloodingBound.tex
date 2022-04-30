@@ -1,9 +1,9 @@
-\section{Bounding the synchronous flooding time}
-\label{SyncFloodingSection}
+\chapter{Bounding the synchronous flooding time}
+\label{chapter:SyncFlooding}
 
-In this section we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network from \cite{syncPaper}. Then we introduce a new type of dynamic network, where the sequence of topologies is not deterministic, but instead follows a distribution. We generalise our flooding bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound.
+In this chapter we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network from \cite{syncPaper}. Then we introduce a new type of dynamic network, where the sequence of topologies is not deterministic, but instead follows a distribution. We generalise our flooding bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound.
 
-\subsection{Model}
+\section{Model}
 
 First we introduce a new algorithm for rumour spreading in discrete rounds (referred to in \cite{asyncPaper} as synchronous spread).
 
@@ -16,7 +16,7 @@ First we introduce a new algorithm for rumour spreading in discrete rounds (refe
 
 We note that the asynchronous rumour spreading algorithm (Algorithm \ref{NodeCentricAsyncAlgorithm}) was probabilistic since the algorithm depended on sources of randomness such as exponential clocks. In contrast, once the dynamic network and initial node from which the rumour spreads are chosen, Algorithm \ref{SyncFloodingAlgorithm} is entirely deterministic. Since the trajectory of the rumour spread is completely determined by the initial conditions, it is reasonable to ask why we would want bounds on the spreading time if we can simply simulate the rumour, and record how long it takes to inform all the nodes. In some cases however, the graph may be so large that simulation is computationally infeasible. 
 In such cases, we may be able to take advantage of bounds in terms of the structural properties of graphs instead. % TODO: Said "cases" at beginning of both sentances
-Additionally, in section \ref{subsection:MEDNBound}
+Additionally, in Section \ref{section:MEDNBound}
 we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of graphs is not fixed but instead follows some distribution. 
 In this case, deterministic bounds will allow us to bound spreading time over the distribution of graph sequences. %TODO: Said "case" again - change
 
@@ -24,7 +24,7 @@ In this case, deterministic bounds will allow us to bound spreading time over th
 % TODO: mention that Flooding only works for synchronus
 
 
-\subsection{Bound on spreading time for the Flooding Algorithm}
+\section{Bound on spreading time for the Flooding Algorithm}
 
 In this section we prove a bound on the spreading time of the flooding algorithm from \cite{syncPaper}, adding details and expanding steps throughout.
 
@@ -62,7 +62,7 @@ We are now ready give a bound on the rumour spreading time for the flooding algo
 
 % TODO: Interpretation of how the bound varies for different (h_i, k_i) sequences, how do these emerge?
 
-We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$-expander for multiple $(h, k)$ pairs. Initially these conditions may seem unreasonably strong, however in Section \ref{subsect:floodingBoundEdgeMarkovian} we will see an interesting example where these properties emerge w.h.p in a random graph.
+We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$-expander for multiple $(h, k)$ pairs. Initially these conditions may seem unreasonably strong, however in Section \ref{section:floodingBoundEdgeMarkovian} we will see an interesting example where these properties emerge w.h.p in a random graph.
 
 \begin{proof}
 	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$, i.e
@@ -196,9 +196,9 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	% TODO : Think about the stralling -1, T_0 vs T_1, need to bound [T_0, T_all]
 \end{proof}
 
-\subsection{Review of Discrete-time Markov Chains}
+\section{Review of Discrete-time Markov Chains}
 
-In this section we give a brief review of Markov chains and associated results needed for Section \ref{subsection:MEDNBound}. We assume that the reader is familiar with finite Discrete-time Markov chains, so omit the proofs in this section. For a full treatment of the subject see \cite{grimmetBook}.
+In this section we give a brief review of Markov chains and associated results needed for Section \ref{section:MEDNBound}. We assume that the reader is familiar with finite Discrete-time Markov chains, so omit the proofs in this section. For a full treatment of the subject see \cite{grimmetBook}.
 
 % TODO: Make sure all motivated by intuition at least, specify definitions to establish conventions/terminology more than educate
 
@@ -276,7 +276,7 @@ Intuitively, a Markov chain is irreducible if there is a non-zero probability of
 
 % TODO: ROUGH - not told how converges, but should define "distribution of its current state after $n$ time steps", rely on intuituion
 
-\subsection{Flooding on Markovian Evolving Dynamic Networks}\label{subsection:MEDNBound}
+\section{Flooding on Markovian Evolving Dynamic Networks}\label{section:MEDNBound}
 
 Until now, all the dynamic networks we have studied have been deterministic, in the sense that the evolution of topologies has been fixed. However, knowing the future topologies of the network may be unrealistic in practice. For example, when considering rumour spread on a real-world network such as the internet, we cannot say with certainty what connections will be present on a given time in the future. This motivates a generalistion of the dynamic network model where the sequence of topologies is drawn from some distribution. This distribution expresses our uncertainty in the future topologies of the network, but allows us to encode information about how we predict the shape of the network may evolve. Under this model, the dynamic network itself is a stochastic process, and a source of randomness. In this section, we analyse the rumour spreading time when a Markov chain is used to  generate the random sequence of topologies.
 
@@ -343,7 +343,7 @@ Since each topology is sampled from the stationary distribution, these propertie
 
 \end{proof}
 
-\subsection{Applying the bound to the Edge Markovian MEDN}\label{subsect:floodingBoundEdgeMarkovian}
+\section{Applying the bound to the Edge Markovian MEDN}\label{section:floodingBoundEdgeMarkovian}
 
 In this section, we apply the bound proved in Theorem \ref{theorem:markovSyncBound} to a specific MEDN called the Edge-Markovian Network. We will also evaluate the quality of the bound by proving a lower bound on the spreading time, and comparing the results with simulations. 
 
@@ -528,7 +528,7 @@ We take a moment to consider the role of $\hat{p}$. Note that $p$ and $q$ may be
 
 In the context of the Edge-Markovian model, the larger the ratio $\frac{p}{p+q}$, the less often edges fail, and the faster edges recover. %TODO: Could be misinterpreted
 This in turn improves the likelihood that each topology contains many edges, increasing the speed at which the rumour spreads. This intuition is reflected in the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound}: the closer $\hat{p}$ is to 1, the smaller the $\frac{\log n}{\log n \hat{p}}$ term will be. However, interestingly the $\log \log n \hat{p}$ term increases with $\hat{p}$, which goes against our intuition, as this term will be larger for denser graphs. 
-This indicates that our bound may not always be tight, which we will explore in Section \ref{subsect:edgeMarkovianFloodingBoundEvaluation}. % TODO: IS THIS TRUE?
+This indicates that our bound may not always be tight, which we will explore in Section \ref{section:edgeMarkovianFloodingBoundEvaluation}. % TODO: IS THIS TRUE?
 
 
 \begin{proof}
@@ -617,13 +617,13 @@ For the $G(n, \hat{p})$ distribution, it is well known that if $\hat{p} = o(\fra
 Bounding the spreading time of the Edge-Markovian Network in cases where $\hat{p} = o(\frac{\log n}{n})$ could be an interesting area for further study. Each topology will be disconnected w.h.p, but unlike the static $G(n,p)$ graph, the changing edges allow the rumour to spread between sets of nodes which were previously disconnected, and eventually inform all nodes in the network.
 % TODO: Define "w.h.p"
 
-\subsection{Evaluating the quality of the bound}\label{subsect:edgeMarkovianFloodingBoundEvaluation}
+\section{Evaluating the quality of the bound}\label{section:edgeMarkovianFloodingBoundEvaluation}
 
 % TODO: Note \hat{p} is a function of n
 % lower bound on mixing time
 % TODO: Why can't generalise to varying t? (Non-homogenous MC)
 
-In this subsection we evaluate how tight the bound in Theorem \ref{theorem:edgeMarkovianFloodingBound} is, using lower bounds on the spreading time and simulations. % TODO: Rephrase 
+In this section we evaluate how tight the bound in Theorem \ref{theorem:edgeMarkovianFloodingBound} is, using lower bounds on the spreading time and simulations. % TODO: Rephrase 
 We start with a lower bound on the spreading time of Algorithm \ref{SyncFloodingAlgorithm} on the stationary Edge-Markovian Network.
 
 \begin{theorem}
@@ -638,7 +638,7 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 	\begin{align*}
 		\mathbb{P}(\delta_{v,t} \geq 2n\hat{p}) 
 		& \leq \mathbb{P}(\text{Binomial}(n, \hat{p}) \geq 2n\hat{p}) \\ 
-		\intertext{since the $\text{Binomial}(n, \hat{p})$ distribution stochastically dominates the $\text{Binomial}(n-1, \hat{p})$ distribution} % TODO: Prove in prelims and cite
+		\intertext{since the $\text{Binomial}(n, \hat{p})$ distribution stochastically dominates the $\text{Binomial}(n-1, \hat{p})$ distribution} % TODO: Prove in chapter:Prelims and cite
 		& \leq \exp(-\frac{n\hat{p}}{3}) \\
 		\intertext{by the Chernoff bound. We omit the proof of the Chernoff bound for brevity, but refer the reader to \cite{binomialChernoff} for a full proof.} % TODO: Move earlier if used there
 		& \leq \exp(-\frac{c \log n}{3}) = n^{-\frac{c}{3}}
@@ -694,7 +694,7 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 
 Note that the lower bound on the spreading time is exactly the first term of the bound proved in Theorem \ref{theorem:edgeMarkovianFloodingBound}. Hence, when $\frac{\log n}{\log (n\hat{p})}$ is the dominant term, the bound is tight. Indeed, when $\hat{p} = \frac{c \log n}{n}$, % TODO: finish this 
 
-% TODO: DEFINE WHP in prelims
+% TODO: DEFINE WHP in chapter:Prelims
 
 % TODO: implications, bound tight when log n/ log(np) is dominant term,
  

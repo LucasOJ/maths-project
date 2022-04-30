@@ -1,9 +1,9 @@
-\section{Bounding the asynchronous rumour spreading time}
-\label{section:AsyncUpperBound}
+\chapter{Bounding the asynchronous rumour spreading time}
+\label{chapter:AsyncUpperBound}
 
-In this section we define an algorithm for rumour spreading on a dynamic network, and prove a bound from \cite{asyncPaper} on the associated spreading time that holds w.h.p. We then investigate how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
+In this chapter we define an algorithm for rumour spreading on a dynamic network, and prove a bound from \cite{asyncPaper} on the associated spreading time that holds w.h.p. We then investigate how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
 
-\subsection{Introducing the Rumour Spreading Model}
+\section{Introducing the Rumour Spreading Model}
 Now we are ready to define our first asynchronous algorithm for rumour spreading on a given dynamic network.
 
 \begin{definition}
@@ -20,7 +20,7 @@ An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{
 
 % TODO: Implications of this model
 
-\subsection{Proof of the bound}
+\section{Proof of the bound}
 
 We follow a proof from \cite{asyncPaper}, explaining steps in greater detail than in the original paper.
 
@@ -332,11 +332,11 @@ Thus, the intuitive idea that the greater the success probability of the bound, 
 	\item Comparison between absolute and non-absolute  diligence results, when is each useful?
 \end{enumerate}
 
-\subsection{Evaluating the quality of the bound}
+\section{Evaluating the quality of the bound}
 
 In this section we gauge the quality of the bound given in Theorem \ref{theorem:AsyncUpperBound}, by applying it to various networks, and comparing the results with simulated spreading times.
 
-\subsubsection{Ring-Complete Alternating Dynamic Network}
+\subsection{Ring-Complete Alternating Dynamic Network}
 
 First we introduce the dynamic network. % TODO: Abrupt ending
 
@@ -380,7 +380,7 @@ To calculate this quantity explicitly, we need to compute the conductance and di
 
 \textbf{Claim 1.} $\Phi(R)=\frac{2}{n}$
 
-We recall from section \ref{subsect:graphMetrics} that the definition of conductance for a graph $G$ is 
+We recall from Section \ref{section:graphMetrics} that the definition of conductance for a graph $G$ is 
 $$
 	\Phi(G) 
 	= \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}} 
@@ -420,7 +420,7 @@ $$
 
 \textbf{Claim 2.} $\rho(R)=1$
 
-We recall from section \ref{subsect:graphMetrics} that the diligence of a subset of nodes $S$ is
+We recall from Section \ref{section:graphMetrics} that the diligence of a subset of nodes $S$ is
 $$
 \rho(S) = \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
 $$ 
@@ -484,7 +484,7 @@ The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results 
 
 We now consider an example of a dynamic network where the bound is not tight in scaling. % TODO: Reword
 
-\subsubsection{Shuffled Ring}\label{subsect:shuffledRingAsyncApplication}
+\subsection{Shuffled Ring}\label{section:shuffledRingAsyncApplication}
 
 We start by introducing the Shuffled Ring Network.
 
@@ -556,7 +556,7 @@ But why is it the case that the bound is weak for the Shuffled Ring Network?
 
 To answer this question, we investigate the spreading time on the static ring graph.
 
-\subsubsection{Static Ring}
+\subsection{Static Ring}
 
 \begin{definition}
 	Static Ring Network $\mathcal{R}$
@@ -656,7 +656,7 @@ This growth is similar to a branching process, where each set of contiguous info
 
 Note that since Algorithm \ref{NodeCentricAsyncAlgorithm} is a random process, the individual simulations analysed in Figures \ref{fig:staticRingInformedNodeGrowth} and \ref{fig:shuffledRingInformedNodeGrowth} are not necessarily characteristic of how the rumour spreads on each network. However, after running the simulations multiple times, we see the same general structures we have discussed in both plots, hence these displays are useful illustrations.
 
-We now return to the question posed in section \ref{subsect:shuffledRingAsyncApplication} - why is the bound given by Theorem \ref{theorem:AsyncUpperBound} weak for the Shuffled Ring? We saw in the proof of Theorem \ref{theorem:staticRingAsyncBound} that the $\mathcal{O}(n \log n)$ bound must hold w.h.p for both the Static Ring and Shuffled Ring, since they have identical structures. However, we have seen from simulations that the spreading time of the Static ring grows like $\mathcal{O}(n)$, so our bound for both the Static Ring and Shuffled Ring can be no better than $\mathcal{O}(n)$. 
+We now return to the question posed in section \ref{section:shuffledRingAsyncApplication} - why is the bound given by Theorem \ref{theorem:AsyncUpperBound} weak for the Shuffled Ring? We saw in the proof of Theorem \ref{theorem:staticRingAsyncBound} that the $\mathcal{O}(n \log n)$ bound must hold w.h.p for both the Static Ring and Shuffled Ring, since they have identical structures. However, we have seen from simulations that the spreading time of the Static ring grows like $\mathcal{O}(n)$, so our bound for both the Static Ring and Shuffled Ring can be no better than $\mathcal{O}(n)$. 
 
 We can interpret the Static Ring as a version of the Shuffled Ring in which the nodes have been relabelled. This example shows that such a renaming has no effect on the bound, but has a significant impact on the spreading time, hence the bound must accommodate for the network with the worse spreading time. We refer to such a network as "adversarial", in the sense that it is the network which aims to slow the spread of the rumour by relabelling nodes.
 

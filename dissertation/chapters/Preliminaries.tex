@@ -1,7 +1,7 @@
-\section{Preliminaries}
-\label{Prelims}
+\chapter{Preliminaries}
+\label{chapter:Prelims}
 
-\subsection{Notation}
+\section{Notation}
 
 First we introduce notation for expressing graph metrics. This notation will also be used throughout the paper. % TODO - GET RID OF SECOND LINE?
 
@@ -40,7 +40,7 @@ First we introduce notation for expressing graph metrics. This notation will als
 
 % TODO: Explain Implications of Cut set defn?
 
-\subsection{Graph Metrics}\label{subsect:graphMetrics}
+\section{Graph Metrics}\label{section:graphMetrics}
 
 \begin{definition}
 	Conductance of a graph $G = (V, E)$
@@ -64,7 +64,7 @@ First we introduce notation for expressing graph metrics. This notation will als
 	$$
 \end{definition}
 
-\subsection{Introducing Dynamic Networks}
+\section{Introducing Dynamic Networks}
 
 Here we formally define the Dynamic Network structure rumours will spread on.
 
@@ -87,9 +87,9 @@ $G_t$ represents the topology of the network at the discrete time step $t$. Howe
 \end{definition}
 
 
-\subsection{Review of Poisson Processes}
+\section{Review of Poisson Processes}
 
-In this subsection we review some key properties of the Poisson process, which will be needed to specify the first asynchronous rumour spread algorithm.
+In this section we review some key properties of the Poisson process, which will be needed to specify the first asynchronous rumour spread algorithm.
 
 The Poisson process ...
 %%% COUNTING PROCCESS START
@@ -135,7 +135,7 @@ The Poisson process can be used to model situations where % TODO: FINISH
 
 %TODO: NEED SUPERPOISITION AND EQUIVALENCE WITH EXPONENTIAL
 
-\subsection{Inhomogeneous Poisson Processes}
+\section{Inhomogeneous Poisson Processes}
 
 In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}.
 
@@ -246,11 +246,11 @@ We now prove a property of inhomogeneous Poisson process which will be essential
 % TODO: Introduce indepdendent increments
 
 
-\subsection{Order statistics of exponential random variables}
+\section{Order statistics of exponential random variables}
 
 
 
-\subsection{Stochastic Domination}
+\section{Stochastic Domination}
 Coupling proof of stochastic domination of poisson 
 
 
@@ -288,7 +288,7 @@ Figure \ref{fig:stochDomPDFs} shows the probability density functions (PDFs) of 
 
 Observe that $X \preceq Y$ if an only if $\mathbb{P}(Y \leq x) \leq \mathbb{P}(X \leq x)$. We recognise $\mathbb{P}(X \leq x)$ as the cumulative distribution function (CDF) of $X$. Hence, we verify this claim by computing the cumulative  distribution functions of the distributions in Figure \ref{fig:stochDomPDFs}, which are shown in Figure \ref{fig:stochDomCDFs}. Indeed, we see that the orange CDF is always below the blue CDF, hence the orange distribution does in fact dominate. % TODO: Reword, do we need this section?
 
-For proofs in Sections \ref{section:AsyncUpperBound} and \ref{SyncFloodingSection} we need to establish stochastic dominance between pairs of Binomial random variables and Poisson random variables. To do this we use a technique called coupling. First we introduce the definition of a coupling.
+For proofs in Sections \ref{chapter:AsyncUpperBound} and \ref{chapter:SyncFlooding} we need to establish stochastic dominance between pairs of Binomial random variables and Poisson random variables. To do this we use a technique called coupling. First we introduce the definition of a coupling.
 
 \begin{definition} % TODO: Check definition
 	Coupling

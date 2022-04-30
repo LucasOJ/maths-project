@@ -1,4 +1,4 @@
-\section{Introduction}
+\chapter{Introduction}
 
 Dynamic networks are complex networks which change over time. The study of such structures is important as we can use them to model many important real-world situations[CITE]. For example, computer networks such as the internet are dynamic: connections between nodes can fail and new nodes can be added which leads to a changing network topology. 
 
@@ -7,17 +7,15 @@ In this paper we investigate a variety of randomized rumour spreading algorithms
 % TODO: FOLLOWING IS WRONG - ALSO CONSIDERING FLOODING TIME
 We compare rumour spreading algorithms by deriving the time it takes for the rumour to spread to all nodes on a given dynamic network, known as the rumour spreading time. Since the algorithms we consider are randomized, the rumour spreading time will vary. Hence, the best we can do is we find bounds that hold w.h.p. Such bounds are well-known for static networks \cite{complexNetworksRumourSpreading}, but in this paper we extend these results to networks with changing topologies. For simplicity, we restrict our investigations to dynamic networks where the edges may be introduced or removed over time, but the vertex set remains the same.
 
-In Section \ref{Prelims} we introduce the notation and background needed to model rumour spreading.
+In Chapter \ref{chapter:Prelims} we introduce the notation and background needed to model rumour spreading.
 
-In Section \ref{section:AsyncUpperBound} we specify an asynchronous rumour spreading algorithm and review a result by Pourmiri and Mans \cite{asyncPaper}, which bounds the associated spreading time on a dynamic network. In this analysis the exact changes in network topology are known before the rumour spreading takes place, however in practice this assumption may be unrealistic.
+In Chapter \ref{chapter:AsyncUpperBound} we specify an asynchronous rumour spreading algorithm and review a result by Pourmiri and Mans \cite{asyncPaper}, which bounds the associated spreading time on a dynamic network. In this analysis the exact changes in network topology are known before the rumour spreading takes place, however in practice this assumption may be unrealistic.
 
-In Section \ref{section:AsyncLowerBound} we review the complementary result from the same paper \cite{asyncPaper} that the asynchronous bound is almost tight.
+In Chapter \ref{chapter:asyncBoundTight} we review the complementary result from the same paper \cite{asyncPaper} that the asynchronous bound is almost tight.
 
-In Section \ref{SyncFloodingSection} we investigate the flooding time for a synchronous rumour spreading algorithm, following the results by of a paper by Clementi, Monti, Pasquale and Silvestri \cite{syncPaper}. We loosen the assumption that we know the exact changes to the network topology at each time step, by instead considering a model where changes occur according to a given probability distribution.
+In Chapter \ref{chapter:SyncFlooding} we investigate the flooding time for a synchronous rumour spreading algorithm, following the results by of a paper by Clementi, Monti, Pasquale and Silvestri \cite{syncPaper}. We loosen the assumption that we know the exact changes to the network topology at each time step, by instead considering a model where changes occur according to a given probability distribution.
 
-In Section \ref{AsyncCheegerBound} we combine ideas from sections \ref{section:AsyncUpperBound} and \ref{SyncFloodingSection} to derive a novel bound on the rumour spreading time of an asynchronous algorithm. 
-
-% TODO - finish this
+% TODO - finish this 
 
 \begin{enumerate}
 	\item Motivation for studying
