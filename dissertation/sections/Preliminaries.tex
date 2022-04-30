@@ -100,6 +100,15 @@ The Poisson process ...
 	A counting process $\left\{ N(t), t \geq 0 \right\}$ is a right-continuous non-decreasing random function $N$ from non-negative reals to non-negative integers such that $N(0) = 0$.
 \end{definition}
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{./figures/poisson_process_example.png}
+	\caption{Example of a counting process from \cite{countingProcessFigure}}
+	\label{fig:poissonProcessExample}
+\end{figure}
+
+% TODO: Discuss figure
+
 We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as "arrivals".  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$. Note that the nuumber arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
 %%% COUNTING PROCCESS END
 
@@ -116,7 +125,7 @@ The Poission process is a type of counting process that satisfies additional con
 		\begin{align*}
 			\mathbb{P}(N(t + \delta) - N(t) = 0) &= 1 - \lambda\delta + o(\delta) \\
 			\mathbb{P}(N(t + \delta) - N(t) = 1) &= \lambda\delta + o(\delta) \\
-			\mathbb{P}(N(t + \delta) - N(t) > 0) &= o(\delta)
+			\mathbb{P}(N(t + \delta) - N(t) > 1) &= o(\delta)
 		\end{align*}
 		\item $N(0) = 0$
 	\end{enumerate}
@@ -141,7 +150,7 @@ In this section we introduce an extension of the Poisson process which will be n
 		\begin{align*}
 			\mathbb{P}(N(t + \delta) - N(t) = 0) &= 1 - \lambda(t)\delta + o(\delta) \\
 			\mathbb{P}(N(t + \delta) - N(t) = 1) &= \lambda(t)\delta + o(\delta) \\
-			\mathbb{P}(N(t + \delta) - N(t) > 0) &= o(\delta)
+			\mathbb{P}(N(t + \delta) - N(t) > 1) &= o(\delta)
 		\end{align*}
 		\item $N(0) = 0$
 	\end{enumerate}
@@ -154,7 +163,7 @@ We now prove a property of inhomogeneous Poisson process which will be essential
 \begin{theorem}
 	Let $\{N(t), t \geq 0\}$ be an inhomogeneous Poisson process with rate function $\lambda(t)$. Then $N(t)$ has a Poisson distribution with mean
 	$$
-		\int_0^t \lambda(x) dx
+		\Lambda(t) = \int_0^t \lambda(x) dx
 	$$
 \end{theorem}
 
@@ -195,7 +204,7 @@ We now prove a property of inhomogeneous Poisson process which will be essential
 	\end{align*}
 	% TODO: Introduce little and big o-notation, little o(x) is any f(x) such that f(x)/x -> 0 as x -> 0
 	Therefore the PDF of $N(t)$ must satisfy the above ODE. 
-	We now show that the Poisson distribution with mean $\Lambda(t) = \int_0^t \lambda(x) dx$
+	We now show that the Poisson distribution with mean $\Lambda(t)$
 	satisfies this equality. It is possible to derive the p.d.f from the equation using the integrating factor technique \cite{inhomoPoissonProof}, however instead we will verify that the Poisson distribution p.d.f is sufficient.
 	Let $q_n(t)$ denote the Poisson p.d.f with mean $\Lambda(t)$, i.e.
 	$$
@@ -325,7 +334,7 @@ Using Theorem \ref{theorem:couplingDomination}, we can establish stochastic domi
 Now we use coupling to establish first-order stochastic dominance between pairs of binomial random variables.
 
 \begin{theorem}
-	Let $X \sim \text{Binomial}(n_1, p)$ and $Y \sim \text{Binomial}(n_2, p)$ with $n_1 < n_2$. Then $X$ is stochastically dominated by $Y$.
+	Let $X \sim \text{Binomial}(n_1, p)$ and $Y \sim \text{Binomial}(n_2, p)$ be independent random variables with $n_1 < n_2$. Then $X$ is stochastically dominated by $Y$.
 \end{theorem}
 
 \begin{proof}
