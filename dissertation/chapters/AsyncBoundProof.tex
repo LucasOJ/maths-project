@@ -477,12 +477,27 @@ Now we compare the bound with simulated spreading times on the $\mathcal{A}$.
 	\label{fig:alternatingSimResults}
 \end{figure}
 
-The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results rumour spreading on $\mathcal{A}$. Each blue point in the plot represents a single simulation, where the $x$ component is the number of nodes in the simulation, and the $y$ component is spreading time. Since the spreading time is random variable, 50 simulations were run for each network size we investigated. The mean of these 50 simulations are plotted in red. % TODO: 50 runs to eliminate varaince of indiviudal runs, bound w.h.p
+The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results simulated rumour spreading on $\mathcal{A}$. Each blue point in the plot represents a single simulation, where the $x$ component is the number of nodes in the simulation, and the $y$ component is spreading time. Since the spreading time is random variable, 200 simulations were run for each network size we investigated. The means (displayed by red points) illustrate the relationship between the size of the network and the expected spreading time. 
+
+However, since the bound in Theorem \ref{theorem:AsyncUpperBound} holds w.h.p, we need a different metric that for which the majority of the spreading times are bounded by ... % TODO: Sort out what this means
+
+To determine whether our bound is sufficient and tight, we investigate the growth rate of the orange line.
+
+Since the asymptotic bound holds w.h.p, for a network with $n$ nodes, we expect that at most 1 in $n$ simulated spreading times exceed the bound.
+
+For the network size of $n$ nodes, the corresponding value of the orange line represents the $100(1-\frac{1}{n})^\text{th}$ percentile of the simulation results, i.e. that 
+
+We observe that the spreading times grow at like $f(n) = c \log \log (n)$ with an appropriately chosen scaling constant $c$ (plotted in green), so the $\mathcal{O}(\log n)$ bound holds. 
+
+However, this analysis suggests that $\mathcal{O}(\log n)$ bound is not tight for $\mathcal{A}$.
+
 
 % TODO: Difference between means and bound -> means fit bound => likely bound works/is tight, expect all points beneath bound don't expect means to follow bound exactly
 % TODO: Analysis - what does this sim actually tell us
 
-We now consider an example of a dynamic network where the bound is not tight in scaling. % TODO: Reword
+We now consider another example of a dynamic network.
+
+% TODO: FIGINTERP
 
 \subsection{Shuffled Ring}\label{section:shuffledRingAsyncApplication}
 
@@ -548,6 +563,9 @@ Now we compare the bound we have obtained with simulated spreading times on the 
 	\caption{Results of shuffled ring spreading time simulations}
 	\label{fig:shuffleRingSimResults}
 \end{figure}
+
+% TODO: FIGINTERP, green line is log(x)
+% REGRESSION
 
 We see from Figure \ref{fig:shuffledRingExample} that the spreading times of the Shuffled Ring Network grow logarithmically in the size of the network. % TODO: Justify rigourouly, generate "closeness" metric to true log n?
 Thus, the $\mathcal{O}(n \log n)$ bound given by Theorem $\ref{theorem:AsyncUpperBound}$ is larger by a factor of $n$ in scaling. 
