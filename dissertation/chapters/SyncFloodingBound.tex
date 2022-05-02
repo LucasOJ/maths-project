@@ -626,7 +626,7 @@ Bounding the spreading time of the Edge-Markovian Network in cases where $\hat{p
 In this section we evaluate how tight the bound in Theorem \ref{theorem:edgeMarkovianFloodingBound} is, using lower bounds on the spreading time and simulations. % TODO: Rephrase 
 We start with a lower bound on the spreading time of Algorithm \ref{SyncFloodingAlgorithm} on the stationary Edge-Markovian Network.
 
-\begin{theorem}
+\begin{theorem}\label{theorem:edgeMarkovianLowerBound}
 	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Dynamic Network. If $\hat{p} = \frac{p}{p+q} \geq c \frac{\log n}{n}$ for a sufficiently large $c$ then w.h.p, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} in $\mathcal{M}(n, p, q)$ is at least 
 	$$
 		\Omega\left(\frac{\log n}{\log (n \hat{p})}\right)
@@ -692,32 +692,93 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 	$$
 \end{proof}
 
-Note that the lower bound on the spreading time is exactly the first term of the bound proved in Theorem \ref{theorem:edgeMarkovianFloodingBound}. Hence, when $\frac{\log n}{\log (n\hat{p})}$ is the dominant term, the bound is tight. Indeed, when $\hat{p} = \frac{c \log n}{n}$, % TODO: finish this 
+Note that the lower bound on the spreading time is exactly the first term of the bound proved in Theorem \ref{theorem:edgeMarkovianFloodingBound}. Hence, when $\frac{\log n}{\log (n\hat{p})}$ is the dominant term, the bound is tight. In fact, under these circumstances, we characterise the exact scaling for the spreading time up to constants.
+
+\begin{corollary}\label{corollary:edgeMarkovianThetaBound}
+	Let $\mathcal{M}(n, p, q)$ be a stationary Edge-Markovian Network such that 
+	$$
+		c \frac{\log n}{n} \leq \hat{p} \leq  \frac{n^\frac{1}{\log \log n}}{n}
+	$$
+	for a sufficiently large $c$. Then, w.h.p, the spreading time of Algorithm \ref{SyncFloodingAlgorithm} on $\mathcal{M}(n, p , q)$ is 
+	$$
+		\Theta\left(\frac{\log n}{\log(n\hat{p})}\right)
+	$$
+\end{corollary}
+
+\begin{proof}
+	Since $\hat{p} \geq c \frac{\log n}{n}$, w.h.p, the spreading time is at most 
+	$$
+		\mathcal{O}\left(\frac{\log n}{\log n\hat{p}} + \log \log n\hat{p} \right)
+	$$ by Theorem \ref{theorem:edgeMarkovianFloodingBound}, and at least 
+	$$
+		\Omega\left(\frac{\log n}{\log(n \hat{p})}\right)
+	$$
+	by Theorem \ref{theorem:edgeMarkovianLowerBound}.
+	Note that 
+	$$
+		\frac{\log n}{\log(n\hat{p})} \geq \frac{\log n}{\log(n^\frac{1}{\log \log n})} = \log \log n
+	$$
+	As $\hat{p} \geq 1$, $\log \log n \geq \log \log (n\hat{p})$, so the first term of the upper bound is dominant and w.h.p, the spreading time is at most 
+	$$
+		\mathcal{O}\left(\frac{\log n}{\log n\hat{p}}\right)
+	$$
+	Hence the spreading time is
+	$$
+		\Theta\left(\frac{\log n}{\log(n\hat{p})}\right)
+	$$
+\end{proof}
+
+% TODO: BE explicit - bound is tight when phat in above range
 
 % TODO: DEFINE WHP in chapter:Prelims
-
-% TODO: implications, bound tight when log n/ log(np) is dominant term,
  
 % TODO: simulations outside tight range p like ((logn)^k)/n
 
+We verify this result with simulations.
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=1\textwidth]{./figures/flooding_gnp_simulation_results.png}
-	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = \frac{c \log n}{n}$}
+	\includegraphics[width=1\textwidth]{./figures/flooding_simulation_min_p.png}
+	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = \frac{\log n}{n}$}
 	\label{fig:floodingGnpSimResultsTight}
 \end{figure}
 
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=1\textwidth]{./figures/flooding_simulation_1.5log.png}
-	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = c\frac{(\log n)^\frac{3}{2}}{n}$}
-	\label{fig:floodingSimResults1.5Log}
-\end{figure}
-
-Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{c \log n}{n}$. 
-Since the rumour spreads in discrete rounds, each of the simulation results in blue falls on an integer value. Each simulation was repeated 50 times for each network size, with the means displayed in red. In green, we have plotted the bound from Theorem \ref{theorem:edgeMarkovianFloodingBound}. As we expected, the mean simulation times closely follow the bound once an appropriate $c$ has been chosen. %TODO: Why expected, tidy this paragrpah
+% TODO: BOTTOM OF INTERVAL
+Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{\log n}{n}$.
+Since the rumour spreads in discrete rounds, each of the simulation results in blue falls on an integer value. Each simulation was repeated 150 times for each network size, with the means displayed in red. In green, we have plotted the bound from Theorem \ref{theorem:edgeMarkovianFloodingBound}, i.e.
+$$
+	g(n) 
+	= \Theta\left(\frac{\log n}{\log (n\hat{p})}\right) 
+	= \Theta\left(\frac{\log n}{\log \log n}\right)
+$$
+As expected, for large $n$, the mean simulation times closely follow the bound once an appropriate scaling constant has been chosen. Note that for small $n \leq 50$, the expected spreading time does not match the simulated spreading times. However, this is not cause for concern as Corollary \ref{corollary:edgeMarkovianThetaBound} is only concerned with the asymptotic behaviour of the spreading times. % TODO: "Concerned" twice
 
 % random variable, from network
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{./figures/flooding_simulation_first_term_max_p_over_4.png}
+	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{4n}$}
+	\label{fig:floodingSimFirstTermMaxPOver4}
+\end{figure}
+
+% TODO: TOP OF INTERVAL
+Figure \ref{fig:floodingSimFirstTermMaxPOver4} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{4n}$. This value of $\hat{p}$ was chosen since it has the same asymptotic scaling as the largest value of $\hat{p}$ for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds. Since $\hat{p}$ is larger than in the simulations in Figure \ref{fig:floodingGnpSimResultsTight}, generally the network will have more edges, so we expect the spreading times to be shorter. This is exactly the behaviour we see for large $n$ in Figure \ref{fig:floodingSimFirstTermMaxPOver4}. Note also that the shape of the expected spreading time differs, which reflects the change in $\hat{p}$. The expected spreading time again fits the simulated times well, as expected from Corollary \ref{corollary:edgeMarkovianThetaBound}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{./figures/flooding_simulation_first_term_max_p.png}
+	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{n}$}
+	\label{fig:floodingSimFirstTermMaxP}
+\end{figure}
+
+Figure \ref{fig:floodingSimFirstTermMaxP} shows the spreading time simulations when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{n}$, the largest value of $\hat{p}$ for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds. It is clear that in 
+
+$$
+	g(n) 
+	= \Theta\left(\frac{\log n}{\log (n\hat{p})}\right) 
+	= \Theta\left(\log \log n \right)
+$$
+
 % TODO: Tight in means, takes discrete values
+% TODO: Refocus on answering a question - how well does it hold?
