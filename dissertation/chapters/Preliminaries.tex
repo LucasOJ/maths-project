@@ -64,27 +64,54 @@ First we introduce notation for expressing graph metrics. This notation will als
 	$$
 \end{definition}
 
-\section{Introducing Dynamic Networks}
+\section{Asymptotic Notation}
 
-Here we formally define the Dynamic Network structure rumours will spread on.
+In this section, we review asymptotic notation for real valued functions. We assume the reader is familiar with this style of notation, but give precise definitions to avoid confusion. % TODO: Reword "avoid confusion"
 
-\begin{definition}
-	Dynamic Network
-
-	\noindent
-	A dynamic network is a sequence of graphs $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$. All the graphs in the sequence have the same vertex set at each time step, but the edge set may vary, i.e.  $G_t = (V, E_t)$ where $E_t$ is some edge set on $V$.
-\end{definition}
-
-$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
-
-% TODO: Segway
+The following definitions allow us to compare functions from the natural numbers to the reals.
 
 \begin{definition}
-	Vertex degree at time $\gamma \in \mathbb{R}_+ $ 
+	$\mathcal{O}$-Notation
 
 	\noindent
-	For a Dynamic Network $\mathcal{G}$ on a vertex set $V$, $d_v(\gamma)$ is the degree of a vertex $v \in V$ at time $\gamma$, i.e. the degree of $v$ in $G_\gamma$
+	We say $f(n) = \mathcal{O}(g(n))$ if there exists a real constant $c > 0$ and $N \in \mathbb{N}$ such that $f(n) \leq c g(n)$ for all $n \geq N$. 
 \end{definition}
+
+\begin{definition}
+	$\Omega$-Notation
+
+	\noindent
+	We say $f(n) = \Omega(g(n))$ if there exists a real constant $c > 0$ and $N \in \mathbb{N}$ such that $f(n) \geq c g(n)$ for all $n \geq N$. 
+\end{definition}
+
+\begin{definition}
+	$\Theta$-Notation
+
+	\noindent
+	We say $f(n) = \Theta(g(n))$ if $f(n) = \mathcal{O}(g(n))$ and $f(n) = \Omega(g(n))$
+\end{definition}
+
+
+\begin{definition}
+	$o$-Notation for functions over the integer domain
+
+	\noindent
+	We say $f(n) = o(g(n))$ if for all $c > 0$, there exists $N \in \mathbb{N}$ such that $f(n) < c g(n)$ for all $n \geq N$.
+\end{definition}
+
+The follow definition defines $o$-notation for real functions where the domain is also $\mathbb{R}$. We use this style of $o$-notation to represent functions of infinitesimals in Section  \ref{section:inhomoPP}.
+
+\begin{definition}
+	$o$-Notation for functions over the real domain
+
+	\noindent
+	We say $f(x) = o(g(x))$ if 
+	$$
+		\lim_{x \to 0} \frac{f(x)}{g(x)} = 0
+	$$
+\end{definition}
+
+% TODO: Linking detail??
 
 
 \section{Review of Poisson Processes}
@@ -135,7 +162,7 @@ The Poisson process can be used to model situations where % TODO: FINISH
 
 %TODO: NEED SUPERPOISITION AND EQUIVALENCE WITH EXPONENTIAL
 
-\section{Inhomogeneous Poisson Processes}
+\section{Inhomogeneous Poisson Processes}\label{section:inhomoPP}
 
 In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}.
 
@@ -160,7 +187,7 @@ In this process the rate of arrivals can vary over time. This property is reflec
 
 We now prove a property of inhomogeneous Poisson process which will be essential for Theorem \ref{theorem:AsyncUpperBound}. 
 
-\begin{theorem}
+\begin{theorem}\label{theorem:inhomoPoissonIncrements}
 	Let $\{N(t), t \geq 0\}$ be an inhomogeneous Poisson process with rate function $\lambda(t)$. Then $N(t)$ has a Poisson distribution with mean
 	$$
 		\Lambda(t) = \int_0^t \lambda(x) dx
@@ -288,7 +315,7 @@ Figure \ref{fig:stochDomPDFs} shows the probability density functions (PDFs) of 
 
 Observe that $X \preceq Y$ if an only if $\mathbb{P}(Y \leq x) \leq \mathbb{P}(X \leq x)$. We recognise $\mathbb{P}(X \leq x)$ as the cumulative distribution function (CDF) of $X$. Hence, we verify this claim by computing the cumulative  distribution functions of the distributions in Figure \ref{fig:stochDomPDFs}, which are shown in Figure \ref{fig:stochDomCDFs}. Indeed, we see that the orange CDF is always below the blue CDF, hence the orange distribution does in fact dominate. % TODO: Reword, do we need this section?
 
-For proofs in Sections \ref{chapter:AsyncUpperBound} and \ref{chapter:SyncFlooding} we need to establish stochastic dominance between pairs of Binomial random variables and Poisson random variables. To do this we use a technique called coupling. First we introduce the definition of a coupling.
+For proofs in Chapters \ref{chapter:AsyncUpperBound} and \ref{chapter:SyncFlooding} we need to establish stochastic dominance between pairs of Binomial random variables and Poisson random variables. To do this we use a technique called coupling. First we introduce the definition of a coupling.
 
 \begin{definition} % TODO: Check definition
 	Coupling
@@ -341,5 +368,27 @@ Now we use coupling to establish first-order stochastic dominance between pairs 
 	Let $X_1, \dots, X_{n_2}$ be an iid sequence of Bernoulli random variables where $\mathbb{P}(X_i = 1) = p$. We observe that $\tilde{X} := \sum_{i=1}^{n_1} X_i \sim \text{Binomial}(n_1, p)$ and $\tilde{Y} := \sum_{i=1}^{n_2} X_i \sim \text{Binomial}(n_2, p)$. Since $X_i \geq 0$ for all $i$, and $\tilde{Y} = \tilde{X} + X_{n_1 + 1} + \dots + X_{n_2}$, we have that $\tilde{X} \leq \tilde{Y}$. Hence, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
 \end{proof}
 
-% TODO: Discuss implications for async rumour spreading - interpreting poission process as exponential clock, not interested in value of the process
+% TODO: Move to own section, intro to networks??
+\section{Introducing Dynamic Networks}
 
+Here we formally define the Dynamic Network structure rumours will spread on.
+
+\begin{definition}
+	Dynamic Network
+
+	\noindent
+	A dynamic network is a sequence of graphs $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$. All the graphs in the sequence have the same vertex set at each time step, but the edge set may vary, i.e.  $G_t = (V, E_t)$ where $E_t$ is some edge set on $V$.
+\end{definition}
+
+$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
+
+% TODO: Segway
+
+\begin{definition}
+	Vertex degree at time $\gamma \in \mathbb{R}_+ $ 
+
+	\noindent
+	For a Dynamic Network $\mathcal{G}$ on a vertex set $V$, $d_v(\gamma)$ is the degree of a vertex $v \in V$ at time $\gamma$, i.e. the degree of $v$ in $G_\gamma$
+\end{definition}
+
+% TODO: Discuss implications for async rumour spreading - interpreting poission process as exponential clock, not interested in value of the process
