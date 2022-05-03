@@ -744,26 +744,28 @@ We verify this result with simulations.
 \end{figure}
 
 % TODO: BOTTOM OF INTERVAL
-Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{\log n}{n}$.
-Since the rumour spreads in discrete rounds, each of the simulation results in blue falls on an integer value. Each simulation was repeated 150 times for each network size, with the means displayed in red. In green, we have plotted the bound from Theorem \ref{theorem:edgeMarkovianFloodingBound}, i.e.
+Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the stationary Edge-Markovian Network when $\hat{p} = \frac{\log n}{n}$.
+Since the rumour spreads in discrete rounds, each of the simulation results (represented as a blue point) lies on an integer value. Each simulation was repeated 300 times for each network size, with the means displayed in red. In green, we have plotted the bound from Theorem \ref{theorem:edgeMarkovianFloodingBound}, i.e.
 $$
 	g(n) 
 	= \Theta\left(\frac{\log n}{\log (n\hat{p})}\right) 
 	= \Theta\left(\frac{\log n}{\log \log n}\right)
 $$
-As expected, for large $n$, the mean simulation times closely follow the bound once an appropriate scaling constant has been chosen. Note that for small $n \leq 50$, the expected spreading time does not match the simulated spreading times. However, this is not cause for concern as Corollary \ref{corollary:edgeMarkovianThetaBound} is only concerned with the asymptotic behaviour of the spreading times. % TODO: "Concerned" twice
+The areas within the light blue section contains a $1-\frac{1}{n}$ fraction of the simulation results for each network size $n$. Observe that this region varies from the mean by $\mathcal{O}(1)$. Thus, we can reason about the w.h.p spreading time growth by comparing the bound to the average spreading time growth. 
+% TODO: LIMITATION IN METHOD: DOES THE VARIANCE AROUND THE MEAN CHANGE??
+As expected, for large $n$, the simulation times closely follow the bound once an appropriate scaling constant has been chosen. Note that for small $n \leq 50$, the expected spreading time does not match the simulated spreading times. However, this is not cause for concern as Corollary \ref{corollary:edgeMarkovianThetaBound} is only concerned with the asymptotic behaviour of the spreading times. % TODO: "Concerned" twice
 
 % random variable, from network
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=1\textwidth]{./figures/flooding_simulation_first_term_max_p_over_4.png}
+	\includegraphics[width=1\textwidth]{./figures/flooding_simulation_first_term_max_p_over_4_with_errors.png}
 	\caption{Results of Edge-Markovian Dynamic Network spreading time simulations when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{4n}$}
 	\label{fig:floodingSimFirstTermMaxPOver4}
 \end{figure}
 
 % TODO: TOP OF INTERVAL
-Figure \ref{fig:floodingSimFirstTermMaxPOver4} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{4n}$. This value of $\hat{p}$ was chosen since it has the same asymptotic scaling as the largest value of $\hat{p}$ for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds. Since $\hat{p}$ is larger than in the simulations in Figure \ref{fig:floodingGnpSimResultsTight}, generally the network will have more edges, so we expect the spreading times to be shorter. This is exactly the behaviour we see for large $n$ in Figure \ref{fig:floodingSimFirstTermMaxPOver4}. Note also that the shape of the expected spreading time differs, which reflects the change in $\hat{p}$. The expected spreading time again fits the simulated times well, as expected from Corollary \ref{corollary:edgeMarkovianThetaBound}.
+Figure \ref{fig:floodingSimFirstTermMaxPOver4} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{4n}$. This value of $\hat{p}$ was chosen since it has the same asymptotic scaling as the largest value of $\hat{p}$ for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds. Since $\hat{p}$ is larger than in the simulations in Figure \ref{fig:floodingGnpSimResultsTight}, generally the network will have more edges, so we expect the spreading times to be shorter. This is exactly the behaviour we see for large $n$ in Figure \ref{fig:floodingSimFirstTermMaxPOver4}. Note also that the shape of the expected spreading time functions differs to Figure \ref{fig:floodingGnpSimResultsTight}, which reflects the change in $\hat{p}$. Note that again nearly all spreading times are within $\mathcal{O}(1)$of the mean, so we can reason about the growth of spreading times by comparing with the average spreading times. The expected spreading time again fits the simulated times well, due to Corollary \ref{corollary:edgeMarkovianThetaBound}.
 
 \begin{figure}[h]
 	\centering
@@ -772,13 +774,27 @@ Figure \ref{fig:floodingSimFirstTermMaxPOver4} displays the simulation results f
 	\label{fig:floodingSimFirstTermMaxP}
 \end{figure}
 
-Figure \ref{fig:floodingSimFirstTermMaxP} shows the spreading time simulations when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{n}$, the largest value of $\hat{p}$ for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds. It is clear that in 
-
+Figure \ref{fig:floodingSimFirstTermMaxP} shows the spreading time simulations when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{n}$, the largest value of $\hat{p}$ for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds. In this case, the expected growth function (displayed in green) is
 $$
 	g(n)
 	= \Theta\left(\frac{\log n}{\log (n\hat{p})}\right) 
 	= \Theta\left(\log \log n \right)
 $$
+We see that in this case the means do not fit the expected growth function as well as the previous two networks. We are not sure why this is the case, and could be an interesting area for further study. In Figure \ref{fig:floodingSimFirstTermMaxPOver4}, we saw that an equivalent function for $\hat{p}$ up to scaling constants closely fitted the mean spreading times. % TODO: What does this suggest?
+
+A limitation of this analysis is that due to the size of $\hat{p}$, the spreading times are short, so it is difficult to identify the long-term growth of the spreading time even with values of $n$ up to 500. % TODO: IS THIS TRUE
+% SUSPICIOUS OF THE GROWTH
+This is exemplified in Figure \ref{fig:floodingSimFirstTermMaxP}, since the spreading time was 3 for all simulations with at least 250 nodes. In fact, even for networks with 10000 nodes, under this value of $\hat{p}$, we see found that the spreading time is consistently 3. We would like to explore this trend for larger networks to better characterise the growth rate of the spreading time. However, the computational cost of running such simulations was too great to produce statistically significant results, as we could not run enough such simulations in a reasonable time. Hence, another potential avenue for further study could be to implement more efficient simulations, to better charecterise the spreading time growth for large $n$. 
+
+
+% TODO: Need larger values of n, computational cost for large networks, enough runs for statistical significance,
+% saw that it holds for scaling proportional to this value of \hat{p}
 
 % TODO: Tight in means, takes discrete values
 % TODO: Refocus on answering a question - how well does it hold?
+
+Overall, we established in Corollary \ref{corollary:edgeMarkovianThetaBound} that for values of $\hat{p}$ in the interval 
+$$
+	c \frac{\log n}{n} \leq \hat{p} \leq  \frac{n^\frac{1}{\log \log n}}{n}
+$$
+the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound} is tight. We verified this fact with simulations. However, for values of $\hat{p}$ at least as large as $\frac{n^\frac{1}{\log \log n}}{n}$, the spreading times from simulations are too small to characterise their growth. Hence, for $\hat{p}$ larger than $\frac{n^\frac{1}{\log \log n}}{n}$, we do not know how tightly the bound holds.
