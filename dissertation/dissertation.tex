@@ -7,6 +7,31 @@
 \usepackage{enumerate}
 \usepackage{mathtools}
 
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{teal}{rgb}{0.0, 0.5, 0.5}
+\definecolor{bittersweet}{rgb}{1.0, 0.44, 0.37}
+\definecolor{dark}{rgb}{0.1, 0.45, 1.0}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=[0]\bfseries\color{bittersweet},
+  keywordstyle=[3]\bfseries\color{teal},
+  keywordstyle=[1]\bfseries\color{dark},
+  keywordstyle=[2]\bfseries,
+  commentstyle=\color{codegreen},
+  columns=spaceflexible,
+  morekeywords=[0]{def, while, if, else, and, or, from, import, as, assert, return},
+  morekeywords=[3]{Graph, float, np, numpy, random, networkx, classes, graph},
+  morekeywords=[1]{len, spread_continuous_rumour,, exponential_sample, list, sorted, tuple},
+  mathescape=true,
+  keepspaces=true,
+  aboveskip=10pt,
+  belowskip=10pt,
+}
+
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usetikzlibrary{fit}
@@ -57,6 +82,7 @@
 \allowdisplaybreaks
 
 \addbibresource{bibliography.bib}
+
 %------------------
 
 %Everything before begin document is called the pre-amble and sets out how the document will look
@@ -88,5 +114,9 @@
 \input{chapters/Conclusion.tex}
 
 \printbibliography
+
+\appendix
+
+\input{chapters/SimulationAppendix.tex}
 
 \end{document}

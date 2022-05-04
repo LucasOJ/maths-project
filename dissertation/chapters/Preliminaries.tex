@@ -93,33 +93,92 @@ The following definitions allow us to compare functions from the natural numbers
 
 
 \begin{definition}
-	$o$-Notation for functions over the integer domain
+	$o$-Notation
 
 	\noindent
 	We say $f(n) = o(g(n))$ if for all $c > 0$, there exists $N \in \mathbb{N}$ such that $f(n) < c g(n)$ for all $n \geq N$.
 \end{definition}
 
-The follow definition defines $o$-notation for real functions where the domain is also $\mathbb{R}$. We use this style of $o$-notation to represent functions of infinitesimals in Section  \ref{section:inhomoPP}.
+\section{Discrete-time Markov Chains}
 
 \begin{definition}
-	$o$-Notation for functions over the real domain
+	Markov Chain
 
-	\noindent
-	We say $f(x) = o(g(x))$ if 
+	\noindent A stochastic process $\{X_n, n \geq 0 \}$ on a state space $S$ is a Markov chain if 
 	$$
-		\lim_{x \to 0} \frac{f(x)}{g(x)} = 0
+		\mathbb{P}(X_n = s_n | X_0 = s_0, \dots,  X_{n-1} = s_{n-1}) 
+		= \mathbb{P}(X_n = s_n | X_{n-1} = s_{n-1})
+	$$
+	for all $n \geq 1$ and $s_0, \dots, s_n \in S$.
+\end{definition}
+
+All the Markov chains we study in this section will operate on state spaces with a finite number of elements, so henceforth all results assume that the state space is finite. For simplicity, we also restrict our study to time homogenous Markov chains, that is Markov chains $\{X_n, n \geq 0 \}$ which satisfy
+$$
+	\mathbb{P}(X_{n+1} = i | X_n = j)
+	= \mathbb{P}(X_1 = i | X_0 = j)
+$$
+for all $n \geq 1$ and $i, j \in S$.
+
+\begin{definition}
+	Transition Matrix
+
+	The transition matrix of a Markov chain $\{X_n, n \geq 0 \}$ on a state space $S$ is an $|S| \times |S|$ matrix $P=(p_{ij})_{i, j \in S}$ such that
+	$$
+		p_{ij} = \mathbb{P}(X_1 = j | X_0 = i)
 	$$
 \end{definition}
 
+\begin{definition}
+	Stationary Distribution
+
+	\noindent
+	A row vector $\pi=(\pi_i)_{i \in S}$ is a stationary distribution of a Markov chain on a state space $S$ with transition matrix $P$ if
+	\begin{enumerate}
+		\item $p_i \geq 0$ for all $i \in S$
+		\item $\sum_{i \in S} p_i = 1$
+		\item $\pi P = \pi$
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}
+	Irreducibility
+
+	\noindent
+	A Markov chain on a state space $S$ is irreducible if for all $i, j \in S$, there exists an $n \geq 0$ such that 
+	$$
+		\mathbb{P}(X_n = i | X_0 = j) > 0
+	$$
+\end{definition}
+
+Intuitively, a Markov chain is irreducible if there is a non-zero probability of reaching any state after some finite number of time steps, regardless of which state the chain started in.
+
+\begin{theorem}\label{theorem:uniqueStationaryDistribution}
+	An irreducible Markov chain has a unique stationary distribution.
+\end{theorem}
+
+\begin{definition}
+	Period
+
+	\noindent
+	The period of state $s \in S$ in a Markov chain $\{X_n, n \geq 0 \}$ is
+	$$
+		\gcd\{ n \geq 1 : \mathbb{P}(X_n = s | X_0 = s)\}
+	$$
+	If all states have period 1, we call the Markov chain aperiodic.
+\end{definition}
+
+% TODO: Intution - interested in how to prove??
+
+\begin{theorem}\label{theorem:markovChainConvergence}
+	If a Markov chain if irreducible and aperiodic, then the distribution of its current state after $n$ time steps converges to its stationary distribution as $n$ tends to infinity.
+\end{theorem}
+
 % TODO: Linking detail??
 
+\section{Inhomogeneous Poisson Processes}\label{section:inhomoPP}
 
-\section{Review of Poisson Processes}
+In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}.
 
-In this section we review some key properties of the Poisson process, which will be needed to specify the first asynchronous rumour spread algorithm.
-
-The Poisson process ...
-%%% COUNTING PROCCESS START
 \begin{definition}
 	Counting Process
 
@@ -136,35 +195,8 @@ The Poisson process ...
 
 % TODO: Discuss figure
 
-We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as "arrivals".  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$. Note that the nuumber arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
+We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as "arrivals".  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$. Note that the number arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
 %%% COUNTING PROCCESS END
-
-The Poission process is a type of counting process that satisfies additional conditions. 
-
-\begin{definition}
-	Homogenous Poisson Process
-
-	\noindent
-	A Homogeneous Poisson process ${N(t), t \geq 0}$ with rate $\lambda > 0$ is a counting process such that
-	\begin{enumerate}
-		\item $N(t)$ has independent increments
-		\item for all $t \geq 0$, 
-		\begin{align*}
-			\mathbb{P}(N(t + \delta) - N(t) = 0) &= 1 - \lambda\delta + o(\delta) \\
-			\mathbb{P}(N(t + \delta) - N(t) = 1) &= \lambda\delta + o(\delta) \\
-			\mathbb{P}(N(t + \delta) - N(t) > 1) &= o(\delta)
-		\end{align*}
-		\item $N(0) = 0$
-	\end{enumerate}
-\end{definition}
-
-The Poisson process can be used to model situations where % TODO: FINISH
-
-%TODO: NEED SUPERPOISITION AND EQUIVALENCE WITH EXPONENTIAL
-
-\section{Inhomogeneous Poisson Processes}\label{section:inhomoPP}
-
-In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}.
 
 \begin{definition}
 	Inhomogeneous Poisson process
@@ -172,115 +204,31 @@ In this section we introduce an extension of the Poisson process which will be n
 	\noindent
 	An inhomogeneous Poisson process ${N(t), t \geq 0}$ with rate function $\lambda(t) > 0$ is a counting process such that
 	\begin{enumerate}
-		\item $N(t)$ has independent increments
-		\item for all $t \geq 0$, 
-		\begin{align*}
-			\mathbb{P}(N(t + \delta) - N(t) = 0) &= 1 - \lambda(t)\delta + o(\delta) \\
-			\mathbb{P}(N(t + \delta) - N(t) = 1) &= \lambda(t)\delta + o(\delta) \\
-			\mathbb{P}(N(t + \delta) - N(t) > 1) &= o(\delta)
-		\end{align*}
+		\item $N(t)$ has independent increments % TODO: What does this mean
+		\item for all $0 \leq s \leq t$, 
+		the number of arrivals in the interval $(s, t]$,  % TODO: Check this interval
+		$N(t) - N(s)$, has a Poisson distribution with mean
+		$$
+			\Lambda(t) = \int_s^t \lambda(x) dx
+		$$
 		\item $N(0) = 0$
 	\end{enumerate}
 \end{definition}
 
-In this process the rate of arrivals can vary over time. This property is reflected in part 2 of the definition: the probability that a single arrival occurs in a small interval $(t, t+\delta]$ is proportional to a time-dependent rate $\lambda(t)$. The greater flexibility of the inhomogeneous process allows it to model a wider variety of stochastic processes than the homogeneous process. In the proof of Theorem \ref{theorem:AsyncUpperBound}, we will see one such process.
+In this process the rate of arrivals can vary over time. This property is reflected in part 2 of the definition ... % TODO: Finish
 
-We now prove a property of inhomogeneous Poisson process which will be essential for Theorem \ref{theorem:AsyncUpperBound}. 
+\begin{definition}
+	Homogeneous Poisson Process
 
-\begin{theorem}\label{theorem:inhomoPoissonIncrements}
-	Let $\{N(t), t \geq 0\}$ be an inhomogeneous Poisson process with rate function $\lambda(t)$. Then $N(t)$ has a Poisson distribution with mean
-	$$
-		\Lambda(t) = \int_0^t \lambda(x) dx
-	$$
-\end{theorem}
+	\noindent
+	A Homogeneous Poisson process ${N(t), t \geq 0}$ with rate $\lambda > 0$ is a special case of the inhomogeneous Poisson process where the rate function $\lambda(t)$ is constant i.e. $\lambda(t)=\lambda > 0$ for all $t$.
+\end{definition}
 
-\begin{proof}
-	For brevity, let $p_n(t)$ denote $\mathbb{P}(N(t) = n)$. Let $\delta$ be small.
-	First we derive an equation that the PDF of $N(t)$ must satisfy.
-	We note that by the law of total probability
-	$$
-		p_n(t+\delta) = \sum_{k=0}^n \mathbb{P}(N(t) = k \cap N(t + \delta) - N(t) = n - k) 
-	$$
-	Since $N$ has independent increments, $N(t)$ and $N(t + \delta) - N(t)$ are independent, hence we have that the previous expression simplifies to
-	$$
-		\sum_{k=0}^n p_k(t) \mathbb{P}(N(t + \delta) - N(t) = n - k) 
-	$$
-	We now split the summation into three parts and evaluate each separately using the definition of the inhomogeneous Poisson process.
-	\begin{align*}
-		&\sum_{k=0}^{n-2} p_k(t) \mathbb{P}(N(t + \delta) - N(t) = n - k) \\ 
-		&+ p_{n-1}(t) \mathbb{P}(N(t + \delta) - N(t) = 1) \\
-		&+ p_n(t) \mathbb{P}(N(t + \delta) - N(t) = 0) 
-	\end{align*}
-	Recall that
-	$$
-		\mathbb{P}(N(t + \delta) - N(t) = k) 
-		= o(\delta)
-	$$
-	for every $k > 1$, hence the first term is $o(\delta)$ as $\sum_{k=0}^{n-2} p_k(t)$ is at most 1 and constant with respect to $\delta$.  
-	By applying the other interval conditions, we obtain that
-	$$
-		p_n(t+\delta) = p_n(t)(1-\lambda(t)\delta) + p_{n-1}(t)\lambda(t)\delta + o(\delta)
-	$$
-	where we have collected the $o(\delta)$ terms.
-	Thus, it follows that
-	\begin{align*}
-		\frac{d}{dt} p_n(t) 
-		&= \lim_{\delta \to 0} \frac{p_n(t+\delta) - p_n(t)}{\delta} \\
-		&= \lim_{\delta \to 0} \left( -\lambda(t)p_n(t) + \lambda(t)p_{n-1}(t) + \frac{o(\delta)}{\delta} \right)\\
-		&= -\lambda(t)p_n(t) + \lambda(t)p_{n-1}(t)
-	\end{align*}
-	% TODO: Introduce little and big o-notation, little o(x) is any f(x) such that f(x)/x -> 0 as x -> 0
-	Therefore the PDF of $N(t)$ must satisfy the above ODE. 
-	We now show that the Poisson distribution with mean $\Lambda(t)$
-	satisfies this equality. It is possible to derive the p.d.f from the equation using the integrating factor technique \cite{inhomoPoissonProof}, however instead we will verify that the Poisson distribution p.d.f is sufficient.
-	Let $q_n(t)$ denote the Poisson p.d.f with mean $\Lambda(t)$, i.e.
-	$$
-		q_n(t)
-		= e^{-\Lambda (t)}\frac{(\Lambda(t))^n}{n!}
-	$$
-	Using the product rule we find that 
-	$$
-		\frac{d}{dt} q_n(t) 
-		= \frac{d}{dt} \left[ e^{-\Lambda (t)}\right] \frac{(\Lambda(t))^n}{n!} + e^{-\Lambda (t)} \frac{d}{dt} \left[ \frac{(\Lambda(t))^n}{n!} \right]
-	$$
-	To evaluate this expression, we compute the derivates. By the Fundamental Theorem of Calculus,
-	$$
-		\frac{d}{dt} e^{-\Lambda (t)} 
-		= \frac{d}{dt} \left[ - \int_0^t \lambda(x) dx \right] e^{-\Lambda (t)} 
-		= - \lambda(t)  e^{-\Lambda (t)}
-	$$
-	and, 
-	$$
-		\frac{d}{dt} \left[ \frac{(\Lambda(t))^n}{n!} \right] 
-		= \frac{d}{dt} \left[ \int_0^t \lambda(x) dx \right] \frac{(\Lambda(t))^{n-1}}{(n-1)!}
-		= \lambda(t) \frac{(\Lambda(t))^{n-1}}{(n-1)!}
-	$$
-	Hence,
-	\begin{align*}
-		\frac{d}{dt} q_n(t) 
-		&= - \lambda(t) e^{-\Lambda (t)} \frac{(\Lambda(t))^n}{n!} + \lambda(t) e^{-\Lambda (t)} \frac{(\Lambda(t))^{n-1}}{(n-1)!} \\
-		&= -\lambda(t)q_n(t) + \lambda(t)q_{n-1}(t)
-	\end{align*}
-	% TODO: WHAT DOES ABOVE MEAN? - Solved equation
-	% TODO: p = q + c, Unqiueness by some inital condtion
-	Initial conditions
-	$
-		p_0(0) = 1, p_k(0) = 0, k > 0 
-	$
-\end{proof}
-
-% TODO: Equivalent formulations + proofs
-% TODO: Introduce indepdendent increments
-
-
-\section{Order statistics of exponential random variables}
-
-
+% TODO: Reference superposition property + equivalence with exp arrival times
 
 \section{Stochastic Domination}
-Coupling proof of stochastic domination of poisson 
 
-
+% TODO: Intro
 
 \begin{definition}
 	First-order Stochastic Domination

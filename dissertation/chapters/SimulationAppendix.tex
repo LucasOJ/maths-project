@@ -1,0 +1,111 @@
+\chapter{Simulation Code}
+
+The simulations for Algorithm \ref{NodeCentricAsyncAlgorithm} and Algorithm \ref{SyncFloodingAlgorithm} were written in Python with the support of the networkx \cite{networkx} and numpy \cite{numpy} external packages.
+
+\section{Algorithm \ref{NodeCentricAsyncAlgorithm} Implementation}
+
+\begin{lstlisting}[language=Python]
+from networkx.classes.graph import Graph
+import numpy as np
+import random
+
+def exponential_sample(rate: float):
+    return np.random.exponential(1/rate)
+
+def spread_continuous_rumour(graph_generator,
+                             number_of_nodes, 
+                             initial_node=0):
+    timestep = 0
+    informed_nodes = {initial_node}
+    events = []
+
+    while len(informed_nodes) < number_of_nodes:
+
+        G: Graph = graph_generator(number_of_nodes, 
+                                  timestep, 
+                                  informed_nodes)
+
+        assert(G.number_of_nodes() == number_of_nodes)
+
+        round_time = exponential_sample(number_of_nodes)
+
+        # Uses memoryless property of exponential distribution
+        while round_time < 1 and 
+              len(informed_nodes) < number_of_nodes:
+
+            # The nth distribution attains the 
+            # miniumum w.p lambda_n / sum_n lambda_n
+            chosen_node = random.choice(list(G.nodes))
+            neighbors = list(G.neighbors(chosen_node))
+            if len(neighbors) > 0:
+                chosen_neighbor = random.choice(neighbors)
+
+                chosen_informed = chosen_node in informed_nodes
+                neighbor_informed = 
+                    chosen_neighbor in informed_nodes
+
+                if (chosen_informed and not neighbor_informed) or 
+                   (neighbor_informed and not chosen_informed):
+
+                    informed_nodes = 
+                        informed_nodes.union({chosen_node, chosen_neighbor})
+                    
+                    activated_edge = 
+                        tuple(sorted((chosen_node, chosen_neighbor)))
+
+                    events.append({
+                        'time': timestep + round_time,
+                        'informed_nodes': informed_nodes,
+                        'graph': G,
+                        'activated_edge': activated_edge
+                    })
+
+            # Minumum of k exponentials has exponential 
+            # distribution of sum of rates
+            round_time += exponential_sample(number_of_nodes)
+
+        timestep += 1
+
+    return events
+\end{lstlisting}
+
+\section{Algorithm \ref{SyncFloodingAlgorithm} Implementation}
+
+\begin{lstlisting}[language=Python]
+from networkx.classes.graph import Graph
+import random
+
+def flooding_spread_function(G: Graph, informed_nodes: set):
+    newly_informed_nodes = set()
+
+    for informed_node in informed_nodes:
+        neighbors = list(G.neighbors(informed_node))
+        newly_informed_nodes = newly_informed_nodes.union(neighbors)
+
+    return informed_nodes.union(newly_informed_nodes)
+
+def spread_discrete_rumour(graph_generator, 
+                           number_of_nodes, initial_node=0, 
+                           spread_function=flooding_spread_function):
+    informed_nodes = {initial_node}
+    timestep = 0
+    events = []
+
+    while len(informed_nodes) < number_of_nodes:
+        G: Graph = 
+            graph_generator(number_of_nodes, timestep, informed_nodes)
+        assert(G.number_of_nodes() == number_of_nodes)
+        
+        informed_nodes: set = spread_function(G, informed_nodes)
+
+        if enable_event_log:
+            events.append({
+                'timestep': timestep,
+                'informed_nodes': informed_nodes,
+                'graph': G
+            })
+        timestep += 1
+
+    return events
+
+\end{lstlisting}
