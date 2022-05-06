@@ -11,14 +11,16 @@ Static rumour spreading takes place on a graph $G=(V,E)$ which we will often ref
 We now introduce our first example of a rumour spreading algorithm, which specifies exactly how the rumour spreads.  
 
 \begin{definition}\label{algo:staticAsync}
-	Push-Pull Rumour Spreading Algorithm
+	Asynchronous Push-Pull Rumour Spreading Algorithm for Static Topologies
 
 	\noindent
-	This rumour spreading algorithm takes place in continuous time on a connected topology $G$ with $n$ nodes.
+	This rumour spreading algorithm takes place in continuous time on a topology $G$ with $n$ nodes.
 	Initially a single node of $G$ is aware of rumour. Each node is associated with an independent unit rate Poisson process. Say an arrival occurs at time $t$ in the Poisson process associated with node $v$. At this time if $v$ will contact one of its neighbours $u$ uniformly at random. If $v$ is aware of the rumour and $u$ is not, $v$ will push the rumour to $u$, and $u$ will become aware of the rumour immediately. Conversely, if $v$ is not aware of the rumour but $u$ is, $v$ will pull the rumour from $u$. If both nodes are aware of the rumour or both nodes are not aware of the rumour, nothing happens.
 \end{definition}
 
-Since informed nodes never forget the rumour and the topology is connected, it is clear that eventually all nodes will be made aware of the rumour. We refer to the first time that all the nodes are aware of the rumour as the "spreading time". This is the central quantity we will bound in this report. The interpretation of the spreading time depends on the model. For example, in an epidemic model, this is the first time the entire population has been infected with the epidemic. Hence, being able to predict and bound the spreading time has practical importance for decision-making in many scenarios where rumour spreading models are applied.
+% TODO: Mention WHAT IF DISCONNECTED - rumour never reach all nodes, speed at which rummour  spreading time complex to analyse since spreadds depends on current active edges (changes over time), depeneds on specific tradjectory. Poisson process makes analysis easier (see next chapter)
+
+Since informed nodes never forget the rumour and the topology is connected, it is clear that eventually all nodes will be made aware of the rumour. We refer to the first time that all the nodes are aware of the rumour as the "spreading time". This is the central quantity we will bound in this report. The interpretation of the spreading time depends on the model. For example, in an epidemic model, this is the first time the entire population has been infected with the epidemic. Hence, the ability to predict and bound the spreading time has practical importance for decision-making in many scenarios where rumour spreading models are used.
 
 \section{Bounding the spreading time}\label{section:graphMetrics}
 
@@ -26,7 +28,7 @@ In this section, we review a theorem for bounding the rumour spreading time of A
 
 The bound we review is expressed in terms of the following functions of the topology, the values of which represent the strength of different structural properties of the given topology.
 
-% TODO: Interpretation of the following matrics
+% TODO: Interpretation of the following metrics
 
 \begin{definition}
 	Conductance of a graph $G = (V, E)$
@@ -49,6 +51,26 @@ The bound we review is expressed in terms of the following functions of the topo
 		\rho(G) = \min_{0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}} \rho(S) 
 	$$
 \end{definition}
+
+Now, we present a bound on the spreading time for a static network.
+\begin{theorem}
+	Let T be the spreading time for Algorithm \ref{algo:staticAsync} on a graph $G$ with $n$ vertices. Then for $c > 0$,
+	$$
+		\mathbb{P}\lb T \geq \frac{2c \log \frac{n}{2}}{\Phi(G)\rho(G)}\rb \leq \frac{1}{c}
+	$$
+\end{theorem}
+Note that since that Algorithm \ref{algo:staticAsync} is randomised, the spreading time is a random variable, thus our bound is probabilistic. 
+This theorem suggests that spreading time grows like 
+$$
+	\bigO \lb \frac{\log n}{\Phi(G)\rho(G)} \rb
+$$ 
+in the number of nodes of the topology.
+
+% TODO: Generally interested in scaling in the number of vertices, r.v since ideally want bounds w.h.p (define), reserve n for number of nodes, prove by adapting 
+
+% TODO: Example application to complete graph
+
+% TODO: linking text
 
 \section{Introducing Dynamic Networks}
 
