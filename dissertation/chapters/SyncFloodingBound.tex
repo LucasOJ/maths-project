@@ -1,4 +1,4 @@
-\chapter{Bounding the synchronous flooding time}
+\chapter{Synchronous Rumour Spreading}
 \label{chapter:SyncFlooding}
 
 In this chapter we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network from \cite{syncPaper}. Then we introduce a new type of dynamic network, where the sequence of topologies is not deterministic, but instead follows a distribution. We generalise our flooding bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound.
@@ -195,14 +195,6 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	$$
 	% TODO : Think about the stralling -1, T_0 vs T_1, need to bound [T_0, T_all]
 \end{proof}
-
-\section{Review of Discrete-time Markov Chains}
-
-In this section we give a brief review of Markov chains and associated results needed for Section \ref{section:MEDNBound}. We assume that the reader is familiar with finite Discrete-time Markov chains, so omit the proofs in this section. For a full treatment of the subject see \cite{grimmetBook}.
-
-% TODO: Make sure all motivated by intuition at least, specify definitions to establish conventions/terminology more than educate
-
-% TODO: ROUGH - not told how converges, but should define "distribution of its current state after $n$ time steps", rely on intuituion
 
 \section{Flooding on Markovian Evolving Dynamic Networks}\label{section:MEDNBound}
 
