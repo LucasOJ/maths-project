@@ -40,6 +40,13 @@ First we introduce notation for working with graphs, the central structure on wh
 	$$
 \end{definition}
 
+\begin{definition}
+	Graph Isomorphism
+
+	\noindent		
+	We say two graphs $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ are isomorphic if there exists a function $f: V_1 \to V_2$ such that ${u, v} \in E_1$ if and only if ${f(u), f(v)} \in E_2$, i.e, there exists a relabelling of the nodes such that $G_1=G_2$.
+\end{definition}
+
 \section{Asymptotic Notation}
 
 In this section, we review asymptotic notation for real valued functions. We assume the reader is familiar with this style of notation, but give precise definitions to avoid confusion. The following definitions allow us to compare functions from the natural numbers to the reals.
@@ -147,7 +154,7 @@ for all $n \geq 1$ and $i, j \in S$.
 
 \section{Inhomogeneous Poisson Processes}\label{section:inhomoPP}
 
-In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}. We assume the reader will be familiar with standard Poisson processes, but anticipate they may not be familiar with the inhomogeneous variant. Thus, we introduce the inhomogeneous Poisson Process from the ground up.
+In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}. We assume the reader will be familiar with standard Poisson processes, but anticipate they may not be familiar with the inhomogeneous variant. Thus, we introduce the inhomogeneous Poisson Process from first principles.
 
 First, a review of the fundamental structure of Poisson processes.
 
@@ -180,7 +187,7 @@ Now we introduce a central definition in the theory of Poisson processes.
 	are independent.
 \end{definition}
 
-Now we are ready to introduce the inhomogeneous Poisson process.
+We are now ready to introduce the inhomogeneous Poisson process.
 
 \begin{definition}
 	Inhomogeneous Poisson process
@@ -199,7 +206,9 @@ Now we are ready to introduce the inhomogeneous Poisson process.
 	\end{enumerate}
 \end{definition}
 
-In this process the rate of arrivals can vary over time. This property is reflected in part 2 of the definition ... % TODO: Finish
+Unlike the standard Poisson process, in the inhomogeneous variant, the rate of arrivals can vary over time according to the rate function $\lambda(t)$. 
+
+% TODO: Linking exposition
 
 \begin{definition}
 	Homogeneous Poisson Process
@@ -226,10 +235,9 @@ We start with the central definition.
 	$$
 \end{definition}
 
-Stochastic domination specifies a partial order between random variables. However, not all random variables are comparable by stochastic domination. % TODO: Exmaples
+Note that not all random variables are comparable by stochastic domination, it specifies a partial order between random variables. % MAYBE: Examples of r.vs that can't be related
 
-% TODO: interpretation as partial order and PDFs vs CDFS (gamma figure) 
-% Not always the case
+We now consider an informal example of stochastic domination to get a better intuition for the definition.
 
 \begin{figure}[h]
 	\centering
@@ -238,7 +246,7 @@ Stochastic domination specifies a partial order between random variables. Howeve
 	\label{fig:stochDomPDFs}
 \end{figure}
 
-Figure \ref{fig:stochDomPDFs} shows the probability density functions (PDFs) of two real random variables. In this example, the orange distribution stochastically dominates the blue distribution.
+Figure \ref{fig:stochDomPDFs} shows the probability density functions (PDFs) of two real random variables $X$ and $Y$, where the PDF of $X$ is blue and the PDF of $Y$ is orange. In this example, $X \preceq Y$.
 
 \begin{figure}[h]
 	\centering
@@ -247,7 +255,7 @@ Figure \ref{fig:stochDomPDFs} shows the probability density functions (PDFs) of 
 	\label{fig:stochDomCDFs}
 \end{figure}
 
-Observe that $X \preceq Y$ if an only if $\mathbb{P}(Y \leq x) \leq \mathbb{P}(X \leq x)$. We recognise $\mathbb{P}(X \leq x)$ as the cumulative distribution function (CDF) of $X$. Hence, we verify this claim by computing the cumulative  distribution functions of the distributions in Figure \ref{fig:stochDomPDFs}, which are shown in Figure \ref{fig:stochDomCDFs}. Indeed, we see that the orange CDF is always below the blue CDF, hence the orange distribution does in fact dominate. % TODO: Reword, do we need this section?
+Observe that $X \preceq Y$ if an only if $\mathbb{P}(Y \leq x) \leq \mathbb{P}(X \leq x)$. We recognise $\mathbb{P}(X \leq x)$ as the cumulative distribution function (CDF) of $X$. Hence, we can verify this claim by computing the cumulative  distribution functions for $X$ and $Y$, which are displayed in Figure \ref{fig:stochDomCDFs} in their associated colours. Indeed, we see that the CDF for $Y$ is always below the CDF for $X$, hence the $Y$ distribution does in fact stochastically dominate $X$.
 
 For proofs in Chapters \ref{chapter:AsyncUpperBound} and \ref{chapter:SyncFlooding} we need to establish stochastic dominance between pairs of Binomial random variables and Poisson random variables. To do this we use a technique called coupling. First we introduce the definition of a coupling.
 
@@ -255,10 +263,10 @@ For proofs in Chapters \ref{chapter:AsyncUpperBound} and \ref{chapter:SyncFloodi
 	Coupling
 
 	\noindent
-	A  coupling of the real random variables $X$ and $Y$ is a joint random variable $(\tilde{X}, \tilde{Y})$ such that the marginal distribution of $\tilde{X}$ is the same as $X$, and the marginal distribution of $\tilde{Y}$ is the same as $Y$.
+	A coupling of the real random variables $X$ and $Y$ is a joint random variable $(\tilde{X}, \tilde{Y})$ such that the marginal distribution of $\tilde{X}$ is the same as $X$ (denoted $\tilde{X} \stackrel{d}{=} X$), and $\tilde{Y} \stackrel{d}{=} Y$.
 \end{definition}
 
-% TODO: when allowed different samples spaces, interpreation
+% MAYBE: when allowed different samples spaces, interpreation
 
 Now we present a theorem which links couplings to first-order stochastic domination.
 
@@ -280,8 +288,6 @@ Now we present a theorem which links couplings to first-order stochastic dominat
 	We omit the proof for the reverse implication as we only use the forwards implication. For the proof of the reverse implication, see \cite{coupling}.
 \end{proof}
 
-% TODO, introduce equal in distribution in coupling definition
-
 Using Theorem \ref{theorem:couplingDomination}, we can establish stochastic domination between random variables by finding a coupling. We first show this technique	for pairs of Poisson random variables
 
 \begin{theorem}
@@ -289,7 +295,7 @@ Using Theorem \ref{theorem:couplingDomination}, we can establish stochastic domi
 \end{theorem}
 
 \begin{proof}
-	Let $\tilde{X} \sim \text{Poisson}(\lambda)$, $\tilde{Z} \sim \text{Poisson}(\mu - \lambda)$ be independent random variables. Hence, we have that $\tilde{Y} := \tilde{X} + \tilde{Z} \sim \text{Poisson}(\mu)$. Note that since $\tilde{Z} \geq 0$, the value taken by $\tilde{Y}$ is always at least the value taken by $\tilde{X}$. Since we have found a coupling $(\tilde{X}, \tilde{Y})$ of $X$ and $Y$ where $\mathbb{P}(\tilde{Y} \geq \tilde{X}) = 1$, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
+	Let $\tilde{X} \sim \text{Poisson}(\lambda)$, $\tilde{Z} \sim \text{Poisson}(\mu - \lambda)$ be independent random variables. Take $\tilde{Y} := \tilde{X} + \tilde{Z}$. Since $\tilde{X}$ and $\tilde{Z}$ are independent, we have that $\tilde{Y} \sim \text{Poisson}(\mu)$ by the convolution of Poisson random variables. Thus, as $\tilde{X} \stackrel{d}{=} X$ and $\tilde{Y} \stackrel{d}{=} Y $, we have established a coupling $(\tilde{X}, \tilde{Y})$ for $X$ and $Y$. Note that since $\tilde{Z} \geq 0$, the value taken by $\tilde{Y}$ is always at least the value taken by $\tilde{X}$. Since we have found a coupling $(\tilde{X}, \tilde{Y})$ of $X$ and $Y$ where $\mathbb{P}(\tilde{Y} \geq \tilde{X}) = 1$, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
 \end{proof}
 
 Now we use coupling to establish first-order stochastic dominance between pairs of binomial random variables.
@@ -299,5 +305,5 @@ Now we use coupling to establish first-order stochastic dominance between pairs 
 \end{theorem}
 
 \begin{proof}
-	Let $X_1, \dots, X_{n_2}$ be an iid sequence of Bernoulli random variables where $\mathbb{P}(X_i = 1) = p$. We observe that $\tilde{X} := \sum_{i=1}^{n_1} X_i \sim \text{Binomial}(n_1, p)$ and $\tilde{Y} := \sum_{i=1}^{n_2} X_i \sim \text{Binomial}(n_2, p)$. Since $X_i \geq 0$ for all $i$, and $\tilde{Y} = \tilde{X} + X_{n_1 + 1} + \dots + X_{n_2}$, we have that $\tilde{X} \leq \tilde{Y}$. Hence, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
+	Let $X_1, \dots, X_{n_2}$ be a sequence of independent Bernoulli random variables where $\mathbb{P}(X_i = 1) = p$. We observe that $\tilde{X} := \sum_{i=1}^{n_1} X_i \sim \text{Binomial}(n_1, p)$ and $\tilde{Y} := \sum_{i=1}^{n_2} X_i \sim \text{Binomial}(n_2, p)$. Since $X_i \geq 0$ for all $i$, and $\tilde{Y} = \tilde{X} + X_{n_1 + 1} + \dots + X_{n_2}$, we have that $\tilde{X} \leq \tilde{Y}$. Hence, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
 \end{proof}
