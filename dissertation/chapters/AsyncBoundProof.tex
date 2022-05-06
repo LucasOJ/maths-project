@@ -1,7 +1,7 @@
 \chapter{Asynchronous Rumour Spreading}
 \label{chapter:AsyncUpperBound}
 
-In this chapter we define an algorithm for rumour spreading on a dynamic network, and prove a bound from \cite{asyncPaper} on the associated spreading time that holds w.h.p. We then investigate how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
+In this chapter we define an algorithm for rumour spreading on a dynamic network introduced by Pourmiri and Mans in \cite{asyncPaper}. We then prove a bound from \cite{asyncPaper} on the associated spreading time that holds w.h.p. We conclude the chapter by investigating how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
 
 \section{Introducing the Rumour Spreading Model}
 Now we are ready to define our first asynchronous algorithm for rumour spreading on a given dynamic network.
@@ -280,7 +280,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	We justify the final inequality as follows. Consider the sequence of connectivity metrics $(\Phi(G_k)\rho(G_k))_{k \geq 0}$.
 	Note that in the first term, since $\tau_{i+1} \leq \tau_i + \delta_i$, we take sums over potentially overlapping intervals of the sequence of connectivity metrics, namely $[\tau_0, \tau_0 + \delta_0], (\tau_1, \tau_1 + \delta_1], (\tau_2, \tau_2 + \delta_2], \dots$. Thus the each $(\Phi(G_k)\rho(G_k))$ will considered at least once, and may contribute to multiple terms of the summation due to the overlaps. We can interpret the second sum as iterating in the same way over the following contigous, disjoint intervals: $[T_0 = 0, T_1 = \Delta_{T_0}(\alpha_0) + 2], (T_1, T_2 = \Delta_{T_1}(\alpha_1) + 2], (T_2, T_3 = \Delta_{T_2}(\alpha_2) + 2], \dots$. Since this sum is taken over disjoint intervals, each $(\Phi(G_k)\rho(G_k))$ term is considered exactly once. Thus, more terms are needed for the contigous summation $\sum_{k=0}^t \Phi(G_k)\rho(G_k)$ to exceed the sum of the target values $\sum_{i=0}^N (2 \alpha_i + 2)$, since connectivity metrics $\Phi(G_k)\rho(G_k)$ aren't reused.% TODO: Target values means what?
 
-	Note that in the final bound for $t_\text{half}$ we have eliminated all random quantities such as $\tau_i$, thus this bound can be calculated using only information about network, and holds w.h.p.
+	Note that in the final bound for $t_\text{half}$ we have eliminated all random quantities such as $\tau_i$, thus this bound can be calculated using only information about network.
 
 	% TODO: Why can choose time at which any number of nodes informed? (by defn of poisson proces, probability 2 processes fire at once is immediate, n distinct steps in |I_t|)
 

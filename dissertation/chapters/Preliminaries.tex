@@ -1,9 +1,11 @@
 \chapter{Preliminaries}
 \label{chapter:Prelims}
 
-\section{Notation}
+In this chapter, we introduce the mathematical background and notation needed to analyse model and analyse dynamic networks.
 
-First we introduce notation for expressing graph metrics. This notation will also be used throughout the paper. % TODO - GET RID OF SECOND LINE?
+\section{Graph-Theoretic Notation}
+
+First we introduce notation for working with graphs, the central structure on which rumour spreading takes place.
 
 \begin{definition}
 	Complement Set
@@ -38,37 +40,9 @@ First we introduce notation for expressing graph metrics. This notation will als
 	$$
 \end{definition}
 
-% TODO: Explain Implications of Cut set defn?
-
-\section{Graph Metrics}\label{section:graphMetrics}
-
-\begin{definition}
-	Conductance of a graph $G = (V, E)$
-	$$
-		\Phi(G) = \min_{\emptyset \neq S \subset V} \frac{|E(S, \comp{S})|}{\min\{\text{vol}(S), \text{vol}(\comp{S})\}}
-	$$
-\end{definition}
-
-\begin{definition}
-	Diligence of a cut $ E(S, \comp{S}) $
-	$$
-		\rho(S) = \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
-	$$ 
-	where $\comp{d}(S) := \frac{\sum_{v \in S} d_v}{|S|}$ is the average degree of the vertices in $S$
-\end{definition}
-
-\begin{definition} % TODO: This definition doesn't include size bounds on S
-	Diligence of a graph $G$
-	$$
-		\rho(G) = \min_{0 < \text{vol}(S) \leq \frac{\text{vol}(V)}{2}} \rho(S) 
-	$$
-\end{definition}
-
 \section{Asymptotic Notation}
 
-In this section, we review asymptotic notation for real valued functions. We assume the reader is familiar with this style of notation, but give precise definitions to avoid confusion. % TODO: Reword "avoid confusion"
-
-The following definitions allow us to compare functions from the natural numbers to the reals.
+In this section, we review asymptotic notation for real valued functions. We assume the reader is familiar with this style of notation, but give precise definitions to avoid confusion. The following definitions allow us to compare functions from the natural numbers to the reals.
 
 \begin{definition}
 	$\mathcal{O}$-Notation
@@ -101,7 +75,7 @@ The following definitions allow us to compare functions from the natural numbers
 
 \section{Discrete-time Markov Chains}
 
-In this section we give a brief review of Markov chains and associated results needed for Section \ref{section:MEDNBound}. We assume that the reader is familiar with finite Discrete-time Markov chains, so omit the proofs in this section. For a full treatment of the subject see \cite{grimmetBook}.
+In this section we give a brief review of Markov chains and associated results needed for Section \ref{section:MEDNBound}. We assume that the reader is familiar with finite Discrete-time Markov chains, so omit the proofs in this section. For a full treatment of the subject and proofs of the theorems in this section see \cite{grimmetBook}.
 
 \begin{definition}
 	Markov Chain
@@ -152,8 +126,6 @@ for all $n \geq 1$ and $i, j \in S$.
 	$$
 \end{definition}
 
-Intuitively, a Markov chain is irreducible if there is a non-zero probability of reaching any state after some finite number of time steps, regardless of which state the chain started in.
-
 \begin{theorem}\label{theorem:uniqueStationaryDistribution}
 	An irreducible Markov chain has a unique stationary distribution.
 \end{theorem}
@@ -169,17 +141,15 @@ Intuitively, a Markov chain is irreducible if there is a non-zero probability of
 	If all states have period 1, we call the Markov chain aperiodic.
 \end{definition}
 
-% TODO: Intution - interested in how to prove??
-
 \begin{theorem}\label{theorem:markovChainConvergence}
 	If a Markov chain if irreducible and aperiodic, then the distribution of its current state after $n$ time steps converges to its stationary distribution as $n$ tends to infinity.
 \end{theorem}
 
-% TODO: Linking detail??
-
 \section{Inhomogeneous Poisson Processes}\label{section:inhomoPP}
 
-In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}.
+In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}. We assume the reader will be familiar with standard Poisson processes, but anticipate they may not be familiar with the inhomogeneous variant. Thus, we introduce the inhomogeneous Poisson Process from the ground up.
+
+First, a review of the fundamental structure of Poisson processes.
 
 \begin{definition}
 	Counting Process
@@ -195,10 +165,22 @@ In this section we introduce an extension of the Poisson process which will be n
 	\label{fig:poissonProcessExample}
 \end{figure}
 
-% TODO: Discuss figure
+We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as "arrivals".  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$, as can be seen in Figure \ref{fig:poissonProcessExample}. Note that the number arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
 
-We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as "arrivals".  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$. Note that the number arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
-%%% COUNTING PROCCESS END
+Now we introduce a central definition in the theory of Poisson processes.
+
+\begin{definition}
+	Independent Increments
+
+	A random counting process $\left\{ N(t), t \geq 0 \right\}$ has independent increments if for any $n \in \mathbb{N}$ and $t_0, t_1, \dots, t_n \in \mathbb{R}^{+}$,
+	the random variables
+	$$
+		N(t_1) - N(t_0), \dots, N(t_n) - N(t_{n - 1})
+	$$
+	are independent.
+\end{definition}
+
+Now we are ready to introduce the inhomogeneous Poisson process.
 
 \begin{definition}
 	Inhomogeneous Poisson process
@@ -206,9 +188,9 @@ We interpret the function $N$ as counting the number of occurrences of an event,
 	\noindent
 	An inhomogeneous Poisson process ${N(t), t \geq 0}$ with rate function $\lambda(t) > 0$ is a counting process such that
 	\begin{enumerate}
-		\item $N(t)$ has independent increments % TODO: What does this mean
+		\item $N(t)$ has independent increments
 		\item for all $0 \leq s \leq t$, 
-		the number of arrivals in the interval $(s, t]$,  % TODO: Check this interval
+		the number of arrivals in the interval $(s, t]$, 
 		$N(t) - N(s)$, has a Poisson distribution with mean
 		$$
 			\Lambda(t) = \int_s^t \lambda(x) dx
@@ -230,7 +212,9 @@ In this process the rate of arrivals can vary over time. This property is reflec
 
 \section{Stochastic Domination}
 
-% TODO: Intro
+In this section we introduce the idea of stochastic domination from first principles, as we anticipate this may be a new concept for some readers. We then introduce the technique of coupling, and use it to prove stochastic domination results needed for later chapters.
+
+We start with the central definition.
 
 \begin{definition}
 	First-order Stochastic Domination
@@ -317,33 +301,3 @@ Now we use coupling to establish first-order stochastic dominance between pairs 
 \begin{proof}
 	Let $X_1, \dots, X_{n_2}$ be an iid sequence of Bernoulli random variables where $\mathbb{P}(X_i = 1) = p$. We observe that $\tilde{X} := \sum_{i=1}^{n_1} X_i \sim \text{Binomial}(n_1, p)$ and $\tilde{Y} := \sum_{i=1}^{n_2} X_i \sim \text{Binomial}(n_2, p)$. Since $X_i \geq 0$ for all $i$, and $\tilde{Y} = \tilde{X} + X_{n_1 + 1} + \dots + X_{n_2}$, we have that $\tilde{X} \leq \tilde{Y}$. Hence, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
 \end{proof}
-
-% TODO: Move to own section, intro to networks??
-\section{Introducing Dynamic Networks}
-
-Here we formally define the Dynamic Network structure rumours will spread on.
-
-\begin{definition}
-	Dynamic Network
-
-	\noindent
-	A dynamic network is a sequence of graphs $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$. All the graphs in the sequence have the same vertex set at each time step, but the edge set may vary, i.e.  $G_t = (V, E_t)$ where $E_t$ is some edge set on $V$.
-\end{definition}
-
-$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
-
-% TODO: Segway
-
-\begin{definition}
-	Vertex degree at time $\gamma \in \mathbb{R}_+ $ 
-
-	\noindent
-	For a Dynamic Network $\mathcal{G}$ on a vertex set $V$, $d_v(\gamma)$ is the degree of a vertex $v \in V$ at time $\gamma$, i.e. the degree of $v$ in $G_\gamma$
-\end{definition}
-
-
-% TODO: DEFINITION OF ISOMORPHISM BETWEEN NETWORKSs
-
-% TOD: definition of active and inactive edges in static rumour spreading section.
-
-% TODO: Discuss implications for async rumour spreading - interpreting poission process as exponential clock, not interested in value of the process
