@@ -7,8 +7,6 @@ from graph_generators import generate_ER_graph
 def exponential_sample(rate: float):
     return np.random.exponential(1/rate)
 
-# TODO: Think about when to use G_0 or G_1
-
 def spread_unit_edges_continuous_rumour(graph_generator, number_of_nodes, initial_node):
     timestep = 0
     informed_nodes = {initial_node}

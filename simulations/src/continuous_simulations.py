@@ -6,8 +6,6 @@ import random
 def exponential_sample(rate: float):
     return np.random.exponential(1/rate)
 
-# TODO: Think about when to use G_0 or G_1
-
 def spread_continuous_rumour(graph_generator, number_of_nodes, initial_node=0, enable_event_log=False):
     timestep = 0
     informed_nodes = {initial_node}

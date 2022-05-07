@@ -14,11 +14,15 @@ Now we are ready to define our first asynchronous algorithm for rumour spreading
 \noindent
 An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds, each lasting a unit length of time. Initially a single node is aware of the rumour. In round $t$, the rumour spreads according to the Asynchronous Push-Pull Rumour Spreading Algorithm for Static Topologies (Algorithm \ref{algo:staticAsync}) on the topology $G_t$.
 
-% TODO: Implications of this model -> active edges change as rumour spreads AND as topology changes (extra dimension of complexity), allows for topologies to be discconnected with finite spreading time
+We take a moment to consider the implications of the changes this model introduces. We observed that in the static network algorithm the random set of active edges is dependent state of the network. However, this model introduces an additional layer of complexity, as the set of active edges also depends on the current topology, and hence the time. Thus, the spreading time random variable is dependent on when spreading events occur, in addition to which nodes were involved. This dependence introduces further complexity into the spreading time analysis.
+
+% An interesting observation is that unlike the static model, in Algorithm \ref{NodeCentricAsyncAlgorithm} the spreading time 
+
+% P1 Maybe: allows for topologies to be discconnected with finite spreading time - probability that spreadin time infinite - taken care of by bound
 
 \section{Proof of the bound}
 
-We follow a proof from \cite{asyncPaper}, explaining steps in greater detail than in the original paper. % TODO:REWORD
+We follow a proof of an upper bound by Pourmiri and Mans from \cite{asyncPaper}, explaining steps in greater detail than in the original paper.
 
 First we prove a lemma about how long it takes for the number of nodes aware of the rumour to increase by a multiplicative factor. 
 
@@ -39,7 +43,7 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 	\noindent
 	Then, 
 	$$
-		\mathbb{P}(\tau' - \tau \geq \Delta(\alpha) + 2) \leq e^{-c\alpha m(\tau)}
+		\mathbb{P}(\tau' - \tau \geq \Delta_\tau(\alpha) + 2) \leq e^{-c_0\alpha m(\tau)}
 	$$
 	\noindent
 	where $c_0 = \frac{1}{2} - \frac{\log 2}{2}$
@@ -49,23 +53,23 @@ At first sight, it may be difficult to identify the relationship that this lemma
 
 When less than half of the nodes are aware of the rumour, we can interpret $\tau'$ as the first time at which the number of informed nodes increases by a half, compared to number of informed nodes at time $\tau$. In this case $|I_{\tau'}| \approxeq \frac{3}{2} |I_\tau|$. When more than half of the nodes are informed, $\tau'$ is the first time at which the set of uniformed nodes shrinks in size by a half, i.e $|U_{\tau'}| \approxeq \frac{|U_\tau|}{2}$. Thus, the random quantity of interest $\tau'-\tau$ is the amount of time it takes for the number of informed nodes to expand by a multiplicative factor, from time $\tau$. 
 
-In the lemma we are interested in the event that this time exceeds $\Delta(\alpha) + 2$. 
-The  $+2$ arises from technicalities in the proof, however the $\Delta(\alpha)$ term reveals a relationship between to the rate at which the set of informed nodes expands, and the connectivity of the dynamic network. % TODO: Change the end of this sentance?
-Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta(\alpha)$ we see that the greater the conductance and diligence metrics of the static topologies in the time steps immediately after $\tau$, the smaller the value of $\Delta(\alpha)$ becomes, since the summation will exceed $2\alpha$ in fewer terms. Thus, we see that well-connected topologies will yield smaller values of $\Delta(\alpha)$. Returning to the probability bound, we see that the bounding term $e^{-c_0\alpha m(\tau)}$ is independent of the topologies after $\tau$. Thus, the bound tells us that the better the connectivity, the shorter the time it takes for the rumour to spread by a multiplicative factor (under the same probability). % TODO: Change bracketed bit to make more sense or remove
-This supports our intuitive expectation that rumour spreading using algorithm \ref{NodeCentricAsyncAlgorithm} is faster in well-connected dynamic networks. % TODO: SHOULD WE EXPECT THIS? HIGHER CONNETIVITY => HIGER DEGREE => LOWER RATE OF TRANSMISSION BETWEEN INDIVIUDAL PAIRS OF NODES.
-
-% TODO: Sanity check on bound by varying alpha: larger alpha => larger delta(alpha) => stronger bound below => tighter proabilitstic bound e^stuff
-
+In Lemma \ref{AsyncIncreaseLemma} we are interested in the event that this time exceeds $\Delta(\alpha) + 2$. 
+The  $+2$ term arises from technicalities in the proof, however the $\Delta_\tau(\alpha)$ term reveals a relationship between to the rate at which the set of informed nodes expands, and the connectivity of the dynamic network.
+Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta_\tau(\alpha)$ we see that the greater the conductance and diligence metrics of the static topologies in the time steps immediately after $\tau$, the smaller the value of $\Delta_\tau(\alpha)$ becomes, since the summation will exceed $2\alpha$ in fewer terms. Thus, we see that well-connected topologies will yield smaller values of $\Delta_\tau(\alpha)$. Returning to the probability bound, we see that the bounding term $e^{-c_0\alpha m(\tau)}$ is independent of the topologies after $\tau$, so the bound has the same probability of failing regardless of the connectivity metrics. Thus, the bound shows that the better the connectivity, the faster the rumour spreads.
 
 \begin{proof}
 	Fix $\tau > 0$.
 	Fix a time $\gamma \in [\tau, \tau')$. 
 	We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. 
-	Let $\{u, v\} \in E(I_\gamma, U_\gamma)$. By the thinning property of Poisson processes, node $u$ pushes the rumour to $v$ according to a Poisson process of rate $\frac{1}{d_u(\gamma)}$. Similarly, node $v$ pulls the rumour from $u$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$. % TODO: Why does this hold? - exposition (thinning)
-	Thus, by the superposition property of Poisson processes, the time until the first uniformed node is made aware of the rumour has an exponential distribution of rate % TODO: Why does this hold - summing of poisson proccesses for each node
+	Let $\{u, v\} \in E(I_\gamma, U_\gamma)$ where $u$ is aware of the rumour and $v$ is not.
+	Recall that $u$ chooses one of its $d_u(\gamma)$ neighbours uniformly at random to push the rumour to according the arrival times of a unit rate Poisson process. Thus, the by the thinning property of Poisson process, $u$ informs $v$ of the rumour according to the arrival times of a Poisson process with rate $\frac{1}{d_u(\gamma)}$
+	Similarly, node $v$ pulls the rumour from one of its $d_v(\gamma)$ neighbours according to a unit rate Poisson process. Thus, $v$ pulls the rumour from $u$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$.
+	The stochastic process by which $u$ contacts $v$ is the sum of these processes, which itself is a Poisson process with rate $\frac{1}{d_u(\gamma)} + \frac{1}{d_v(\gamma)}$ by the superposition property.
+	By considering all the active edges, the cumulative process by which any of the uniformed nodes contact any of the informed nodes is Poisson process of rate 
 	$$
-		\lambda(\gamma) = \sum_{\{u, v\} \in E(I_\gamma, U_\gamma)} \frac{1}{d_u(\gamma)} + \frac{1}{d_v(\gamma)}
+	\lambda(\gamma) = \sum_{\{u, v\} \in E(I_\gamma, U_\gamma)} \frac{1}{d_u(\gamma)} + \frac{1}{d_v(\gamma)}
 	$$
+	by superposition. We note that $\lambda(\gamma)$ is a step function which changes value at the times when the set of active edges changes, i.e, when a new node becomes aware of the rumour or the topology changes. We now derive a lower bound for this rate.
 	Let $S = I_\gamma$ if $\text{vol}(I_\gamma) \leq \text{vol}(U_\gamma)$, otherwise let $S = U_\gamma$. Then,
 
 	\begin{align*}
@@ -89,7 +93,6 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 		& = \rho(G_\gamma)\Phi(G_\gamma) m(\gamma)
 		\intertext{by the definition of $m(\gamma)$}
 	\end{align*}
-	% TODO: Brief exposition here??
 	We now proceed to prove the following claim, by performing case analysis on $m(\gamma)$
 
 	\textbf{Claim.} $m(\gamma) \geq \frac{m(\tau)}{2}$.
@@ -129,14 +132,15 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\begin{equation} \label{eq:RateBound}
 		\lambda(\gamma) \geq \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2}
 	\end{equation}
-	So far we have bounded the rate at which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of transmission is a function of $\gamma$ we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$. % TODO: Is this a poisson proccess? Independent increments, rate function defined by realisation but still has independet increments, step talk about step function.
-	Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. %TODO: Change last sentance - exactly the same as paper
+	So far we have bounded the rate of the Poisson process by which uninformed nodes are made aware of the rumour at time $\gamma$. Since the rate of this transmission process is a function of $\gamma$, we define an inhomogeneous Poisson process $\{N(\gamma), \gamma \geq \tau\}$ with rate function $\lambda(\gamma)$.
+	Intuitively, $N(\gamma)$ counts the number of newly informed nodes in the interval $[\tau,\gamma)$. 
+	% MAYBE: In actuality, it is a separate process but has the same distribution, defined for a speific realisation, independent of true spread
 	Let $\Delta(\alpha)$ denote $\Delta_\tau(\alpha)$ for brevity.
 	By the definition of the inhomogeneous Poisson process, $N(\tau + \Delta(\alpha) + 2)$ has a Poisson distribution with rate $\Lambda(\tau + \Delta(\alpha) + 2)$, where
 	\begin{align*}
 		\Lambda(\tau + \Delta(\alpha) + 2) &= \int_\tau^{\tau + \Delta(\alpha) + 2} \lambda(\gamma) d\gamma \\
 		& \geq \int_{\ceil\tau}^{{\ceil\tau} + \Delta(\alpha) + 1} \lambda(\gamma) d\gamma \\
-		\intertext{where we note  that $\tau \leq \ceil{\tau}$ and $\tau > \ceil{\tau} - 1$, so $[\ceil{\tau}, {\ceil\tau} + \Delta(\alpha) + 1] \subseteq [\tau, \tau + \Delta(\alpha) + 2]$. Also note that since $\lambda$ is a rate function, $\lambda(\gamma) \geq 0$. Since we integrate over a smaller range of a non-negative function, the inequality holds.} % TODO: Reword 
+		\intertext{where we note  that $\tau \leq \ceil{\tau}$ and $\tau > \ceil{\tau} - 1$, so $[\ceil{\tau}, {\ceil\tau} + \Delta(\alpha) + 1] \subseteq [\tau, \tau + \Delta(\alpha) + 2]$. Also note that since $\lambda$ is a rate function, $\lambda(\gamma) \geq 0$. Since we integrate over a smaller domain of a non-negative function, the inequality holds.}
 		& = \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \lambda(\gamma) d\gamma \\
 		\intertext{by splitting the integral into unit length intervals between integers} 
 		& \geq \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2} d\gamma \\
@@ -179,10 +183,10 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 	\noindent
 	From the definition of the density function of Poisson random variables we have that 
 	\begin{align*}
-		\mathbb{P}(Y \leq \frac{r}{2}) & = e^{-r} \sum_{j=0}^\frac{r}{2} \frac{r^j}{j!} \\ % TODO: Assumes r/2 is integer? - add floor to upper bond of sum
-		& = e^{-r} \sum_{j=0}^\frac{r}{2} \frac{2^j(\frac{r}{2})^j}{j!} \\
-		& \leq e^{-r} \sum_{j=0}^\frac{r}{2} \frac{2^\frac{r}{2}(\frac{r}{2})^j}{j!} \\
-		& \leq e^{-r} e^\frac{r \log 2}{2} \sum_{j=0}^\frac{r}{2} \frac{(\frac{r}{2})^j}{j!} \\
+		\mathbb{P}(Y \leq \frac{r}{2}) & = e^{-r} \sum_{j=0}^{\floor{\frac{r}{2}}} \frac{r^j}{j!} \\
+		& = e^{-r} \sum_{j=0}^{\floor{\frac{r}{2}}} \frac{2^j(\frac{r}{2})^j}{j!} \\
+		& \leq e^{-r} \sum_{j=0}^{\floor{\frac{r}{2}}} \frac{2^\frac{r}{2}(\frac{r}{2})^j}{j!} \\
+		& \leq e^{-r} e^\frac{r \log 2}{2} \sum_{j=0}^\infty \frac{(\frac{r}{2})^j}{j!} \\
 		& \leq e^{-r} e^\frac{r \log 2}{2} e^\frac{r}{2} \\
 		& = e^{-c_0r} \\
 	\end{align*}
@@ -195,20 +199,17 @@ This supports our intuitive expectation that rumour spreading using algorithm \r
 Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following Theorem.
 
 \begin{theorem}\label{theorem:AsyncUpperBound}
-	\ModelIntro Then, w.h.p, the rumour will have spread to all the nodes of $\mathcal{G}$ in time at most
+	\ModelIntro Let $c \geq 2$ be a constant. Then, with probability $1 - n^{-(c-1)}$, the rumour will have spread to all the nodes of $\mathcal{G}$ in time at most
 	$$
 		\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
 	$$
-	
-	\noindent
-	for a sufficiently large $C$
+	where $C = $ % TODO: FILL
 \end{theorem}
 
 \begin{proof}
 	We bound the overall spreading time by splitting the rumour spreading in two phases, and bounding lengths of each phase separately.
 
 	\textbf{First Phase.} The first phase starts at time $t=0$ and ends at the first time when the number of informed nodes reaches $\frac{n}{2}$, which we denote $t_\text{half}$. We divide the phase into intervals $[\tau_i, \tau_{i+1}]$ where $\tau_0 = 0$ and $\tau_{i+1}$ is the first time the number of informed nodes increases by $\frac{m(\tau_i)}{2}$. 
-	% TODO: MENTION FINAL INTERVAL MAY END AFTER t_\text{half}
 	Using the notation from Lemma \ref{AsyncIncreaseLemma}, we have that $\tau_{i+1} = \tau_i'$. 
 	
 	Note that for all times $\tau < t_\text{half}$, the number of informed nodes is less than $\frac{n}{2}$, so $m(\tau) = |I_\tau|$. Thus, by the following induction at time $\tau_i < t_\text{half}$ there are at least $(\frac{3}{2})^i$ informed nodes.
@@ -243,10 +244,10 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		\intertext{by Lemma \ref{AsyncIncreaseLemma}}	
 		&\leq \sum_{i=0}^N e^{-c \log n} \\
 		\intertext{since $K < N$}
-		&= N e^{-c \log n} \\ % TODO: Want n^{-c} not tends to 0!! change w.h.p defn to O((log x) ^l n^(-c))?? -> n^{1-c}
-		&\to 0 \text { as } n \to \infty
+		&= N n^{-c} \\
+		&\leq n^{c-1}
 	\end{align*}
-	Thus w.h.p all intervals have length at least $\Delta(\alpha_i) + 2$, hence
+	Since $c \geq 2$, w.h.p all intervals have length at least $\Delta(\alpha_i) + 2$, hence
 	\begin{equation}\label{eq:t_halfBound}
 		t_\text{half} 
 		\leq \tau_{K+1} 
@@ -268,65 +269,45 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		&\leq \min \left\{t: \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq \sum_{i=0}^N (2 \alpha_i + 2) \right\}
 	\end{align*}
 	We justify the final inequality as follows. Consider the sequence of connectivity metrics $(\Phi(G_k)\rho(G_k))_{k \geq 0}$.
-	Note that in the first term, since $\tau_{i+1} \leq \tau_i + \delta_i$, we take sums over potentially overlapping intervals of the sequence of connectivity metrics, namely $[\tau_0, \tau_0 + \delta_0], (\tau_1, \tau_1 + \delta_1], (\tau_2, \tau_2 + \delta_2], \dots$. Thus the each $(\Phi(G_k)\rho(G_k))$ will considered at least once, and may contribute to multiple terms of the summation due to the overlaps. We can interpret the second sum as iterating in the same way over the following contigous, disjoint intervals: $[T_0 = 0, T_1 = \Delta_{T_0}(\alpha_0) + 2], (T_1, T_2 = \Delta_{T_1}(\alpha_1) + 2], (T_2, T_3 = \Delta_{T_2}(\alpha_2) + 2], \dots$. Since this sum is taken over disjoint intervals, each $(\Phi(G_k)\rho(G_k))$ term is considered exactly once. Thus, more terms are needed for the contigous summation $\sum_{k=0}^t \Phi(G_k)\rho(G_k)$ to exceed the sum of the target values $\sum_{i=0}^N (2 \alpha_i + 2)$, since connectivity metrics $\Phi(G_k)\rho(G_k)$ aren't reused.% TODO: Target values means what?
+	Note that in the first term, since $\tau_{i+1} \leq \tau_i + \delta_i$, we take sums over potentially overlapping intervals of the sequence of connectivity metrics, namely $[\tau_0, \tau_0 + \delta_0], (\tau_1, \tau_1 + \delta_1], (\tau_2, \tau_2 + \delta_2], \dots$. Thus, each $(\Phi(G_k)\rho(G_k))$ will be considered at least once, and may contribute to multiple terms of the summation due to the overlaps. We can interpret the second sum as iterating in the same way over the following contiguous, disjoint intervals: $[T_0 = 0, T_1 = \Delta_{T_0}(\alpha_0) + 2], (T_1, T_2 = \Delta_{T_1}(\alpha_1) + 2], (T_2, T_3 = \Delta_{T_2}(\alpha_2) + 2], \dots$. Since this sum is taken over disjoint intervals, each $(\Phi(G_k)\rho(G_k))$ term is considered exactly once. Thus, more terms are needed for the contiguous summation $\sum_{k=0}^t \Phi(G_k)\rho(G_k)$ to exceed the sum of the target values $\sum_{i=0}^N (2 \alpha_i + 2)$, since connectivity metrics $\Phi(G_k)\rho(G_k)$ aren't reused.
 
 	Note that in the final bound for $t_\text{half}$ we have eliminated all random quantities such as $\tau_i$, thus this bound can be calculated using only information about network.
 
-	% TODO: Why can choose time at which any number of nodes informed? (by defn of poisson proces, probability 2 processes fire at once is immediate, n distinct steps in |I_t|)
+	\textbf{Second Phase.} The second phase starts at $t_\text{half}$, when at least $\frac{n}{2}$ nodes have been made aware of the rumour. The phase ends at the first time all nodes are aware of the rumour, which we denote $t_\text{all}$. Note that since the number of informed nodes is at least $\frac{n}{2}$ during this is phase, the number of uninformed nodes is at most $\frac{n}{2}$. Thus, for $\tau > t_\text{half}$, $m(\tau) = |U_\tau|$. From this point, the ideas used to bound the second phase are identical to those in the analysis of the first phase. We omit the analysis of this phase to avoid repetition, and refer the reader to \cite{asyncPaper} for the full details. 
 
-	\textbf{Second Phase.} The second phase starts at $t_\text{half}$, when at least $\frac{n}{2}$ nodes have been made aware of the rumour. The phase ends at the first time all nodes are aware of the rumour, which we denote $t_\text{all}$. We again divide up the phase into intervals $[\tau_j, \tau_{j+1}]$, where $\tau_0 = t_\text{half}$ and $\tau_{j+1} = \tau_j'$ as in the first phase.
-
-	Note that since the number of informed nodes is at least $\frac{n}{2}$ during this is phase, the number of uninformed nodes is at most $\frac{n}{2}$. Thus for $\tau > t_\text{half}$, $m(\tau) = |U_\tau|$. Using this fact, we prove $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$ by induction.
-
-	\underline{Base Case.}
-	From the definition of $t_\text{half}$, $|I_{\tau_0}| = |I_{t_\text{half}}| \geq \frac{n}{2}$, so $|U_{\tau_0}| \leq \frac{n}{2}$.
-
-	\underline{Inductive Case.} Suppose $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$. Note that since $|I_\tau| + |U_\tau| = n$, we have that $|I_{\gamma}| \geq |I_\tau| + \frac{m(\tau)}{2} \iff |U_\gamma| \leq |U_\tau| - \frac{m(\tau)}{2}$. Hence by the defintion of $\tau_j'$,
+	The result of the second phase analysis is that w.h.p,
+	$$
+		t_\text{all} - t_\text{half} 
+		\leq \min \left\{t: \sum_{k=0}^t \Phi(G_{t_\text{half} +k}) \rho(G_{t_\text{half} +k}) \geq \sum_{j=0}^M (2 \beta_j + 2) \right\}
+	$$
+	where $\beta_j = \ceil{\frac{c \log n}{c_0 n(1/2)^j}}$ and $M = \floor{\log_2 n}$
+	Note that 
 	\begin{align*}
-		\tau_{j+1} &= \tau_j' \\
-		&= \min \{ \gamma : |I_\gamma| \geq |I_{\tau_j}| + \frac{m(\tau_j)}{2}\} \\
-		&= \min \{ \gamma : |U_\gamma| \leq |U_{\tau_j}| - \frac{m(\tau_j)}{2}\} \\
-		&= \min \{ \gamma : |U_\gamma| \leq |U_{\tau_j}| - \frac{|U_{\tau_j}|}{2}\} & \text{since } m(\tau_j) = |U_{\tau_j}| \text{ in this phase} \\
-		&= \min \{ \gamma : |U_\gamma| \leq \frac{1}{2}|U_{\tau_j}|\}
-	\end{align*}
-	Thus by the induction hypothesis, $|U_{\tau_{j+1}}| \leq \frac{1}{2}|U_{\tau_j}| \leq \frac{1}{2}n(\frac{1}{2})^{j+1} = n(\frac{1}{2})^{j+2}$.
-
-	As in the first phase, let $K$ be the random variable for the index of the final interval in the phase, i.e the interval where $\tau_K < t_\text{all}$ and $\tau_{K+1} \geq t_\text{all}$.
-
-	Let $M = \floor{\log_2 n}$. Since $|U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$, we have that $|U_{\tau_M}| \leq n(\frac{1}{2})^{M+1} \leq \frac{1}{2}$, thus since the number of informed nodes is an integer, at time $\tau_M$ there are no uninformed nodes left i.e all nodes are informed of the rumour. Hence $K < M$, otherwise at time $\tau_K$ all nodes would be aware of the rumour but we have that $\tau_K < t_\text{all}$ by the definition of $K$.
-
-	Let $\beta_j = \ceil{\frac{c \log n}{c_0 n(1/2)^j}}$. 
-	By Lemma \ref{AsyncIncreaseLemma}, $\Delta(\beta_i) + 2$ is an upper bound for the length of the interval $[\tau_j, \tau_{j+1}]$ 
-	with probability at least $1 - e^{-c_0\beta_j m(\tau_j)}$. 
-	Since $m(\tau_j) = |U_{\tau_j}| \leq n(\frac{1}{2})^{j+1}$. 
-	
-	% TODO: Cut second phase for repetiveness 
-	% TODO: FINISH PROOF
-
+		\sum_{i=0}^N (c \alpha_i + 2) + \sum_{j=0}^M (2 \beta_j + 2)
+		= 
+	\end{align*} % TODO: Evaluate this
+	By combining the results from both phases, we have that w.h.p,
+	$$
+		t_\text{all} = (t_\text{all} - t_\text{half}) + t_\text{half} \leq \min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
+	$$
+	where 
+	$$
+		C = \sum % TODO: FILL IN
+	$$
 \end{proof}
 
-In Theorem \ref{theorem:AsyncUpperBound}, we have successfully generalized standard results about the rumour spreading time to dynamic networks. Indeed, by using Theorem \ref{theorem:AsyncUpperBound} we can recover a standard result about rumour spreading on static networks. If we let $G_t = G$ for all $t$ (i.e. a static network), by Theorem \ref{theorem:AsyncUpperBound} the rumour spreading time $T$ satisfies 
+In Theorem \ref{theorem:AsyncUpperBound}, we have successfully generalized standard results about the rumour spreading time to dynamic networks. Indeed, by using Theorem \ref{theorem:AsyncUpperBound} we can recover the standard result about rumour spreading on static networks from Theorem \ref{theorem:staticBound}. If we let $G_t = G$ for all $t$ (i.e. a static network), by Theorem \ref{theorem:AsyncUpperBound} the rumour spreading time $T$ satisfies 
 \begin{align*}
 	T &\leq \min \left\{t : \sum_{k=0}^t \Phi(G)\rho(G) \geq C \log n \right\} \\
 	&= \min \left\{t : t \Phi(G)\rho(G) \geq C \log n \right\}  \\
 	&= \min \left\{t : t \geq \frac{C \log n}{\Phi(G)\rho(G)}\right\}  \\
 	&= \mathcal{O}\left(\frac{\log n}{\Phi(G)\rho(G)}\right)
 \end{align*}
-w.h.p. This result is almost identical to a standard result for rumour spreading on static networks.  % TODO: cite theorem from static networks
-% TODO: "however, the real stregth comes from dynamic networks"
+w.h.p. Encouragingly, we have recovered the same scaling in spreading time as Theorem \ref{theorem:staticBound}.
 
-% TODO: THIS IS A BIT OF A JUMP, SANITY CHECK?
-Theorem \ref{theorem:AsyncUpperBound} also expresses the relationship between the success probability of the bound, and the size of the bound. We recall that the failure probability of the bound is $\mathcal{O}\left(\log(n) e^{-c \log(n)}\right)$, where $c$ is a chosen constant greater than 2. % TODO: Change to n^(c-1), verify 2
+Theorem \ref{theorem:AsyncUpperBound} also expresses the relationship between the success probability of the bound, and the size of the bound. We recall that the failure probability of the bound is $\mathcal{O}\left(n^{-(c-1)s}\right)$.
 We also note that the constant $C$ in Theorem \ref{theorem:AsyncUpperBound} is monotone increasing in $c$. The greater $C$ is, the more terms will be required for the summation to exceed $C \log n$, which will yield a larger bound. 
-Thus, the intuitive idea that the greater the success probability of the bound, the larger the bound needs to be, holds. % TODO: Reword this sentance
-
-% DRAWBACKS
-% CAN'T GET EXPLICIT RESULTS
-% - CONSTANT CASE
-% Sequence needs to be known ahead of time - strong restriction
-
-% TODO: ADD DRAWBACKS - first some observational comments
-
+Thus, the greater the success probability of the bound, the larger the bound will be.
  
 % MAYBE: How does diligence affect bound?
 
@@ -352,8 +333,6 @@ First we introduce the dynamic network.
 	\end{equation*}
 	i.e. $\mathcal{A}$ alternates between the ring and complete graph topologies.
 \end{definition}
-
-% TODO: More explicit linking here
 
 Now we apply Theorem \ref{theorem:AsyncUpperBound} to bound the spreading time on the Ring-Complete Alternating Network.
 
@@ -461,7 +440,9 @@ for large $n$.
 
 \end{proof}
 
-% TODO: COMMENT THAT static bound gives log n spread (prove in motivation section on static graphs), adding alternating with lower connectiity only increases spreading time by multaplicitive constant - how infrequent can high conductance grpah be and still preserve log n scaling? k \in O(1)
+Recall from Theorem \ref{theorem:staticRingAsyncBound}, that the spreading time also scaled like $\bigO(\log n)$ for the static complete network. Thus, we observe that alternating the complete topology with the low-connectivity ring topology only reduces the speed of the rumour spread by a constant factor.
+
+% MAYBE: how infrequent can high conductance grpah be and still preserve log n scaling? k \in O(1)
 
 Now we compare the bound with simulated spreading times on $\mathcal{A}$.
 
@@ -484,7 +465,9 @@ The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results 
 
 We take a moment to interpret the quantity Theorem \ref{theorem:AsyncUpperBound} bounds. Consider the true distribution of spreading times for a network of size $n$. The top plot of Figure \ref{fig:analysisMethod} shows such a distribution. Since the bound holds w.h.p, we have that at least a $1-\frac{1}{n}$ fraction of the density is below the bound. We represent the bound by $g(n)$ in Figure \ref{fig:analysisMethod} Denote the function that takes a network size, and returns the point at which exactly a $1-\frac{1}{n}$ fraction of the density lies below the point the "high probability function". The high probability function is represented by $f(n)$ in Figure \ref{fig:analysisMethod}. This is the function that Theorem \ref{theorem:AsyncUpperBound} bounds from above. To determine if the bound is tight, we want to identify how close to the bound is to the high probability function.
 
-However, of course we do not know the full distribution of spreading times as it is generated by a complex stochastic process. Instead, we use simulations to generate an empirical estimate of the spreading time distribution, represented by the bottom plot of Figure \ref{fig:analysisMethod}. We can think of each simulation result as a sample from the full distribution. Using the empirical distribution, we can estimate the high probability function by taking the $100(1-\frac{1}{n})^\text{th}$ percentile of the simulation results for each network size $n$, which we have plotted in orange in Figure \ref{fig:floodingGnpSimResultsTight}. This value of this estimate for a network of size $n$ is illustrated by $\hat{f}(n)$ in Figure \ref{fig:analysisMethod}. Thus, the estimated high probability function gives a lower bound for the growth in spreading times. %TODO: Mention w.h.p somewhere in this sentance
+% TODO: REPLACE WITH 99th percentile
+
+However, of course we do not know the full distribution of spreading times as it is generated by a complex stochastic process. Instead, we use simulations to generate an empirical estimate of the spreading time distribution, represented by the bottom plot of Figure \ref{fig:analysisMethod}. We can think of each simulation result as a sample from the full distribution. Using the empirical distribution, we can estimate the high probability function by taking the $100(1-\frac{1}{n})^\text{th}$ percentile of the simulation results for each network size $n$, which we have plotted in orange in Figure \ref{fig:floodingGnpSimResultsTight}. This value of this estimate for a network of size $n$ is illustrated by $\hat{f}(n)$ in Figure \ref{fig:analysisMethod}. Thus, the estimated high probability function gives a lower bound for the growth in spreading times. 
 
 On Figure \ref{fig:floodingGnpSimResultsTight}, we have plotted the function $f(n) = c \log \log (n)$ in green, with an appropriately chosen scaling constant $c$. Note that the estimated high probability function has a similar growth rate, so these simulations suggest that w.h.p, the spreading time on $\mathcal{A}$ grows like $\mathcal{O}(\log \log n)$ in the network size.
 
@@ -546,7 +529,7 @@ We now use Theorem \ref{theorem:AsyncUpperBound} to bound the spreading time on 
 	\end{align*}
 \end{proof}
 
-We see that the bound we obtain for the spreading time on the Shuffled Ring Network is a factor of $n$ larger than the Ring-Complete Alternating Network, due to the loss of the high-connectivity complete topologies. % TODO: More exposition/analysis here?
+We see that the bound we obtain for the spreading time on the Shuffled Ring Network is a factor of $n$ larger than the Ring-Complete Alternating Network, due to the loss of the high-connectivity complete topologies. 
 
 Now we compare the bound we have obtained with simulated spreading times on the Shuffled Ring Network.
 
@@ -557,12 +540,8 @@ Now we compare the bound we have obtained with simulated spreading times on the 
 	\label{fig:shuffleRingSimResults}
 \end{figure}
 
-% TODO: FIGINTERP, green line is log(x)
-% REGRESSION
-
 In Figure \ref{fig:shuffledRingExample} we have used the same methods of analysis as in Figure \ref{fig:alternatingSimResults}. However, for this network, the spreading times grow like $\mathcal{O}(\log n)$, which is slower than in $\mathcal{A}$.
 The $\mathcal{O}(n \log n)$ bound given by Theorem $\ref{theorem:AsyncUpperBound}$ is larger than the true spreading times by a factor of $\mathcal{O}(n)$ in asymptotic scaling. Hence, the bound is very weak, and is unlikely to be useful in practice. But why is it the case that the bound is so weak for $\mathcal{S}$?
-% TODO: Justify more -  doesn't give much information,  motivates investigation into why the bound is weak in this case, and are there other cases where it is also weak?, can we tighten it?
 
 To answer this question, we investigate the spreading time on the static ring graph.
 
@@ -579,10 +558,8 @@ To answer this question, we investigate the spreading time on the static ring gr
 	w.h.p the spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on the Static Ring Network is at most $\mathcal{O}(n \log n)$.
 \end{theorem}
 
-% TODO: FROM HERE USE NEW ISOMORPHISM DEFN
-
 \begin{proof}
-	We notice that in each round the topologies of Shuffled Ring Network and Static Ring Network networks are isomorphic they  have the same conductance and diligence in each round. Hence, Theorem \ref{theorem:AsyncUpperBound} yields the same bound for the Static Ring Network as the Shuffled Ring Network. % TODO: More details
+	We notice that the Shuffled Ring Network and Static Ring Network networks are isomorphic. Since the conductance and diligence metrics are invariant to node renaming, both networks they have the same conductance and diligence in each round. Since Theorem \ref{theorem:AsyncUpperBound} is only dependent on the sequence of conductance and diligence, we obtain the same bound for the Static Ring Network and the Shuffled Ring Network.
 \end{proof} 
 
 Now we investigate the simulated spreading times on the Static Ring Graph.
@@ -594,19 +571,14 @@ Now we investigate the simulated spreading times on the Static Ring Graph.
 	\label{fig:staticRingSimResults}
 \end{figure}
 
-We see from the simulations on the Static Ring Graph that the spreading time grows linearly with the number of nodes in the network. Notice that this is significantly slower than the logarithmic growth seen in the Shuffled Ring simulations, despite both networks having isomorphic topologies. 
+We see from the simulations on the Static Ring network that the spreading time grows linearly with the number of nodes in the network. Notice that this is significantly slower than the logarithmic growth seen in the Shuffled Ring simulations, despite the fact that the networks are isomorphic.
+Since the true spreading time growth for Static Ring network is linear, the $\mathcal{O}(n \log n)$ bound given by Theorem \ref{theorem:AsyncUpperBound} is much tighter for this network, and is only a factor of $\mathcal{O}(\log n)$ larger than the simulated spreading times.
 
-In this case, the $\mathcal{O}(n \log n)$ bound given by Theorem \ref{theorem:AsyncUpperBound} is much tighter, and is only a factor of $\mathcal{O}(\log n)$ larger than the simulated spreading times.
-% TODO: Finish above when established link between bound holding w.h.p and being in line with simulations.
+We investigate why the rumour spreads faster on the Shuffled Ring Network by comparing how the rumour spreads in the Shuffled Ring and Static Ring networks.
 
-We investigate why the rumour spreads faster on the Shuffled Ring Network by comparing how the rumour spreads in the Shuffled Ring and Static Ring networks. % TODO: Redundant sentance?
-
-% TODO: Talk about the general behaviour when dicussing how made simulations earlier? Bit of a jump here
-% TODO:
-By Theorem [TODO:CITE EXPONENTIAL CLOCK THEOREM], we can interpret the operation of Algorithm \ref{NodeCentricAsyncAlgorithm} as picking a node at random when an exponential clock of rate $n$ ticks, % TODO: Change ticks?
-then picking a random neighbour to exchange the rumour with. If one of the nodes is aware of the rumour and the other is not, the uninformed node is made aware of the rumour, which we call a "spreading event". 
-In the ring topology all nodes have the same degree, so we can further simplify the interpretation of the spreading process as choosing an edge uniformly at random when an exponential clock of rate $n$ ticks. Thus, the greater the proportion of active edges to inactive edges, the greater the probability that the chosen edge is active, and triggers a spreading event. More frequent spreading events in turn yield lower spreading times. 
-
+By the superposition and thinning properties of the Poisson process, we can interpret the operation of Algorithm \ref{NodeCentricAsyncAlgorithm} as picking a node at random according to the arrival times of rate $n$ Poisson process,
+before picking a random neighbour to exchange the rumour with. If one of the nodes is aware of the rumour and the other is not, a spreading event will occur.
+In the ring topology all nodes have the same degree, so we can further simplify the interpretation of the spreading process as choosing a present edge uniformly according to the arrival times of a rate $n$ Poisson process. Thus, the greater the proportion of active edges to inactive edges, the greater the probability that the chosen edge is active, and triggers a spreading event. More frequent spreading events in turn yield lower spreading times. 
 
 \begin{figure}[h]
 	\centering
@@ -635,7 +607,7 @@ In the Static Ring Network, we find that at all times there are only two active 
 
 Within a round, in the Shuffled Ring Network, the rumour spreads similarly to the Static Network, i.e. by extending the contiguous set of informed nodes. We see this behaviour in the $t = 1 - \epsilon$ case of Figure \ref{fig:shuffledRingExampleSpread}. However, when the network is shuffled at the start of the new round, it is likely that the continuous set of informed nodes is broken up and scattered around the ring, forming multiple continuous sets of informed nodes as seen in the $t=1$ case of Figure \ref{fig:shuffledRingExampleSpread}. Each of these new sets of adjacent informed nodes contributes an additional two active edges.
 
-Hence, the spreading time is longer for the Static Ring Network, as the Static Ring Network is limited to 2 active edges at any time, whereas the Shuffled Ring Network could have many more.
+Hence, the spreading time is longer for the Static Ring Network, as the Static Ring Network is limited to 2 active edges at any time, whereas the Shuffled Ring Network could have many more. We observe the effects of this behaviour in simulations.
 
 \begin{figure}[h]
 	\centering
@@ -644,7 +616,6 @@ Hence, the spreading time is longer for the Static Ring Network, as the Static R
 	\label{fig:staticRingInformedNodeGrowth}
 \end{figure}
 
-We observe the described behaviour in the simulations. % TODO: Change this
 Figure \ref{fig:staticRingInformedNodeGrowth} shows the number of informed nodes at each time during a rumour spread simulation on the Static Ring Network with 500 nodes. Notice that the rate at which the number of informed nodes increases is constant, since at all times there are exactly 2 active edges capable of spreading the rumour.
 
 \begin{figure}[h]
@@ -657,8 +628,8 @@ Figure \ref{fig:staticRingInformedNodeGrowth} shows the number of informed nodes
 Figure \ref{fig:shuffledRingInformedNodeGrowth} is a similar plot for a rumour spread on the Shuffled Ring Network. In this figure we note that the rate at which the number of informed nodes increases varies over time. In the first 3 rounds there are few informed nodes and only 3 opportunities for shuffling, hence the number of active edges is still close to 2. This is reflected in Figure \ref{fig:shuffledRingInformedNodeGrowth} by the initial slow growth in the number of informed nodes. However, after round 4 we see a rapid increase in the rate at which nodes are informed of the rumour, since there are a sufficient number of informed nodes for the shuffling to scatter informed nodes all around the ring, adding many active edges. 
 As the network becomes saturated with informed nodes around time 7, the number of active edges begins to decrease as it becomes more likely that informed nodes will still be adjacent to other informed nodes after shuffling. Hence, in Figure \ref{fig:shuffledRingInformedNodeGrowth}, we see the rate of growth begins to decrease.
 
-% TODO: Remove branching process - out of nowhere and unjustified?
-This growth is similar to a branching process, where each set of contiguous informed nodes (the parent) has a probability of being split into multiple contiguous sets (the children). In this process the offspring distribution would change over time as the network becomes saturated. An interesting area for further study could be fully characterising this growth as a branching process.
+% MAYBE: Talk about branching process
+% This growth is similar to a branching process, where each set of contiguous informed nodes (the parent) has a probability of being split into multiple contiguous sets (the children). In this process the offspring distribution would change over time as the network becomes saturated. An interesting area for further study could be fully characterising this growth as a branching process.
 
 Note that since Algorithm \ref{NodeCentricAsyncAlgorithm} is a random process, the individual simulations analysed in Figures \ref{fig:staticRingInformedNodeGrowth} and \ref{fig:shuffledRingInformedNodeGrowth} are not necessarily characteristic of how the rumour spreads on each network. However, after running the simulations multiple times, we see the same general structures we have discussed in both plots, hence these displays are useful illustrations.
 
@@ -670,9 +641,4 @@ We refer to networks with the same topologies in each round up to the relabellin
 
 For example, all other networks isomorphic but not equal to the Static Ring Network (such as the Shuffle Ring Network) involve some relabelling of nodes between rounds, which could introduce additional active edges. Thus, the Static Ring minimises the number of active edges at all time steps so is in fact the adversarial network for the Shuffle Ring Network. 
 
-We saw in this example that the bound was only a factor of $\mathcal{O}(\log n)$ worse than the best possible bound in the adversarial case. Thus, we conclude that the bound is almost tight in this case. But are there other adversarial networks for which the bound is almost tight? And is the adversarial network always the static equivalent of a given network? We investigate these questions in Chapter \ref{chapter:asyncBoundTight}
-% TODO: Finish this
-
-% TODO: Is the static always the adversarial? - No, about connectivity as well (shown in chapter 3)
-
-% TODO: Adversarial not "figting back" but one of the possibilites the bound has to account for
+In conclusion, we have seen in this section that although sometimes the bound is nearly tight, frequently it is not. After studying the behaviour of rumour spreading on isomorphic ring networks, we also saw that adversarial networks with larger spreading times than their isomorphic networks weaken the bound for these other networks. In this example we saw that the bound was only a factor of $\mathcal{O}(\log n)$ worse than the best possible bound in the adversarial case. But are there other adversarial networks for which the bound is almost tight? And is the adversarial network always the static equivalent of a given network? We investigate these questions in Chapter \ref{chapter:asyncBoundTight}.
