@@ -152,7 +152,7 @@ Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta_\tau(\alpha)$
 		& = \alpha m(\tau)
 	\end{align*}
 	Let $X$ be a random variable with a $\text{Poisson}(\alpha m(\tau))$ distribution. 
-	Since $\Lambda(\tau + \Delta(\alpha) + 2) \geq \alpha m(\tau)$, we have that $X$ is first-order stochastically dominated by $N(\tau + \Delta(\alpha) + 2)$.
+	Since $\Lambda(\tau + \Delta(\alpha) + 2) \geq \alpha m(\tau)$, we have that $X$ is first-order stochastically dominated by $N(\tau + \Delta(\alpha) + 2)$ by Theorem \ref{theorem:poissonDomination}.
 	Note that
 	$$
 		\tau' - \tau \geq \Delta(\alpha) + 2 \iff 
@@ -311,7 +311,7 @@ Thus, the greater the success probability of the bound, the larger the bound wil
  
 % MAYBE: How does diligence affect bound?
 
-\section{Evaluating the quality of the bound}
+\section{Evaluating the quality of the bound}\label{section:asyncEvaluation}
 
 In this section we gauge the quality of the bound given in Theorem \ref{theorem:AsyncUpperBound}, by applying it to various networks, and comparing the results with simulated spreading times.
 

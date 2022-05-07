@@ -1,20 +1,18 @@
 \chapter{Example of an Adversarial Network}\label{chapter:asyncBoundTight}
 
-In this chapter, we present a family of adversarial networks for which the upper bound derived in Chapter \ref{chapter:AsyncUpperBound} is almost tight. This construction was given in \cite{asyncPaper}, however we add detail to help the reader understand the analysis. First we introduce the family of networks. Then we evaluate the spreading time bound for this family. Finally, we derive a lower bound on the spreading time and show that the bound is indeed almost tight.
+% TODO: Other chapters - only need conducantce and diligence ahead of time
 
-% TODO: MOTIVATION - why study this example?, last chapter, should measure the bound against adversarial cases, add to implicaions above
+In Section \ref{section:asyncEvaluation}, simulations that suggested that the bound from Theorem \ref{theorem:AsyncUpperBound} is almost tight in some adversarial cases. In this chapter, we go a step further, and present a family of adversarial networks for which the upper bound derived in Chapter \ref{chapter:AsyncUpperBound} is provably almost tight. This construction was given in \cite{asyncPaper}, however we add detail to help the reader understand the analysis. First we introduce the family of networks. Then we evaluate the spreading time bound for this family. Finally, we derive a lower bound on the spreading time and show that the bound is indeed almost tight.
 
-% TODO: Not static.
+\section{Introducing the Adversarial Network}
 
-% MAYBE: Adversarial not "figting back" but one of the possibilites the bound has to account for
+Before we define the adversarial network itself, we introduce a family of topologies used to construct the network.
 
 \begin{definition}\label{def:HkAB}
  	Graph $H_{k, \Delta}(A,B)$
 
-	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\floor{\frac{n}{4}} \leq |A| \leq \ceil{\frac{3n}{4}}$. % TODO: Reconsile floors and ceilings on bounds, want that B_0 > 3n/4, floor n/4 cieling 3n/4?
+	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\floor{\frac{n}{4}} \leq |A| \leq \ceil{\frac{3n}{4}}$.
 	Let B denote $V \setminus A$. The positive integers $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ are fixed. We construct the graph $H_{k, \Delta}(A,B)$ on the vertex set $V$ using the following steps
-
-	% TODO: Can we adjust k and delta slightly to work for k-regualr ends? 
 
 	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$, and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in Figure \ref{fig:HkAB_1}.
 
@@ -23,18 +21,13 @@ In this chapter, we present a family of adversarial networks for which the upper
         \input{figures/HkAB_1.tex}
         \caption{Construction of $H_{k, \Delta}(A,B)$ after Step 1}
         \label{fig:HkAB_1}
-    \end{figure}
-    
-	\textit{Step 2.} Let $G_A$ be an arbitrary m-regular % TODO: Fill in once decided on ending graphs
-	graph on $A \setminus S_0$ such that $\Phi(G_A) = \Theta(1)$. %TODO: remove this??
+    \end{figure} 
 
-	% TODO: m-regular graph 
-	% https://sites.math.rutgers.edu/~sk1233/courses/topics-S13/lec8.pdf
-	% Margulis–Gabber–Galil convert to simple graph?
-
+	\textit{Step 2.} Let $G_A$ be an arbitrary 
+	graph on $A \setminus S_0$ such that $\Phi(G_A) = \Theta(1)$ and all nodes have a $\Theta(1)$ neighbours. % MAYBE: Cosntruction??
 	We now connect each node of $S_0$ to $\Delta$ distinct nodes of $G_A$. First, we arbitrarily enumerate the nodes in $S_0$ and $G_A$ as $v_1, v_2, \dots, v_\Delta$ and $u_1, u_2, \dots, u_{|G_A|}$ respectively. Connect $v_1$ to the first $\Delta$ nodes in the $G_A$, starting with $u_1$. Connect $v_2$ to the next $\Delta$ nodes in $G_A$, starting with $u_{\Delta + 1}$.
 	Repeat this process for each $v_i$, as in Figure \ref{fig:HkAB_2}.
-	If there are more new connections than nodes in $G_A$, reuse nodes in $G_A$ starting again from $u_1$ and forming new connections in the enumerated order, i.e the $i^\text{th}$ new connection should be made with node $u_m$ where $m = i\mod |G_A|$.
+	If there are more new connections than nodes in $G_A$, reuse nodes in $G_A$ starting again from $u_1$ and forming new connections in the enumerated order, i.e, the $i^\text{th}$ new connection should be made with node $u_m$ where $m = i\mod |G_A|$.
 
     \begin{figure}[h]
         \centering
@@ -43,9 +36,8 @@ In this chapter, we present a family of adversarial networks for which the upper
         \label{fig:HkAB_2}
     \end{figure}
 
-
-	\textit{Step 3.} Let $G_B$ be an arbitrary m-regular graph on $B \setminus \bigcup_{i=1}^k S_i$ such that $\Phi(G_B) = \Theta(1)$. 
-	We generate $G_B$ using the same construction as in Step 2. We then connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_{k, \Delta}(A,B)$ illustrated in Figure \ref{fig:HkAB_3}.
+	\textit{Step 3.} Let $G_B$ be another arbitrary graph on $B \setminus \bigcup_{i=1}^k S_i$ such that $\Phi(G_B) = \Theta(1)$ and each node has $\Theta(1)$ neighbours. 
+	We connect each node of $S_k$ to $\Delta$ distinct nodes of $G_B$ using the same enumeration method as in Step 2. This yields the graph $H_{k, \Delta}(A,B)$ illustrated in Figure \ref{fig:HkAB_3}.
 
     \begin{figure}[h]
         \centering
@@ -54,34 +46,35 @@ In this chapter, we present a family of adversarial networks for which the upper
         \label{fig:HkAB_3}
     \end{figure}
 
-	%TODO: explain how Winding around the ring increases the degree by at most an additive constant O(sqrt(n))^2 extra edges O(n) nodes in A \ S_0 so by O notation at most addivie constant difference
-
 \end{definition}
 
-We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary sets of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_{k, \Delta}(A,B)$ as a single graph as all graphs in the family have the same structural properties required for the proof, so we can choose any of them. % TODO: Remove this paragraph? premature?
+We note that Definition \ref{def:HkAB} technically specifies a family of graphs, since the construction relies on choosing arbitrary sets of vertices, each of which yields a distinct graph. However, for the purposes of this analysis we think of $H_{k, \Delta}(A,B)$ as a single graph as all graphs in the family have the same structural properties required for the proof, so we can choose any of them.
 
 Using $H_{k, \Delta}(A,B)$, we now construct the following family of networks for which Theorem \ref{theorem:AsyncUpperBound} is tight.
 
 \begin{definition}
 	$\rho$-diligent Dynamic Network
 	
-	First we define the sequences of node subsets $(A_t)_{t\geq 0}$ and $(B_t)_{t\geq0}$ with $A_t, B_t \subseteq V$ for all $t$. For each $t$, we construct $A_t$ and $B_t$ such that they partition $V$ into two subsets, as follows:
+	First we define the sequences of node subsets $(A_t)_{t \geq 0}$ and $(B_t)_{t \geq 0}$ with $A_t, B_t \subseteq V$ for all $t$. For each $t$, we construct $A_t$ and $B_t$ such that they partition $V$ into two subsets, as follows:
 
-	Let $A_0$ be an arbitrary subset of $V$ of size $\floor{\frac{n}{4}}$ containing the first node to be aware of the rumour. % TODO: Any problem with ceiling function?
-	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$. % TODO: Have we defined what I_t is?
+	Let $A_0$ be an arbitrary subset of $V$ of size $\floor{\frac{n}{4}}$ containing the first node to be aware of the rumour. 
+	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$.
 	Let $A_{t+1} = V \setminus A_t$, i.e. the set of nodes that were either in $A_0$ or informed of the rumour by round $t+1$.
 
-	Now we can define the dynamic network $\rho$-diligent Dynamic Network $\mathcal{G}(n, \rho) = (G_t)_{t\geq 0}$ itself. 
-	% TODO: Check sequnce notation consistent, 0 not in N
-	% TODO: Does \Delta satisfy conditions required for H_\Delta(A,B)
-	% TODO: Standardise notation for H_K(A,B)
+	Now we can define the dynamic network $\rho$-diligent Dynamic Network $\mathcal{G}(n, \rho) = (G_t)_{t \geq 0}$ itself. 
 
 	Let $\Delta = \ceil{\frac{1}{\rho}}$, and $k = \mathcal{O}(\log n / \log \log n)$.
 	Let $G_t = H_{k, \Delta}(A_t, B_t)$ while $|B_t| \geq \frac{n}{4}$. Note that since $\Delta = \mathcal{O}(\sqrt{n})$ by the definition of $H_{k, \Delta}(A,B)$, we must have that $\rho = \Omega\left(\frac{1}{\sqrt{n}}\right)$.
 	Note also that $|A_t|$ is increasing in $t$ since $A_t$ is a superset of the informed nodes at time $t$, so there may be some time step $l$ where $|A_l| > \ceil{\frac{3n}{4}}$. Thus, for all time steps $t \geq l$, we cannot construct $H_{k, \Delta}(A_t,B_t)$. Hence, for all $t \geq l$, let $G_{t+1} = G_t$.
 \end{definition}
 
-In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network.
+Note that this network reacts to the spread of the rumour. At the end of each round, when the topology is allowed to change, all the informed nodes are moved into the set $A$. In Section \ref{section:adversarialLowerBound} we will see how this adversarial behaviour prolongs the rumour spreading time.
+
+\section{Obtaining the Upper Bound}
+
+In this section, we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network. 
+
+Note that since the network is allowed to react to the rumour, and the rumour spreading process is random, the sequence of topologies is randomised. However, we will see that since all topologies have the same connectivity metrics regardless of the rumour spread, we can still apply Theorem \ref{theorem:AsyncUpperBound} for the $rho$-diligence network.
 
 \begin{theorem}
 	The rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at most 
@@ -100,26 +93,30 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 	$$
 		|G_A| = |A \setminus S_0| = |A| - |S_0| = \Theta(n) - \mathcal{O}(\sqrt{n}) = \Theta(n)
 	$$
-	By construction each node in $G_A$ is connected to exactly $m$ % TODO: Replace with actual number
-	other nodes in $G_A$, so internal edges contribute $\Theta(n)$ degree to $\text{vol}(G_A)$. The only other edges which terminate in $G_A$ are the $\Delta^2$ edges between $G_A$ and $S_0$, thus $\text{vol}(G_A) = \Delta^2 + \Theta(n)$. By taking the disjoint union of $G_A$ and $\bigcup_{i=1}^q S_i$ we obtain $\text{vol}(A_q) = (2q + 1)\Delta^2 + \Theta(n)$. % TODO: Check as doesn't match paper.
+	By construction each node in $G_A$ is connected to $\Theta(1)$
+	other nodes in $G_A$, so internal edges contribute $\Theta(n)$ degree to $\text{vol}(G_A)$. The only other edges which terminate in $G_A$ are the $\Delta^2$ edges between $G_A$ and $S_0$, thus $\text{vol}(G_A) = \Delta^2 + \Theta(n)$. By taking the disjoint union of $G_A$ and $\bigcup_{i=1}^q S_i$ we obtain $\text{vol}(A_q) = (2q + 1)\Delta^2 + \Theta(n)$. 
 	
-	Note that for any $q$, $|E(A_q,\comp{A_q})| = \Delta^2$ since the only edges connecting $A_q$ and $\comp{A_q}$ are the edges passing between $S_q$ and $S_{q+1}$. This is most easily seen by inspecting Figure \ref{fig:HkAB_3}, and noting that $A_q$ corresponds to the first $q + 1$ sets of nodes in the string, while $\comp{A_q}$ corresponds to the remaining $k - q + 1$ sets of noes at the end of the string. By construction, each of these cuts consist of exactly $\Delta^2$ edges, thus $|E(A_q,\comp{A_q})| = \Delta^2$ as claimed.
-	Hence, we can derive an upper bound on the conductance of $H_{k, \Delta}(A, B)$ by evaluating the conductance expression for the set $A_q$ instead of the set which achieves the minimum. 
+	Note that for any $q$, $|E(A_q,\comp{A_q})| = \Delta^2$ since the only edges connecting $A_q$ and $\comp{A_q}$ are the edges passing between $S_q$ and $S_{q+1}$. This is most easily seen by inspecting Figure \ref{fig:HkAB_3}, and noting that $A_q$ corresponds to the first $q + 1$ sets of nodes in the string, while $\comp{A_q}$ corresponds to the remaining $k - q + 1$ sets of nodes at the end of the string.
+	Hence, we can derive an upper bound on the conductance of $H_{k, \Delta}(A, B)$ by evaluating the conductance expression for the set $A_q$ as follows.
 	$$
-		\Phi(H_{k, \Delta}(A, B)) \leq \frac{|E(A_q, \comp{A_q})|}{\min \left\{ \text{vol}(A_q), \text{vol}(\comp{A_q}) \right\} } % TODO: THIS INEQUALITY DOESN'T WORK
-		\leq \frac{|E(A_q, \comp{A_q})|}{\text{vol}(A_q)} = \frac{\Delta^2}{(2q + 1)\Delta^2 + \Theta(n)}
+		\Phi(H_{k, \Delta}(A, B)) 
+		\leq \frac{|E(A_q, \comp{A_q})|}{\min \left\{ \text{vol}(A_q), \text{vol}(\comp{A_q}) \right\} } 
+		= \frac{\Delta^2}{\min \left\{ \text{vol}(A_q), \text{vol}(\comp{A_q}) \right\}}
 	$$	
-	% TODO: Prove that A_k is the minimal set
-
-	% TODO: Finish this
-
+	To get as tight a bound as possible, we choose $q$ to maximise the denominator. Note that by symmetry, $\vol(\comp{A_q}) = 2(k - q + 1)\Delta^2 + \Theta(n)$. Thus, the denominator is maximised by taking $q = \floor{\frac{k}{2}}$. Hence,
+	$$
+		\Phi(H_{k, \Delta}(A, B)) 
+		\leq \frac{\Delta^2}{2(k - \floor{\frac{k}{2}} + 1)\Delta^2 + \Theta(n)}
+		= \Theta\lb\frac{\Delta^2}{k\Delta^2 + n}\rb
+	$$
+	% TODO: Say lower bound, show arbitrary expression
 	\textbf{Claim 2.} $\rho(H_{k, \Delta}(A,B)) = \Theta\left(\frac{1}{\Delta}\right)$
 
-	First we consider the set of vertices $A = G_A \cup S_0$ for which the minimal diligence is achieved. % TODO: Check this works with A instead of A_1 (used in paper)
+	First we consider the set of vertices $A = G_A \cup S_0$ for which the minimal diligence is achieved.
 	We have that $\text{vol}(A) = 2\Delta^2 + \Theta(n)$ since $S_0$ contributes $2\Delta^2$ degree and $G_A$ contributes $\Theta(n)$ degree as shown in claim 1. Since $\Delta = \mathcal{O}(\sqrt{n})$, we obtain that 
 	$$
 		\text{vol}(A) = 2 \mathcal{O}(\sqrt{n})^2 + \Theta(n) = \mathcal{O}(n) + \Theta(n) = \Theta(n)
-	$$ % TODO: Check adding theta and O gives theta
+	$$ 
 	Since $|A| = \Theta(n)$ by construction we have that the average degree of $A$ satisfies $$
 		\bar{d}(A) = \frac{\text{vol}(A)}{|A|} = \frac{\Theta(n)}{\Theta(n)} = \Theta(1)
 	$$
@@ -140,12 +137,12 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 	
 	Since by construction, the internal edges in $G_A$ contribute $\Theta(1)$ degree to each node, we have that the degree for an arbitrary node in $G_A$ is $\Theta(1) + \mathcal{O}(1) = \Theta(1)$. As $G_B$ is connected to the string of bipartite graphs in an identical fashion during Step 2, all nodes of $G_B$ also have $\Theta(1)$ degree.  
 	
-	Let $S \subseteq V$ be an arbitrary subset of nodes. Since we have that all nodes in $G_A$ and $G_B$ have degree $\Theta(1)$, the maximum degree of any node in the graph is $2\Delta$. Hence 
+	Let $S \subseteq V$ be an arbitrary subset of nodes. Since we have that all nodes in $G_A$ and $G_B$ have degree $\Theta(1)$, the maximum degree of any node in the graph is $2\Delta$ for large $n$. Hence 
 
 	$$
 	\min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\} \geq \frac{1}{2\Delta}
 	$$
-	Since all nodes have at least constant degree, we have that $\comp{d}(S) = \Omega(1)$. Thus 
+	Since all nodes have at least constant degree, we have that $\comp{d}(S) = \Omega(1)$. Thus, 
 	$$
 		\rho(S) 
 		= \comp{d}(S) \min_{\{u, v\} \in E(S, \comp{S}) } \left\{ \max \left\{ \frac{1}{d_u},\frac{1}{d_v} \right\} \right\}
@@ -174,11 +171,11 @@ In the following theorem, we use Theorem \ref{theorem:AsyncUpperBound} to bound 
 		= 
 		\mathcal{O}\left(\log n \left(n \rho + \frac{k}{\rho}\right)\right)
 	$$
-	% TODO: Resolve k -> 0 log n -> +inf -> (check multaplicitve difference between log n from upper bound and 1/k for lower bound)
-	% 		- why choice of log n / log log n for k?
 \end{proof}
 
-Now we verify that the upper bound is tight by computing a lower bound on the spreading time for a $\rho$-diligent dynamic network that holds w.h.p.
+\section{Obtaining the lower bound}\label{section:adversarialLowerBound}
+
+In this section we verify that the upper bound is tight by computing a lower bound on the spreading time for a $\rho$-diligent dynamic network that holds w.h.p.
 
 First we prove a lemma about the spread of the rumour down the chain of bipartite subgraphs in $H_{k, \Delta}(A,B)$.
 
@@ -212,8 +209,8 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 		\mathbb{E}[I_k(\tau) |I_{k-1}(\gamma), \gamma \in [0, 1]] \leq \mathbb{E}[N_k(\tau) |I_{k-1}(\gamma), \gamma \in [0, \tau]]
 	$$
 	At time $\gamma \in [0,1]$, there are $I_{k-1}(\gamma)$ nodes aware of the rumour in $S_{k-1}$, and pushing the rumour down each of their $\Delta$ edges to $S_k$. Since each of these edges pushes the rumour according to a Poisson process of rate $\frac{2}{\Delta}$, by the superposition of Poisson processes the nodes of $S_{k-1}$ inform the nodes of $S_k$ according to a Poisson processes of rate $\frac{2}{\Delta}I_{k-1}(\gamma)\Delta = 2 I_{k-1}(\gamma)$.
-	Thus, $N_k(\tau)|(I_{k-1}(\gamma), \gamma \in [0, \tau])$ is an inhomogeneous Poisson process, where the value of the rate function at time $\gamma$ is $2 I_{k-1}(\gamma)$. By % TODO: CITE HOMOGENEOUS THEOREM
-	, 
+	% TODO: contcating homogeneours PP gives inhomo PP
+	Thus, $N_k(\tau)|(I_{k-1}(\gamma), \gamma \in [0, \tau])$ is an inhomogeneous Poisson process, where the value of the rate function at time $\gamma$ is $2 I_{k-1}(\gamma)$. By the definition of the inhomogeneous Poisson process,
 	\begin{align*}
 		\mathbb{E}[N_k(\tau)|I_{k-1}(\gamma), \gamma \in [0, \tau]] &= \mathbb{E}\int_0^\tau 2 I_{k-1}(\gamma) d\gamma \\
 		&= 2 \int_0^\tau \mathbb{E}I_{k-1}(\gamma) d\gamma \\ % TODO: How can we swap integral and expectation? Fubinis theorem since I_{k-1}(\gamma) \leq \Delta
@@ -250,7 +247,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	since each of the $k$ disjoint node sets $S_i$ have size $\Delta$. Since $B_1 = B_0 \setminus I_1$
 	$$
 		|B_1| = |B_0 \setminus I_1| = |B_0| - |B_0 \cap I_1| \geq \frac{3n}{4} - k\Delta
-	$$ % TODO: Corrected typo above
+	$$
 	where the final inequality holds due to inequality (\ref{eq:firstStepinfectedNodesOfB}) and the fact that $|B_0| \geq \frac{3n}{4}$. 
 	% TODO: Mention S, G_A, G_B different each timestep - chosen arbitrarily
 
@@ -282,8 +279,6 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	time to spread the rumour to all nodes of $\mathcal{G}(n, \rho)$, where $\Delta = \ceil{\frac{1}{\rho}}$.
 \end{proof}
 
-% TODO: adversarial Reaction vs part of the sample space here
-
 \begin{corollary}
 	For all large $n$ and arbitrary $\rho = \Omega\left(\frac{1}{\sqrt{n}}\right)$, there exists a dynamic network on $n$ vertices with diligence $\rho$ for every topology, for which the bound is at most an $o\lb \log^2 n \rb$ factor larger than the true spreading time w.h.p.
 \end{corollary}
@@ -306,3 +301,5 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 \end{proof}
 
 Since the bound is larger than the true spreading time by at most a poly-logarithmic factor, we say the bound is almost tight for the $\rho$-diligent network family. 
+
+% TODO: Link back to evaluating the bound

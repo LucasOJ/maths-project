@@ -72,12 +72,25 @@ In this section, we review asymptotic notation for real valued functions. We ass
 	We say $f(n) = \Theta(g(n))$ if $f(n) = \mathcal{O}(g(n))$ and $f(n) = \Omega(g(n))$
 \end{definition}
 
-
 \begin{definition}
 	$o$-Notation
 
 	\noindent
 	We say $f(n) = o(g(n))$ if for all $c > 0$, there exists $N \in \mathbb{N}$ such that $f(n) < c g(n)$ for all $n \geq N$.
+\end{definition}
+
+\begin{definition}
+	Tight
+
+	\noindent
+	If the function $f$ is bounded above by $g$ such that $f(n) = \Theta(g(n))$, then we say the bound is tight. 
+\end{definition}
+
+\begin{definition}
+	Almost tight
+
+	\noindent
+	If the function $f$ is bounded above by $g$ such that $f(n) = \bigO\lb(\log n)^k g(n)\rb$ for some constant $k>0$ and $g(n) = \Omega((\log n)^k)$, then we say the bound $g$ is almost tight, since for large $n$ poly-logarithmic factors become comparatively small. 
 \end{definition}
 
 \section{Discrete-time Markov Chains}
@@ -151,6 +164,8 @@ for all $n \geq 1$ and $i, j \in S$.
 \begin{theorem}\label{theorem:markovChainConvergence}
 	If a Markov chain if irreducible and aperiodic, then the distribution of its current state after $n$ time steps converges to its stationary distribution as $n$ tends to infinity.
 \end{theorem}
+
+Once the Markov chain has converged to the stationarity distribution we say it has reached equilibrium.
 
 \section{Inhomogeneous Poisson Processes}\label{section:inhomoPP}
 
@@ -290,7 +305,7 @@ Now we present a theorem which links couplings to first-order stochastic dominat
 
 Using Theorem \ref{theorem:couplingDomination}, we can establish stochastic domination between random variables by finding a coupling. We first show this technique	for pairs of Poisson random variables
 
-\begin{theorem}
+\begin{theorem}\label{theorem:poissonDomination}
 	Let $0 < \lambda < \mu$. If $X \sim \text{Poisson}(\lambda)$ and $Y \sim \text{Poisson}(\mu)$ are independent random variables, then $X \preceq Y$. 
 \end{theorem}
 
@@ -300,7 +315,7 @@ Using Theorem \ref{theorem:couplingDomination}, we can establish stochastic domi
 
 Now we use coupling to establish first-order stochastic dominance between pairs of binomial random variables.
 
-\begin{theorem}
+\begin{theorem}\label{theorem:binomialDomination}
 	Let $X \sim \text{Binomial}(n_1, p)$ and $Y \sim \text{Binomial}(n_2, p)$ be independent random variables with $n_1 < n_2$. Then $X$ is stochastically dominated by $Y$.
 \end{theorem}
 

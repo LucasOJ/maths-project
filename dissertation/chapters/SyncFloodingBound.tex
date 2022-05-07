@@ -20,10 +20,6 @@ Additionally, in Section \ref{section:MEDNBound}
 we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of graphs is not fixed but instead follows some distribution. 
 In this case, deterministic bounds will allow us to bound spreading time over the distribution of graph sequences. %TODO: Said "case" again - change
 
-% TODO: Why study flooding time?
-% TODO: mention that Flooding only works for synchronus
-
-
 \section{Bound on spreading time for the Flooding Algorithm}
 
 In this section we prove a bound on the spreading time of the flooding algorithm from \cite{syncPaper}, adding details and expanding steps throughout.
@@ -39,8 +35,6 @@ First we introduce the notion of an expander graph, which we need to express the
 		B(S) = \left\{u \in V \setminus S : \{u, v\} \in E \text{ for some } v \in S \right\}
 	$$
 \end{definition}
-
-% TODO: Figure of boundary sets
 
 \begin{definition}
 	$(h, k)$-Expander
@@ -60,8 +54,6 @@ We are now ready give a bound on the rumour spreading time for the flooding algo
 	$$
 \end{theorem}
 
-% TODO: Interpretation of how the bound varies for different (h_i, k_i) sequences, how do these emerge?
-
 We notice that there are strong conditions on the connectivity of the dynamic network that must be met for this bound to hold, namely that every topology is an $(h,k)$-expander for multiple $(h, k)$ pairs. Initially these conditions may seem unreasonably strong, however in Section \ref{section:floodingBoundEdgeMarkovian} we will see an interesting example where these properties emerge w.h.p in a random graph.
 
 \begin{proof}
@@ -71,7 +63,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 		T_i = \min \{ t \in \mathbb{N} : |I_t| > h_i \}
 	$$
 
-	First we upper-bound the number of steps in the interval $[T_i, T_j]$, % TODO: Generalise to [T_i, T_j], should all hold as expected
+	First we upper-bound the number of steps in the interval $[T_i, T_j]$,
 	by bounding the number of informed nodes $t$ time-steps after $T_i$ from below.
 
 	By induction, we show that if $T_i + t < T_j$, then the number of informed nodes at time $T_i + t$ is greater than $(1+k_j)^t h_i$.
@@ -86,16 +78,15 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\begin{align*}
 		|I_{s+1}| &= |I_s| + |B(I_s)| \\
 		\intertext{by the operation of Algorithm \ref{SyncFloodingAlgorithm}}
-		& \geq |I_s| + k_j |I_s| \\ % since we assume s < T_j => |I_s| \leq h_j + (h_j, k_j)-expander
+		& \geq |I_s| + k_j |I_s| \\ 
 		\intertext{as $G_t$ is a $(h_j, k_j)$-expander, so we observe that $|B(I_s)| \leq h_j$ since $s < T_j$}
 		& = (1 + k_j)|I_s| \\
 		& > (1 + k_j)(1+k_j)^t h_i \\
 		\intertext{by the induction hypothesis}
 		& = (1+k_j)^{t+1} h_i
 	\end{align*}
-	% TODO: boundary set picture here	
 	Let $\tau = T_i + \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$. 
-	Suppose for contradiction that $\tau < T_j$. %TODO: Is contradicition overkill here?
+	Suppose for contradiction that $\tau < T_j$.
 	Since we assumed $\tau < T_j$ we can apply the above inequality %TODO: label
 	to get the following lower bound on the number of informed nodes at time $\tau$.
 	$$
@@ -108,7 +99,6 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\begin{equation} \label{eq:FloodingIntervalBound}
 		T_j - T_i \leq \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}} \leq \frac{\log (h_j/h_i)}{\log(1+k_j)} + 1
 	\end{equation}
-	% TODO: Make ceiling brackets fit
 	% TODO: Exposition about next steps + direction here
 
 	% TODO: What about time until first spread - must happen at timestep 2 since (h,k) expander so no isolated nodes.
@@ -121,9 +111,6 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	for the interval $[T_0,T_s]$. However, we can tighten the bound by removing the additive $s$ term through case analysis on the subinterval $[T_{i-1}, T_i]$, as follows.
 
 	% TODO: Link back to theorem, after since n/2 = h_s, after T_s at least n/2 nodes are informed
-
-
-	% TODO: Note that the source of the problems is the cieling function - aim to get into form like in thm statement, but can't naively add all togethe oterwise + O(S) error, requires deeper analysis
 
 	\textbf{Case 1.} Suppose $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$.
 
@@ -146,7 +133,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	$$
 	Hence, as the topology is an in $(h_i, k_i)$-expander, in round $T_{i-1}$ at least $|I_{T_{i-1}}|k_i$ new uninformed nodes on the boundary of the informed node set are informed. Thus, at the start of the next round, there are at least $(1+k_i)h_{i-1}$ informed nodes, since $|I_{T_{i-1}}| > h_{i-1}$ by the definition of $T_{i-1}$. Combining this with the rearranged form of the assumed inequality, we see that the number of informed nodes "jumps" to more than $h_i$ nodes in a single time step.
 
-	It may be that after this jump there are also more than $h_j$ nodes for some $j \geq i$, %TODO: insert figure here of t vs |I_t|, for t = T_{i-1}, T_i, T_{i+1}, etc, maybe similar figure for steps in case 1.
+	It may be that after this jump there are also more than $h_j$ nodes for some $j \geq i$, 
 	from which we obtain $T_{i-1} + 1 = T_i = T_{i+1} = \dots = T_j$. See Figure \ref{fig:floodingJump} for an illustration of this "jump" behaviour. 
 	\begin{figure}[h]
 		\centering
@@ -158,7 +145,6 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	
 	% TODO: j doesn't exist case
 	Let $j$ be the index such that $h_j < (1+k_i)h_{i-1} \leq h_{j+1}$, i.e. the last $j \geq i$ when $T_j = T_{i-1} + 1$, as in Figure \ref{fig:floodingJump}. % TODO: Check this equivalence - think it does hold
-	% TODO: Figure here to illusttrate T_j, 
 	% TODO: "may be the same as before" - what does this mean??? 
 	Hence, by the definition of $j$, h
 	\begin{align*}
@@ -212,15 +198,13 @@ First we introduce a variation of the original Dynamic Network definition.
 
 We see that this definition adheres to the previous restriction that all topologies have the same vertex set. Since the network is Markovian, the distribution from which the next topology is draw depends only on the previous topology.
 
-We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0$ is a stationary distribution of $\mathcal{M}$. By the definition of a stationary distribution, in such an MEDN the probability that $G_t = G'$ for a given $G'$ is the probability that $G_t = G'$ under the stationary distribution, for any time step $t$. Hence, once the Markov chain associated with the network has reached equilibrium, % TODO: define "equalibrium"
-the future evolution of the network effectively proceeds by independently sampling a topology from the stationary distribution at each time step. % TODO: Check if independent, get rid of "effectively"?
+We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0$ is a stationary distribution of $\mathcal{M}$. By the definition of a stationary distribution, in such an MEDN the probability that $G_t = G'$ for a given $G'$ is the probability that $G_t = G'$ under the stationary distribution, for any time step $t$. Hence, once the Markov chain associated with the network has reached equilibrium,
+the future evolution of the network proceeds as if by sampling a topology from the stationary distribution at each time step.
 
-Under certain conditions, Markov chains converge to their stationary distributions. Thus, for the rest of this section we assume that our MEDNs have been running for a long enough such that when we inject the rumour the network is already in equilibrium. In this paper we don't discuss the conditions which allow for converge to the stationary distribution or how long the convergence takes, and assume that round 0 begins when we inject the rumour.
-% TODO: What about if we started not in the stationary distributuion?? Further exploration needed. Or close to stationary? 
+Under certain conditions, Markov chains converge to their stationary distributions. Thus, for the rest of this section we assume that our MEDNs have been running for a long enough such that when we inject the rumour the network is already in equilibrium. In this paper we don't discuss how long the convergence takes, and assume that round 0 begins when we inject the rumour.
 
 We now adapt the deterministic bound proved in Theorem \ref{theorem:DeterministicFloodingBound} to a MEDN, by adding details to proof from \cite{syncPaper}
 
-% TODO: Is this a non-theorm? What does it acutally mean?
 
 \begin{theorem}\label{theorem:markovSyncBound}
 	Let $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$  be a stationary Markovian evolving graph. Suppose also that there exists an increasing sequence $1 = h_0 \leq h_1 < \dots < h_s = \frac{n}{2}$ and decreasing sequence $k_1 \geq k_2 \geq \dots \geq k_s$ of positive real numbers, such that with probability $1-\frac{1}{n^2}$, the stationary distribution of $\mathcal{M}$ is a $(h_i, k_i)$-expander for every $i \in \{1, \dots , s\}$. Then the spreading time of $\mathcal{G}$ under algorithm \ref{SyncFloodingAlgorithm} is
@@ -232,7 +216,7 @@ We now adapt the deterministic bound proved in Theorem \ref{theorem:Deterministi
 
 Note that in previous bounds the source of randomness in the spreading time has been the rumour spreading algorithm, however in this bound the only source of randomness is the network itself.
 
-We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the same expansion properties hold w.h.p with respect to the stationary distribution. % TODO: REWORD??
+We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the same expansion properties hold w.h.p with respect to the stationary distribution. 
 Since each topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will hold for MEDNs, as long as the long-term proportion of topologies in our network without strong expansion properties is bounded by $\frac{1}{n^2}$.
 
 % TODO: Review this proof for order that makes sense, and check it actually holds
@@ -284,13 +268,11 @@ First, we introduce and motivate the model.
 	\end{center}
 	An Edge-Markovian Evolving Network $\mathcal{M}(n, p, q) = \left\{(V, E_t) : t \in \mathbb{N} \right\}$ is a random sequence of graphs on the vertex set $V$ where $E_t = \left\{ e \in E : X_e(t) = 1 \right\}$, i.e. each edge $e$ is only present in the time steps when its associated Markov chain $X_e$ is in state 1.
 \end{definition}
-The Edge-Markovian Network models the situation when connections between nodes independently fail or are restored. The "birth" and "death" of each edge $e$ is dictated by its associated Markov chain $X_e$, where in each round, a present edge has probability $q$ of failing, and a missing edge has probability $p$ of restoration. Hence, for any given edge, after a geometrically distributed time with parameter $q$, a failure occurs. Restoring the edge takes a geometrically distributed time with parameter $p$ % TODO: WHAT DO FAILING AND RESTORATION MEAN
+The Edge-Markovian Network models the situation when connections between nodes independently fail or are restored. The "birth" and "death" of each edge $e$ is dictated by its associated Markov chain $X_e$, where in each round, a present edge has probability $q$ of failing, and a missing edge has probability $p$ of restoration. Hence, for any given edge, after a geometrically distributed time with parameter $q$, a failure occurs. Restoring the edge takes a geometrically distributed time with parameter $p$.
 
 Since the future state of each edge is only dependent on current state, this Network is appropriate for modelling memoryless Networks where we can assume each edge acts independently with identical dynamics to other edges. For example, in a computer network we could imagine each  connection is randomly disrupted by an issue with probability $q$, and the affected connection is fixed with probability $p$ in each of the subsequent time steps. 
 
 Now we will see that the set of Markov chains associated with the edges induces a Markov chain over the set of possible graphs on $V$, thus the Edge-Markovian Network is an MEDN.
-
-% TODO: REPAIR-DELAY NETWORKS - any edge could fail, takes a few steps to fix, how to model, what is the stationary distribution?
 
 \begin{lemma}
 	The Edge-Markovian Network is a MEDN
@@ -300,7 +282,6 @@ Now we will see that the set of Markov chains associated with the edges induces 
 	Since all the edges are memoryless, the distribution of which edges will be present in the subsequent round is only dependent on which edges are present currently. %TODO: Reword this
 	Thus, the distribution over possible topologies in the following round is only dependent on the topology in the current round.
 	Hence, the sequence of topologies is a Markov chain, so the network is an MEDN.
-	% TODO: Include transition probabilities
 \end{proof}
 
 Since the Edge-Markovian Network is an MEDN, we can apply Theorem \ref{theorem:markovSyncBound} to bound the spreading time of Algorithm \ref{SyncFloodingAlgorithm}. Before applying the bound, we need to establish the stationary distribution of this network. First we establish when a stationary distribution exists for the Edge-Markovian MEDN.
@@ -466,7 +447,7 @@ This indicates that our bound may not always be tight, which we will explore in 
 		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{\log \frac{i}{\max\{i-1,1\}}}{\log(1+k_i)}\right)
 	$$
 	w.h.p.
-	Since $\log \frac{i}{i-1} \leq \frac{1}{i}$ for $i \geq 2$, % TODO: Justify
+	Since $\log \frac{i}{i-1} \leq \frac{1}{i}$ for $i \geq 2$, % TODO: CITE
 	this quantity is bounded above by 
 	$$
 		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{1}{i\log(1+k_i)}\right)
@@ -481,7 +462,7 @@ This indicates that our bound may not always be tight, which we will explore in 
 
 	\textbf{First Sum.}
 
-	Using that $\sum_{i=1}^m 1/i \leq \log m + 1$, %TODO: Justify
+	Using that $\sum_{i=1}^m 1/i \leq \log m + 1$, %TODO: CITE
 	we observe that
 	$$
 		\frac{1}{\log(1+\frac{n\hat{p}}{c})} \sum_{i=1}^{\floor{1/\hat{p}}} \frac{1}{i} 
@@ -529,19 +510,15 @@ This indicates that our bound may not always be tight, which we will explore in 
 
 \end{proof}
 
-Theorem \ref{theorem:edgeMarkovianFloodingBound} holds if $\hat{p}$ is at least $c \frac{\log n}{n}$ for a sufficiently large constant $c$, but what happens if $\hat{p} = o(\frac{\log n}{n})$? % TODO: Is mixing little o and concrete inequalities confusing?
+Theorem \ref{theorem:edgeMarkovianFloodingBound} holds if $\hat{p}$ is at least $c \frac{\log n}{n}$ for a sufficiently large constant $c$, but what happens if $\hat{p} = o(\frac{\log n}{n})$? 
 It turns out that in this case we are unable to apply Theorem \ref{theorem:markovSyncBound}, so the assumption that $\hat{p} \geq c \frac{\log n}{n}$ is necessary for the proof as well as sufficient.
 
 For the $G(n, \hat{p})$ distribution, it is well known that if $\hat{p} = o(\frac{\log n}{n})$, then w.h.p the graph will be disconnected \cite{complexNetworksRandomGraphs}. Since the graph can be split into at least two connected components, we notice that the smaller component is a set of size at most $\frac{n}{2}$ with an empty boundary. Hence, w.h.p, the graph is not a $(\frac{n}{2}, k)$-expander for any positive $k$. This is a condition for Theorem \ref{theorem:markovSyncBound}, hence we cannot apply the bound in cases where $\hat{p} = o(\frac{\log n}{n})$.
 
 Bounding the spreading time of the Edge-Markovian Network in cases where $\hat{p} = o(\frac{\log n}{n})$ could be an interesting area for further study. Each topology will be disconnected w.h.p, but unlike the static $G(n,p)$ graph, the changing edges allow the rumour to spread between sets of nodes which were previously disconnected, and eventually inform all nodes in the network.
-% TODO: Define "w.h.p"
 
 \section{Evaluating the quality of the bound}\label{section:edgeMarkovianFloodingBoundEvaluation}
 
-% TODO: Note \hat{p} is a function of n
-% lower bound on mixing time
-% TODO: Why can't generalise to varying t? (Non-homogenous MC)
 
 In this section we evaluate how tight the bound in Theorem \ref{theorem:edgeMarkovianFloodingBound} is, using lower bounds on the spreading time and simulations. % TODO: Rephrase 
 We start with a lower bound on the spreading time of Algorithm \ref{SyncFloodingAlgorithm} on the stationary Edge-Markovian Network.
@@ -558,9 +535,9 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 	\begin{align*}
 		\mathbb{P}(\delta_{v,t} \geq 2n\hat{p}) 
 		& \leq \mathbb{P}(\text{Binomial}(n, \hat{p}) \geq 2n\hat{p}) \\ 
-		\intertext{since the $\text{Binomial}(n, \hat{p})$ distribution stochastically dominates the $\text{Binomial}(n-1, \hat{p})$ distribution} % TODO: Prove in chapter:Prelims and cite
+		\intertext{since the $\text{Binomial}(n, \hat{p})$ distribution stochastically dominates the $\text{Binomial}(n-1, \hat{p})$ distribution (see Theorem \ref{theorem:binomialDomination})} 
 		& \leq \exp(-\frac{n\hat{p}}{3}) \\
-		\intertext{by the Chernoff bound. We omit the proof of the Chernoff bound for brevity, but refer the reader to \cite{binomialChernoff} for a full proof.} % TODO: Move earlier if used there
+		\intertext{by the Chernoff bound. We omit the proof of the Chernoff bound for brevity, but refer the reader to \cite{binomialChernoff} for a full proof.}
 		& \leq \exp(-\frac{c \log n}{3}) = n^{-\frac{c}{3}}
 		\intertext{since $\hat{p} \geq \frac{c \log n}{n}$}
 	\end{align*}
@@ -576,7 +553,7 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 		\leq
 		n^{-2} 
 	$$
-	Denote maximum degree of $G_t$ as $\Delta_t$. Thus, by the previous union bound, the probability that $\Delta_t$ is at least $2n\hat{p}$ is at most $n^{-2}$ for all $t$. Now we use another union bound to bound the probability that the maximum degree of the network is at least $2n\hat{p}$ at any time step in the first $n$ rounds. % TODO: Exceeds is wrong word.
+	Denote maximum degree of $G_t$ as $\Delta_t$. Thus, by the previous union bound, the probability that $\Delta_t$ is at least $2n\hat{p}$ is at most $n^{-2}$ for all $t$. Now we use another union bound to bound the probability that the maximum degree of the network is at least $2n\hat{p}$ at any time step in the first $n$ rounds.
 	$$
 		\mathbb{P}\left(\bigcup_{t \in [n]} \left\{ \Delta_t > 2n\hat{p}\right\} \right) 
 		\leq 
@@ -650,12 +627,6 @@ Note that the lower bound on the spreading time is exactly the first term of the
 	and the upper bound is tight.
 \end{proof}
 
-% TODO: BE explicit - bound is tight when phat in above range
-
-% TODO: DEFINE WHP in chapter:Prelims
- 
-% TODO: simulations outside tight range p like ((logn)^k)/n
-
 We verify this result with simulations.
 
 \begin{figure}[h]
@@ -674,10 +645,7 @@ $$
 	= \Theta\left(\frac{\log n}{\log \log n}\right)
 $$
 The areas within the light blue section contains a $1-\frac{1}{n}$ fraction of the simulation results for each network size $n$. Observe that this region varies from the mean by $\mathcal{O}(1)$. Thus, we can reason about the w.h.p spreading time growth by comparing the bound to the average spreading time growth. 
-% TODO: LIMITATION IN METHOD: DOES THE VARIANCE AROUND THE MEAN CHANGE??
 As expected, for large $n$, the simulation times closely follow the bound once an appropriate scaling constant has been chosen. Note that for small $n \leq 50$, the expected spreading time does not match the simulated spreading times. However, this is not cause for concern as Corollary \ref{corollary:edgeMarkovianThetaBound} is only concerned with the asymptotic behaviour of the spreading times. % TODO: "Concerned" twice
-
-% random variable, from network
 
 \begin{figure}[h]
 	\centering
@@ -686,7 +654,6 @@ As expected, for large $n$, the simulation times closely follow the bound once a
 	\label{fig:floodingSimFirstTermMaxPOver4}
 \end{figure}
 
-% TODO: TOP OF INTERVAL
 Figure \ref{fig:floodingSimFirstTermMaxPOver4} displays the simulation results for rumour spread on the Stationary Edge-Markovian Network when $\hat{p} = \frac{n^\frac{1}{\log \log n}}{4n}$. This value of $\hat{p}$ was chosen since it has the same asymptotic scaling as the largest value of $\hat{p}$ for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds. Since $\hat{p}$ is larger than in the simulations in Figure \ref{fig:floodingGnpSimResultsTight}, generally the network will have more edges, so we expect the spreading times to be shorter. This is exactly the behaviour we see for large $n$ in Figure \ref{fig:floodingSimFirstTermMaxPOver4}. Note also that the shape of the expected spreading time functions differs to Figure \ref{fig:floodingGnpSimResultsTight}, which reflects the change in $\hat{p}$. Note that again nearly all spreading times are within $\mathcal{O}(1)$of the mean, so we can reason about the growth of spreading times by comparing with the average spreading times. The expected spreading time again fits the simulated times well, due to Corollary \ref{corollary:edgeMarkovianThetaBound}.
 
 \begin{figure}[h]
@@ -709,11 +676,7 @@ A limitation of this analysis is that due to the size of $\hat{p}$, the spreadin
 This is exemplified in Figure \ref{fig:floodingSimFirstTermMaxP}, since the spreading time was 3 for all simulations with at least 250 nodes. In fact, even for networks with 10000 nodes, under this value of $\hat{p}$, we see found that the spreading time is consistently 3. We would like to explore this trend for larger networks to better characterise the growth rate of the spreading time. However, the computational cost of running such simulations was too great to produce statistically significant results, as we could not run enough such simulations in a reasonable time. Hence, another potential avenue for further study could be to implement more efficient simulations, to better charecterise the spreading time growth for large $n$. 
 
 
-% TODO: Need larger values of n, computational cost for large networks, enough runs for statistical significance,
-% saw that it holds for scaling proportional to this value of \hat{p}
-
-% TODO: Tight in means, takes discrete values
-% TODO: Refocus on answering a question - how well does it hold?
+% TODO: saw that it holds for scaling proportional to this value of \hat{p}
 
 Overall, we established in Corollary \ref{corollary:edgeMarkovianThetaBound} that for values of $\hat{p}$ in the interval 
 $$
