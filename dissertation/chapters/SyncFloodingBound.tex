@@ -98,7 +98,6 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 		T_j - T_i \leq \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}} \leq \frac{\log (h_j/h_i)}{\log(1+k_j)} + 1
 	\end{equation}
 
-	% TODO: What about time until first spread - must happen at timestep 2 since (h,k) expander so no isolated nodes.
 	Note that since $h_s = \frac{n}{2}$, at time $T_s$ at least half of the nodes will be aware of the rumour. Hence, if we can bound $[T_0, T_s]$, we will have bounded the time it takes for half of the nodes to be informed. 
 
 	To bound $[T_0, T_s]$, we bound each subinterval $[T_{i-1}, T_i]$. Naively applying the bound to each subinterval directly and taking the sum yields the overall bound 
@@ -121,7 +120,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 		T_i - T_{i-1} = \mathcal{O}\left( \frac{\log (h_i/h_{i-1})}{\log(1+k_i) }\right) + \mathcal{O}(1) = \mathcal{O}(1)
 	\end{equation}
 	To understand the situation that this case represents, we inspect the inequality we assumed.
-	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. Since we have assumed that $T_{i-1} < T_i$, % TODO: Assume this earlier
+	By rearranging we find that $(1+k_i)h_{i-1} > h_i$. If $T_{i-1} = T_i$, then trivially any positive bound for the interval holds. Suppose instead that  $T_{i-1} < T_i$. Thus,
 	the number of informed nodes at the start of round $T_{i-1}$ satisfies
 	$$
 		|I_{T_{i-1}}| \leq h_i
@@ -138,15 +137,16 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\end{figure}
 	In this case the total time that has passed between $T_{i-1}$ and $T_j$ is 1, so we instead bound the whole jump interval as follows:
 	
-	% TODO: j doesn't exist case
-	Let $j$ be the index such that $h_j < (1+k_i)h_{i-1} \leq h_{j+1}$, i.e. the last $j \geq i$ when $T_j = T_{i-1} + 1$, as in Figure \ref{fig:floodingJump}. % TODO: Check this equivalence - think it does hold
-	% TODO: "may be the same as before" - what does this mean??? 
-	Hence, by the definition of $j$, h
+	Let $j$ be the index such that $h_j < (1+k_i)h_{i-1} \leq h_{j+1}$, i.e. the last $j \geq i$ when $T_j = T_{i-1} + 1$, as in Figure \ref{fig:floodingJump}. If no such $j$ exists since $(1 + k_i)h_{i-1}$ is larger than $h_s = \frac{n}{2}$, then by the end of the `jump' over $\frac{n}{2}$ of the nodes are aware of the rumour so $T_s - T_{i-1} = 1$. 
+
+	Returning to the case where $j$, by the definition of $j$, 
 	\begin{align*}
 		T_j - T_{i-1} &=1 \\ 
 		&\leq \frac{\log (h_{j+1}) - \log(h_{i-1})}{\log(1+k_i) } \\
-		& =\sum_{l=i}^{j+1} \frac{\log (h_{l}) - \log(h_{l-1})}{\log(1+k_i) } & \text{since the numerator forms a telescoping sum} \\
-		& \leq \sum_{l=i}^{j+1} \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } & \text{since } k_i \geq k_l \text{ for all } l \geq i \\
+		& =\sum_{l=i}^{j+1} \frac{\log (h_{l}) - \log(h_{l-1})}{\log(1+k_i) } 
+		\intertext{since the numerator forms a telescoping sum} \\
+		& \leq \sum_{l=i}^{j+1} \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) } 
+		\intertext{since $k_i \geq k_l$ for all $l \geq i$} \\
 		& = \mathcal{O}\left(\sum_{l=i}^j \frac{\log (h_{l}/h_{l-1})}{\log(1+k_l) }\right)
  	\end{align*}
 
@@ -154,9 +154,8 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	$$
 		T_s = \sum_{i=2}^s T_i - T_{i-1}
 	$$
-	% TODO: T_1 = 0 is this consistent??
-	For the $i^\text{th}$ interval, if $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$, we can apply the result from Case 1. If $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} < 1$, we apply Case 2 to bound the whole jump interval $[T_{i-1}, T_j]$, and continue the summation from $T_j$. % TODO: CHeck, problems from j+1 on case 2 result?
-	Thus, $T_s$ can be bounded above by
+	For the $i^\text{th}$ interval, if $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$, we can apply the result from Case 1. If $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} < 1$, we apply Case 2 to bound the whole jump interval $[T_{i-1}, T_j]$, and continue the summation from $T_j$.
+	Thus, the length of interval $[T_0, T_s]$ can be bounded above by
 	\begin{equation}\label{eq:floodingBoundExpression}
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
 	\end{equation}
@@ -174,7 +173,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	$$
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)}\right)
 	$$
-	% TODO : Think about the stralling -1, T_0 vs T_1, need to bound [T_0, T_all]
+	% MAYBE: TRAILING T_0 = 1 and T_ALL - 1
 \end{proof}
 
 \section{Flooding on Markovian Evolving Dynamic Networks}\label{section:MEDNBound}
@@ -436,7 +435,7 @@ This in turn improves the likelihood that each topology contains many edges, inc
 		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{\log \frac{i}{\max\{i-1,1\}}}{\log(1+k_i)}\right)
 	$$
 	w.h.p.
-	Since $\log \frac{i}{i-1} \leq \frac{1}{i}$ for $i \geq 2$, % TODO: CITE
+	Since $\log \frac{i}{i-1} \leq \frac{1}{i}$ for $i \geq 2$,
 	this quantity is bounded above by 
 	$$
 		\mathcal{O}\left(\sum_{i=1}^\frac{n}{2} \frac{1}{i\log(1+k_i)}\right)
@@ -509,7 +508,7 @@ Bounding the spreading time of the Edge-Markovian Network in cases where $\hat{p
 \section{Evaluating the quality of the bound}\label{section:edgeMarkovianFloodingBoundEvaluation}
 
 
-In this section we evaluate how tight the bound in Theorem \ref{theorem:edgeMarkovianFloodingBound} is, using lower bounds on the spreading time and simulations. % TODO: Rephrase 
+In this section we evaluate how tight synchronous bound is, by bounding the spreading time from below and comparing the bound with simulated spreading times.
 We start with a lower bound on the spreading time of Algorithm \ref{SyncFloodingAlgorithm} on the stationary Edge-Markovian Network.
 
 \begin{theorem}\label{theorem:edgeMarkovianLowerBound}
@@ -571,7 +570,7 @@ We start with a lower bound on the spreading time of Algorithm \ref{SyncFlooding
 	$$
 	by the induction hypothesis, hence the claim holds in this case.
 
-	Let $\tau = \frac{\log (n/2)}{\log(2n\hat{p})}$. Note that for sufficiently large $n$, $\tau < n$, since $\hat{p} \geq c \frac{\log n}{n}$.  %TODO: Check if this is true - what if \hat{p} grows slowly in n??
+	Let $\tau = \frac{\log (n/2)}{\log(2n\hat{p})}$. Note that for sufficiently large $n$, $\tau < n$, since $\hat{p} \geq c \frac{\log n}{n}$.
 	Hence, we obtain that for all times $t < \tau = \frac{\log (n/2)}{\log(2n\hat{p})}$, the number of informed nodes is at most $\frac{n}{2}$. Thus, the spreading time is at least 
 	$$
 		\tau = \Omega\left(\frac{\log n}{\log(n \hat{p})}\right)
@@ -625,8 +624,7 @@ We verify this result with simulations.
 	\label{fig:floodingGnpSimResultsTight}
 \end{figure}
 
-% TODO: BOTTOM OF INTERVAL
-Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the stationary Edge-Markovian Network when $\hat{p} = \frac{\log n}{n}$.
+Figure \ref{fig:floodingGnpSimResultsTight} displays the simulation results for rumour spread on the stationary Edge-Markovian Network when $\hat{p} = \frac{\log n}{n}$, the smallest scaling for which Corollary \ref{corollary:edgeMarkovianThetaBound} holds.
 Since the rumour spreads in discrete rounds, each of the simulation results (represented as a blue point) lies on an integer value. Each simulation was repeated 300 times for each network size, with the means displayed in red. In green, we have plotted the bound from Theorem \ref{theorem:edgeMarkovianFloodingBound}, i.e.
 $$
 	g(n) 
@@ -634,7 +632,7 @@ $$
 	= \Theta\left(\frac{\log n}{\log \log n}\right)
 $$
 The areas within the light blue section contains a $1-\frac{1}{n}$ fraction of the simulation results for each network size $n$. Observe that this region varies from the mean by $\mathcal{O}(1)$. Thus, we can reason about the w.h.p spreading time growth by comparing the bound to the average spreading time growth. 
-As expected, for large $n$, the simulation times closely follow the bound once an appropriate scaling constant has been chosen. Note that for small $n \leq 50$, the expected spreading time does not match the simulated spreading times. However, this is not cause for concern as Corollary \ref{corollary:edgeMarkovianThetaBound} is only concerned with the asymptotic behaviour of the spreading times. % TODO: "Concerned" twice
+As expected, for large $n$, the simulation times closely follow the bound once an appropriate scaling constant has been chosen. Note that for small $n \leq 50$, the expected spreading time does not match the simulated spreading times. However, as Corollary \ref{corollary:edgeMarkovianThetaBound} is only concerned with the asymptotic behaviour of the spreading times, the behaviour of the spreading times for small $n$ is irrelevant.
 
 \begin{figure}[h]
 	\centering

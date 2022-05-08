@@ -204,7 +204,7 @@ Now we introduce a central definition in the theory of Poisson processes.
 
 We are now ready to introduce the inhomogeneous Poisson process.
 
-\begin{definition}
+\begin{definition}\label{defn:inhomoPP}
 	Inhomogeneous Poisson process
 
 	\noindent
@@ -221,20 +221,75 @@ We are now ready to introduce the inhomogeneous Poisson process.
 	\end{enumerate}
 \end{definition}
 
-Unlike the standard Poisson process, in the inhomogeneous variant, the rate of arrivals can vary over time according to the rate function $\lambda(t)$. 
+Unlike the standard Poisson process, in the inhomogeneous variant, the rate of arrivals can vary over time according to the rate function $\lambda(t)$. In this report, inhomogeneous Poisson processes arise when we consider consecutive homogenous Poisson processes. We show that the cumulative arrivals of consecutive homogenous Poisson processes form an inhomogeneous Poisson process in the following Theorem.
 
-% TODO: contcating homogeneours PP gives inhomo PP
+\begin{theorem}
+	Let $N_1, \dots, N_m$ be independent Poisson processes, where the rate of $N_i$ is denoted by $\lambda_i$. Let $(t_1, t_2], (t_2, t_3], \dots$ be a sequence of contiguous intervals such that $t_1 = 0$ and $t_i < t_{i+1}$. Let $\{N(t), t \geq 0\}$ be a counting process such that
+	$$
+		N(0) = 0, \quad N(t) = N(t_i) + N_i(t - t_i)
+	$$ 
+	for $t \in (t_i, t_{i+1}]$ i.e, $N(t)$ counts the cumulative arrivals of consecutive homogenous Poisson processes up to time $t$. Then $N(t)$ is an inhomogeneous Poisson process with rate function $\lambda(t)$ where
+	$$
+		\lambda(t) = \lambda_i
+	$$
+	for $t \in (t_i, t_{i+1}]$.
+\end{theorem}
 
-% TODO: Linking exposition
+\begin{proof}
+	To prove this theorem, we verify that $N(t)$ satisfies the three conditions in Definition \ref{defn:inhomoPP}. First note that $N(t)$ has independent increments since each of the component Poisson processes are independent and have independent increments by definition. For the second condition, we analyse the distribution of the increment $N(t) - N(s)$ in two cases.
+
+	\textbf{Case 1.} Suppose $s, t \in (t_i, t_{i+1}]$. 
+	
+	\noindent
+	Then $N(t) - N(s) = N_i(t - t_i) - N_i(s - t_i)$ which has a Poisson distribution with rate $$
+		\lambda_i(t-s) = \int_s^t \lambda(t)
+	$$
+	since $N_i$ is a Poisson process
+
+	\textbf{Case 2.} Suppose $t \in (t_i, t_{i+1}]$ and $s \in (t_j, t_{j+1}]$ for some $i < j$.
+	
+	\noindent
+	Note that, 
+	$$
+		N(t) - N(s) = (N_i(t_{i+1} - t_i) - N_i(s - t_i)) + \sum_{k=i+1}^{j-1} N_k(t_{k+1} - t_k) + N_j(t - t_j)
+	$$
+	Note that this is the sum of independent Poisson random variables. Hence, by the convolution of Poisson random variables we have that $N(t) - N(s)$ is a Poisson random variable with mean
+	$$
+		\lambda_i(t_{i+1} - s) + \sum_{k=i+1}^{j-1} \lambda_k(t_{k+1} - t_k) + \lambda_j(t - t_j) = \int_s^t \lambda(t) 
+	$$
+	For the third condition, note that we are given $N(0) = 0$.
+\end{proof}
+
+We now define the homogenous Poisson process in terms of the inhomogeneous process.
 
 \begin{definition}
-	Homogeneous Poisson Process
+	(Homogeneous) Poisson Process
 
 	\noindent
-	A Homogeneous Poisson process ${N(t), t \geq 0}$ with rate $\lambda > 0$ is a special case of the inhomogeneous Poisson process where the rate function $\lambda(t)$ is constant i.e. $\lambda(t)=\lambda > 0$ for all $t$.
+	A Homogeneous Poisson process $\{N(t), t \geq 0\}$ with rate $\lambda > 0$ is a special case of the inhomogeneous Poisson process where the rate function $\lambda(t)$ is constant i.e. $\lambda(t)=\lambda > 0$ for all $t$.
 \end{definition}
 
-% TODO: Reference superposition property + thinning
+In this report, if we refer to the Poisson processes without qualifying whether it is homogenous our inhomogeneous, then assume the process is homogenous.
+
+We now introduce some standard properties of the Poisson process. We omit the proofs as we assume the reader is familiar with these properties.
+
+\begin{theorem}
+	Superposition of Poisson processes
+
+	\noindent
+	Let $\{N_1(t), t \geq 0\}$ and $\{N_2(t), t \geq 0\}$ be Poisson processes with rates $\lambda_1$ and $\lambda_2$ respectively. Then $\{N_1(t) + N_2(t), t \geq 0\}$ is a Poisson process of rate $\lambda_1 + \lambda_2$.
+\end{theorem}
+
+\begin{theorem}
+	Thinning of Poisson processes.
+
+	\noindent
+	Let $\{N(t), t \geq 0\}$ be a Poisson process with rate $\lambda$ and let $X_1, X_2, \dots$ be independent $\text{Bernoulli}(p)$ random variables. Let
+	$$
+		M(t) = \sum_{i=1}^N(t) X_i, L(t) = N(t) - M(t)
+	$$
+	Then $\{M(t), t \geq 0\}$ is a Poisson process of rate $p\lambda$, $\{L(t), t \geq 0\}$ is a Poisson process of rate $(1-p)\lambda$, and both processes are independent.
+\end{theorem}
 
 \section{Stochastic Domination}
 
