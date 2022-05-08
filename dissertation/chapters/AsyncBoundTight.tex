@@ -1,7 +1,5 @@
 \chapter{Example of an Adversarial Network}\label{chapter:asyncBoundTight}
 
-% TODO: Other chapters - only need conducantce and diligence ahead of time
-
 In Section \ref{section:asyncEvaluation}, simulations that suggested that the bound from Theorem \ref{theorem:AsyncUpperBound} is almost tight in some adversarial cases. In this chapter, we go a step further, and present a family of adversarial networks for which the upper bound derived in Chapter \ref{chapter:AsyncUpperBound} is provably almost tight. This construction was given in \cite{asyncPaper}, however we add detail to help the reader understand the analysis. First we introduce the family of networks. Then we evaluate the spreading time bound for this family. Finally, we derive a lower bound on the spreading time and show that the bound is indeed almost tight.
 
 \section{Introducing the Adversarial Network}
@@ -11,7 +9,7 @@ Before we define the adversarial network itself, we introduce a family of topolo
 \begin{definition}\label{def:HkAB}
  	Graph $H_{k, \Delta}(A,B)$
 
-	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\floor{\frac{n}{4}} \leq |A| \leq \ceil{\frac{3n}{4}}$.
+	Let $V$ be a set of $n$ vertices, with $A \subset V$ an arbitrary subset satisfying $\floor*{\frac{n}{4}} \leq |A| \leq \ceil*{\frac{3n}{4}}$.
 	Let B denote $V \setminus A$. The positive integers $k = \mathcal{O}\left(\frac{\log n}{\log \log n}\right)$ and $\Delta = \mathcal{O}(\sqrt{n})$ are fixed. We construct the graph $H_{k, \Delta}(A,B)$ on the vertex set $V$ using the following steps
 
 	\textit{Step 1.} Let $\{S_i, 0 \leq i \leq k\}$ denote an arbitrary set of disjoint subsets of nodes in $V$ such that $|S_i| = \Delta$ for all $i$, $S_0 \subseteq A$, and $S_i \subseteq B$ for $1 \leq i \leq k$. We connect each node of $S_i$ to all nodes in $S_{i+1}$ for $0 \leq i \leq k - 1$. This generates a string of $k$ complete bipartite graphs, as seen in Figure \ref{fig:HkAB_1}.
@@ -57,15 +55,15 @@ Using $H_{k, \Delta}(A,B)$, we now construct the following family of networks fo
 	
 	First we define the sequences of node subsets $(A_t)_{t \geq 0}$ and $(B_t)_{t \geq 0}$ with $A_t, B_t \subseteq V$ for all $t$. For each $t$, we construct $A_t$ and $B_t$ such that they partition $V$ into two subsets, as follows:
 
-	Let $A_0$ be an arbitrary subset of $V$ of size $\floor{\frac{n}{4}}$ containing the first node to be aware of the rumour. 
+	Let $A_0$ be an arbitrary subset of $V$ of size $\floor*{\frac{n}{4}}$ containing the first node to be aware of the rumour. 
 	Set $B_0 = V \setminus A_0$. Let $B_{t+1} = B_t \setminus I_{t+1}$, i.e. the set of nodes in $B_t$ that were still not informed of the rumour by round $t+1$.
 	Let $A_{t+1} = V \setminus A_t$, i.e. the set of nodes that were either in $A_0$ or informed of the rumour by round $t+1$.
 
 	Now we can define the dynamic network $\rho$-diligent Dynamic Network $\mathcal{G}(n, \rho) = (G_t)_{t \geq 0}$ itself. 
 
-	Let $\Delta = \ceil{\frac{1}{\rho}}$, and $k = \mathcal{O}(\log n / \log \log n)$.
+	Let $\Delta = \ceil*{\frac{1}{\rho}}$, and $k = \mathcal{O}(\log n / \log \log n)$.
 	Let $G_t = H_{k, \Delta}(A_t, B_t)$ while $|B_t| \geq \frac{n}{4}$. Note that since $\Delta = \mathcal{O}(\sqrt{n})$ by the definition of $H_{k, \Delta}(A,B)$, we must have that $\rho = \Omega\left(\frac{1}{\sqrt{n}}\right)$.
-	Note also that $|A_t|$ is increasing in $t$ since $A_t$ is a superset of the informed nodes at time $t$, so there may be some time step $l$ where $|A_l| > \ceil{\frac{3n}{4}}$. Thus, for all time steps $t \geq l$, we cannot construct $H_{k, \Delta}(A_t,B_t)$. Hence, for all $t \geq l$, let $G_{t+1} = G_t$.
+	Note also that $|A_t|$ is increasing in $t$ since $A_t$ is a superset of the informed nodes at time $t$, so there may be some time step $l$ where $|A_l| > \ceil*{\frac{3n}{4}}$. Thus, for all time steps $t \geq l$, we cannot construct $H_{k, \Delta}(A_t,B_t)$. Hence, for all $t \geq l$, let $G_{t+1} = G_t$.
 \end{definition}
 
 Note that this network reacts to the spread of the rumour. At the end of each round, when the topology is allowed to change, all the informed nodes are moved into the set $A$. In Section \ref{section:adversarialLowerBound} we will see how this adversarial behaviour prolongs the rumour spreading time.
@@ -103,10 +101,10 @@ Note that since the network is allowed to react to the rumour, and the rumour sp
 		\leq \frac{|E(A_q, \comp{A_q})|}{\min \left\{ \text{vol}(A_q), \text{vol}(\comp{A_q}) \right\} } 
 		= \frac{\Delta^2}{\min \left\{ \text{vol}(A_q), \text{vol}(\comp{A_q}) \right\}}
 	$$	
-	To get as tight a bound as possible, we choose $q$ to maximise the denominator. Note that by symmetry, $\vol(\comp{A_q}) = 2(k - q + 1)\Delta^2 + \Theta(n)$. Thus, the denominator is maximised by taking $q = \floor{\frac{k}{2}}$. Hence,
+	To get as tight a bound as possible, we choose $q$ to maximise the denominator. Note that by symmetry, $\vol(\comp{A_q}) = 2(k - q + 1)\Delta^2 + \Theta(n)$. Thus, the denominator is maximised by taking $q = \floor*{\frac{k}{2}}$. Hence,
 	$$
 		\Phi(H_{k, \Delta}(A, B)) 
-		\leq \frac{\Delta^2}{2(k - \floor{\frac{k}{2}} + 1)\Delta^2 + \Theta(n)}
+		\leq \frac{\Delta^2}{2(k - \floor*{\frac{k}{2}} + 1)\Delta^2 + \Theta(n)}
 		= \Theta\lb\frac{\Delta^2}{k\Delta^2 + n}\rb
 	$$
 	In fact, $A_\frac{k}{2}$ is a set of nodes which minimises the conductance. Intuitively this fact seems reasonable. $G_A$ and $G_B$ are well-connected sets by construction, so when choosing $S$ to minimise $|E(S, \comp{S})|$, it is desirable to avoid making a cut through either of these sets. Additionally, choosing $A_\frac{k}{2}$ separates the total volume of the graph in half, which maximises $\min \{\vol(S),\vol(\comp{S})\}$, and minimises the overall expression. 
@@ -149,7 +147,7 @@ Note that since the network is allowed to react to the rumour, and the rumour sp
 	
 	Now we prove that no set with a smaller diligence exists. First note that we increase the degree of each node in $G_A$ by $\Theta(1)$ when joining them to $S_0$ and $S_1$ in Step 2 of the construction of $H_{k, \Delta}(A,B)$. To see this, we observe that the enumeration technique illustrated in Figure \ref{fig:HkAB_2} spreads the $\Delta^2$ additional edges evenly across $G_A$. Thus, the degree increase for an arbitrary node in $G_A$ is at most
 	$$
-		\ceil{\frac{\Delta^2}{|G_A|}}=\frac{\mathcal{O}(n)}{\Theta(n)} = \mathcal{O}(1)
+		\ceil*{\frac{\Delta^2}{|G_A|}}=\frac{\mathcal{O}(n)}{\Theta(n)} = \mathcal{O}(1)
 	$$
 	since $\Delta = \mathcal{O}(\sqrt{n})$ and $|G_A| = \Theta(n)$. 
 	
@@ -181,7 +179,7 @@ Note that since the network is allowed to react to the rumour, and the rumour sp
 		= 
 		T \Theta\left(\frac{1}{n \rho + \frac{k}{\rho}}\right)
 	$$
-	since $G_t = H_{k, \Delta}(A_t,B_t)$ for all $t$, where $\Delta = \ceil{\frac{1}{\rho}} = \Theta\left(\frac{1}{\rho}\right)$ by the definition of the dynamic network. Hence 
+	since $G_t = H_{k, \Delta}(A_t,B_t)$ for all $t$, where $\Delta = \ceil*{\frac{1}{\rho}} = \Theta\left(\frac{1}{\rho}\right)$ by the definition of the dynamic network. Hence 
 	$$
 		\min \left\{T : \sum_t^T \Phi(G_t)\rho(G_t) \geq C \log n \right\}
 		=
@@ -198,9 +196,9 @@ In this section we verify that the upper bound is tight by computing a lower bou
 First we prove a lemma about the spread of the rumour down the chain of bipartite subgraphs in $H_{k, \Delta}(A,B)$.
 
 \begin{lemma}\label{lemma:H_k,DeltaABOneStep}
-	Suppose we spread a rumour according to Algorithm \ref{NodeCentricAsyncAlgorithm} on $G = H_{k, \Delta}(A,B)$ for some $A, B$ with $\Delta = \ceil{\frac{1}{\rho}}$. Assume that every node in $S_0$ is aware of the rumour, and no node in $B$ is informed. Then the probability that at least one node of $S_k$ is informed after a unit length of time is at most
+	Suppose we spread a rumour according to Algorithm \ref{NodeCentricAsyncAlgorithm} on $G = H_{k, \Delta}(A,B)$ for some $A, B$ with $\Delta = \ceil*{\frac{1}{\rho}}$. Assume that every node in $S_0$ is aware of the rumour, and no node in $B$ is informed. Then the probability that at least one node of $S_k$ is informed after a unit length of time is at most
 	$$
-		\frac{2^k}{k!}\ceil{\frac{1}{\rho}}
+		\frac{2^k}{k!}\ceil*{\frac{1}{\rho}}
 	$$	
 \end{lemma}
 
@@ -330,7 +328,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	$$
 		\Omega\left(\frac{n}{4k\Delta}\right) = \Omega\left(\frac{n\rho}{k}\right)
 	$$
-	time to spread the rumour to all nodes of $\mathcal{G}(n, \rho)$, where $\Delta = \ceil{\frac{1}{\rho}}$.
+	time to spread the rumour to all nodes of $\mathcal{G}(n, \rho)$, where $\Delta = \ceil*{\frac{1}{\rho}}$.
 \end{proof}
 
 \begin{corollary}

@@ -83,19 +83,19 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 		\intertext{by the induction hypothesis}
 		& = (1+k_j)^{t+1} h_i
 	\end{align*}
-	Let $\tau = T_i + \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$. 
+	Let $\tau = T_i + \ceil*{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$. 
 	Suppose for contradiction that $\tau < T_j$.
 	Since we assumed $\tau < T_j$ we can apply the inequality we just proved
 	to get the following lower bound on the number of informed nodes at time $\tau$.
 	$$
 		|I_\tau| > 
-		(1+k_j)^{\ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}} h_i
+		(1+k_j)^{\ceil*{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}} h_i
 		\geq e^{\log (h_j/h_i)} h_i
 		= h_j
 	$$
-	Thus we have a contradiction, since under the assumption that $\tau < T_j$, we get that the number of informed nodes at time $\tau$ is greater than $h_j$, i.e. by the definition of $T_j$, $\tau \geq T_j$. Hence, we have that $\tau \geq T_j$ i.e. $\ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$ time-steps after $T_i$, the number of informed nodes is greater than $h_j$. Rearranging this inequality gives us the following bound on the length of the interval $[T_i, T_j]$:
+	Thus we have a contradiction, since under the assumption that $\tau < T_j$, we get that the number of informed nodes at time $\tau$ is greater than $h_j$, i.e. by the definition of $T_j$, $\tau \geq T_j$. Hence, we have that $\tau \geq T_j$ i.e. $\ceil*{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$ time-steps after $T_i$, the number of informed nodes is greater than $h_j$. Rearranging this inequality gives us the following bound on the length of the interval $[T_i, T_j]$:
 	\begin{equation} \label{eq:FloodingIntervalBound}
-		T_j - T_i \leq \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}} \leq \frac{\log (h_j/h_i)}{\log(1+k_j)} + 1
+		T_j - T_i \leq \ceil*{ \frac{\log (h_j/h_i)}{\log(1+k_j)}} \leq \frac{\log (h_j/h_i)}{\log(1+k_j)} + 1
 	\end{equation}
 
 	Note that since $h_s = \frac{n}{2}$, at time $T_s$ at least half of the nodes will be aware of the rumour. Hence, if we can bound $[T_0, T_s]$, we will have bounded the time it takes for half of the nodes to be informed. 
@@ -426,8 +426,8 @@ This in turn improves the likelihood that each topology contains many edges, inc
 	\begin{equation*}
 		k_i = 
 		\begin{cases*}
-			\frac{n\hat{p}}{c} & $1 \leq i \leq \floor{\frac{1}{\hat{p}}}$ \\
-			\frac{n}{ci} & $\floor{\frac{1}{\hat{p}}} \leq i \leq \frac{n}{2}$
+			\frac{n\hat{p}}{c} & $1 \leq i \leq \floor*{\frac{1}{\hat{p}}}$ \\
+			\frac{n}{ci} & $\floor*{\frac{1}{\hat{p}}} \leq i \leq \frac{n}{2}$
 		\end{cases*}
 	\end{equation*}
 	By Theorem \ref{theorem:DeterministicFloodingBound} we have that the spreading time is at most
@@ -442,9 +442,9 @@ This in turn improves the likelihood that each topology contains many edges, inc
 	$$
 	By substituting for $k_i$ in the summation, we have the that the order of the spreading time is bounded w.h.p by
 	$$
-		\sum_{i=1}^{\floor{1/\hat{p}}} \frac{1}{i\log(1+\frac{n\hat{p}}{c})} 
+		\sum_{i=1}^{\floor*{1/\hat{p}}} \frac{1}{i\log(1+\frac{n\hat{p}}{c})} 
 		+
-		\sum_{i=\floor{1/\hat{p}} + 1}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
+		\sum_{i=\floor*{1/\hat{p}} + 1}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
 	$$
 	We bound each of the sums separately.
 
@@ -453,7 +453,7 @@ This in turn improves the likelihood that each topology contains many edges, inc
 	Using that $\sum_{i=1}^m 1/i \leq \log m + 1$, 
 	we observe that
 	$$
-		\frac{1}{\log(1+\frac{n\hat{p}}{c})} \sum_{i=1}^{\floor{1/\hat{p}}} \frac{1}{i} 
+		\frac{1}{\log(1+\frac{n\hat{p}}{c})} \sum_{i=1}^{\floor*{1/\hat{p}}} \frac{1}{i} 
 		\leq 
 		\frac{\log \frac{1}{\hat{p}} + 1}{\log(1+\frac{n\hat{p}}{c})} 
 		= 
@@ -465,28 +465,28 @@ This in turn improves the likelihood that each topology contains many edges, inc
 
 	We split the second sum again into
 	$$	
-		\sum_{i=\floor{1/\hat{p}} + 1}^{\ceil{n/c}-1} \frac{1}{i\log(1+\frac{n}{ci})} 
+		\sum_{i=\floor*{1/\hat{p}} + 1}^{\ceil*{n/c}-1} \frac{1}{i\log(1+\frac{n}{ci})} 
 		+ 
-		\sum_{i=\ceil{n/c}}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
+		\sum_{i=\ceil*{n/c}}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
 	$$
 	Note that
 	\begin{align*}
-		\sum_{i=\floor{1/\hat{p}} + 1}^{\ceil{n/c}-1} \frac{1}{i\log(1+\frac{n}{ci})} 
-		& \leq \sum_{i=\floor{1/\hat{p}} + 1}^{\ceil{n/c}-1} \frac{1}{i\log(\frac{n}{ci})} \\
-		& \leq \int_{\floor{1/\hat{p}}}^{\ceil{n/c}-1} \frac{1}{x\log(1+\frac{n}{cx})} dx \\
-		\intertext{since $f(x) = x\log(1+\frac{n}{cx})$ is non-negative and concave on the interval $[\floor{1/\hat{p}}, \ceil{n/c}]$ }
-		& = \left[-\log\log \frac{n}{cx}\right]_{\floor{1/\hat{p}}}^{\ceil{n/c}-1} \\
+		\sum_{i=\floor*{1/\hat{p}} + 1}^{\ceil*{n/c}-1} \frac{1}{i\log(1+\frac{n}{ci})} 
+		& \leq \sum_{i=\floor*{1/\hat{p}} + 1}^{\ceil*{n/c}-1} \frac{1}{i\log(\frac{n}{ci})} \\
+		& \leq \int_{\floor*{1/\hat{p}}}^{\ceil*{n/c}-1} \frac{1}{x\log(1+\frac{n}{cx})} dx \\
+		\intertext{since $f(x) = x\log(1+\frac{n}{cx})$ is non-negative and concave on the interval $[\floor*{1/\hat{p}}, \ceil*{n/c}]$ }
+		& = \left[-\log\log \frac{n}{cx}\right]_{\floor*{1/\hat{p}}}^{\ceil*{n/c}-1} \\
 		&= \mathcal{O}(\log \log (n \hat{p}))
 	\end{align*}
 	Since $\log(1+x) \geq \frac{x}{1+x}$ for $x < 1$ we observe that
 	\begin{align*}
-		\sum_{i=\ceil{n/c}}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
+		\sum_{i=\ceil*{n/c}}^\frac{n}{2} \frac{1}{i\log(1+\frac{n}{ci})} 
 		& \leq 
-		\sum_{i=\ceil{n/c}}^\frac{n}{2} \frac{(1 + \frac{n}{ci})}{i\frac{n}{ci}} 
+		\sum_{i=\ceil*{n/c}}^\frac{n}{2} \frac{(1 + \frac{n}{ci})}{i\frac{n}{ci}} 
 		= 
-		\sum_{i=\ceil{n/c}}^\frac{n}{2} \left( \frac{c}{n} + \frac{1}{i} \right) \\
+		\sum_{i=\ceil*{n/c}}^\frac{n}{2} \left( \frac{c}{n} + \frac{1}{i} \right) \\
 		& \leq 
-		\sum_{i=\ceil{n/c}}^\frac{n}{2} \left( \frac{c}{n} + \frac{c}{n} \right)
+		\sum_{i=\ceil*{n/c}}^\frac{n}{2} \left( \frac{c}{n} + \frac{c}{n} \right)
 		= \mathcal{O}(1)
 	\end{align*}
 

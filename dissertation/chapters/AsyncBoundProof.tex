@@ -31,7 +31,7 @@ First we prove a lemma about how long it takes for the number of nodes aware of 
 	Define 
 	
 	$$
-	\Delta_\tau(\alpha) = \min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil{\tau}+k})\rho(G_{\ceil{\tau}+k}) \geq 2 \alpha \right\}
+	\Delta_\tau(\alpha) = \min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil*{\tau}+k})\rho(G_{\ceil*{\tau}+k}) \geq 2 \alpha \right\}
 	$$
 
 	\noindent
@@ -139,7 +139,7 @@ Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta_\tau(\alpha)$
 	\begin{align*}
 		\Lambda(\tau + \Delta(\alpha) + 2) &= \int_\tau^{\tau + \Delta(\alpha) + 2} \lambda(\gamma) d\gamma \\
 		& \geq \int_{\ceil\tau}^{{\ceil\tau} + \Delta(\alpha) + 1} \lambda(\gamma) d\gamma \\
-		\intertext{where we note  that $\tau \leq \ceil{\tau}$ and $\tau > \ceil{\tau} - 1$, so $[\ceil{\tau}, {\ceil\tau} + \Delta(\alpha) + 1] \subseteq [\tau, \tau + \Delta(\alpha) + 2]$. Also note that since $\lambda$ is a rate function, $\lambda(\gamma) \geq 0$. Since we integrate over a smaller domain of a non-negative function, the inequality holds.}
+		\intertext{where we note  that $\tau \leq \ceil*{\tau}$ and $\tau > \ceil*{\tau} - 1$, so $[\ceil*{\tau}, {\ceil\tau} + \Delta(\alpha) + 1] \subseteq [\tau, \tau + \Delta(\alpha) + 2]$. Also note that since $\lambda$ is a rate function, $\lambda(\gamma) \geq 0$. Since we integrate over a smaller domain of a non-negative function, the inequality holds.}
 		& = \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \lambda(\gamma) d\gamma \\
 		\intertext{by splitting the integral into unit length intervals between integers} 
 		& \geq \sum_{k=0}^{\Delta(\alpha)} \int_{\ceil\tau + k}^{{\ceil\tau} + k + 1} \rho(G_\gamma)\Phi(G_\gamma)\frac{m(\tau)}{2} d\gamma \\
@@ -182,9 +182,9 @@ Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta_\tau(\alpha)$
 	\noindent
 	From the definition of the density function of Poisson random variables we have that 
 	\begin{align*}
-		\mathbb{P}(Y \leq \frac{r}{2}) & = e^{-r} \sum_{j=0}^{\floor{\frac{r}{2}}} \frac{r^j}{j!} \\
-		& = e^{-r} \sum_{j=0}^{\floor{\frac{r}{2}}} \frac{2^j(\frac{r}{2})^j}{j!} \\
-		& \leq e^{-r} \sum_{j=0}^{\floor{\frac{r}{2}}} \frac{2^\frac{r}{2}(\frac{r}{2})^j}{j!} \\
+		\mathbb{P}(Y \leq \frac{r}{2}) & = e^{-r} \sum_{j=0}^{\floor*{\frac{r}{2}}} \frac{r^j}{j!} \\
+		& = e^{-r} \sum_{j=0}^{\floor*{\frac{r}{2}}} \frac{2^j(\frac{r}{2})^j}{j!} \\
+		& \leq e^{-r} \sum_{j=0}^{\floor*{\frac{r}{2}}} \frac{2^\frac{r}{2}(\frac{r}{2})^j}{j!} \\
 		& \leq e^{-r} e^\frac{r \log 2}{2} \sum_{j=0}^\infty \frac{(\frac{r}{2})^j}{j!} \\
 		& \leq e^{-r} e^\frac{r \log 2}{2} e^\frac{r}{2} \\
 		& = e^{-c_0r} \\
@@ -228,9 +228,9 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	Thus $|I_{\tau_{i+1}}| \geq \frac{3}{2}|I_{\tau_i}| \geq \frac{3}{2}(\frac{3}{2})^i = (\frac{3}{2})^{i+1}$ by the induction hypothesis. 
 	
 	Let $K$ be the random variable for the index of the final interval in the phase, i.e, the interval where $\tau_K < t_\text{half}$ and $\tau_{K+1} \geq t_\text{half}$.
-	Let $N = \ceil{\log_\frac{3}{2}\frac{n}{2}}$.  Since $|I_{\tau_i}| \geq (\frac{3}{2})^i$, we have that $|I_{\tau_N}| \geq (\frac{3}{2})^N \geq \frac{n}{2}$. Thus, $K < N$ otherwise the number of informed nodes at time $\tau_K$ would be greater than or equal to $\frac{n}{2}$, so $\tau_K$ would be at least $t_\text{half}$ which contradicts the definition of $K$.
+	Let $N = \ceil*{\log_\frac{3}{2}\frac{n}{2}}$.  Since $|I_{\tau_i}| \geq (\frac{3}{2})^i$, we have that $|I_{\tau_N}| \geq (\frac{3}{2})^N \geq \frac{n}{2}$. Thus, $K < N$ otherwise the number of informed nodes at time $\tau_K$ would be greater than or equal to $\frac{n}{2}$, so $\tau_K$ would be at least $t_\text{half}$ which contradicts the definition of $K$.
 
-	Let $\alpha_i = \ceil{\frac{c \log n}{c_0 (3/2)^i}}$.
+	Let $\alpha_i = \ceil*{\frac{c \log n}{c_0 (3/2)^i}}$.
 	By Lemma \ref{AsyncIncreaseLemma}, $\Delta(\alpha_i) + 2$ is an upper bound for the length of the interval $[\tau_i, \tau_{i+1}]$ 
 	with probability at least $1 - e^{-c_0\alpha_i m(\tau_i)}$ for $i \leq K$.
 	Since $m(\tau_i) = |I_{\tau_i}| \geq (\frac{3}{2})^i$, this probability is greater than $1 - e^{-c_0\alpha_i (\frac{3}{2})^i} \geq 1 - e^{-c \log n}$, by the definition of $\alpha_i$. By the union bound over all $K$ intervals of the phase,
@@ -258,12 +258,12 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	\begin{align*}
 		\Delta_{\tau_i}(\alpha_i) + 2 
 		&=
-		\min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil{\tau_i}+k})\rho(G_{\ceil{\tau_i}+k}) \geq 2 \alpha_i \right\} + 2 \\
-		&\leq \min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil{\tau_i}+k})\rho(G_{\ceil{\tau_i}+k}) \geq 2 \alpha_i + 2 \right\}
+		\min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil*{\tau_i}+k})\rho(G_{\ceil*{\tau_i}+k}) \geq 2 \alpha_i \right\} + 2 \\
+		&\leq \min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil*{\tau_i}+k})\rho(G_{\ceil*{\tau_i}+k}) \geq 2 \alpha_i + 2 \right\}
 	\end{align*}
 	since $\Phi(G)\rho(G) \leq 1$ for  any topology $G$. Denote the final expression $\delta_i$. Combining the previous inequalities gives that
 	\begin{align*}
-		t_\text{half} &\leq \sum_{i=0}^N \min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil{\tau_i}+k})\rho(G_{\ceil{\tau_i}+k}) \geq 2 \alpha_i + 2 \right\} = \sum_{i=0}^N \delta_i \\
+		t_\text{half} &\leq \sum_{i=0}^N \min \left\{t: \sum_{k=0}^t \Phi(G_{\ceil*{\tau_i}+k})\rho(G_{\ceil*{\tau_i}+k}) \geq 2 \alpha_i + 2 \right\} = \sum_{i=0}^N \delta_i \\
 		&\leq \min \left\{t: \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq \sum_{i=0}^N (2 \alpha_i + 2) \right\}
 	\end{align*}
 	We justify the final inequality as follows. Consider the sequence of connectivity metrics $(\Phi(G_k)\rho(G_k))_{k \geq 0}$.
@@ -278,7 +278,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		t_\text{all} - t_\text{half} 
 		\leq \min \left\{t: \sum_{k=0}^t \Phi(G_{t_\text{half} +k}) \rho(G_{t_\text{half} +k}) \geq \sum_{j=0}^M (2 \beta_j + 2) \right\}
 	$$
-	where $\beta_j = \ceil{\frac{c \log n}{c_0 n(1/2)^j}}$ and $M = \floor{\log_2 n}$
+	where $\beta_j = \ceil*{\frac{c \log n}{c_0 n(1/2)^j}}$ and $M = \floor*{\log_2 n}$
 	By evaluating the geometric sums we have that 
 	\begin{align*}
 		\sum_{i=0}^N (2 \alpha_i + 2) + \sum_{j=0}^M (2 \beta_j + 2) \leq C
@@ -344,7 +344,7 @@ By the definition of $\mathcal{A}$ we have that
 	= &\min \left\{t : \underbrace{\Phi(R)\rho(R) + \Phi(K)\rho(K) + \Phi(R)\rho(R) + \dots}_{t + 1 \text{ terms}} \geq C \log n \right\} \\
 	\simeq &\min \left\{t : \frac{t}{2}\Phi(R)\rho(R) + \frac{t}{2}\Phi(K)\rho(K) \geq C \log n \right\} \\
 	= &\min \left\{t : t \geq \frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)} \right\} \\
-	= &\ceil{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}}
+	= &\ceil*{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}}
 \end{align*}
 To calculate this quantity explicitly, we need to compute the conductance and diligence of $R$ and $K$. 
 
@@ -425,9 +425,9 @@ In $K$ every node has degree $n - 1$. Thus, by identical reasoning to Claim 2, w
 
 Substituting the values of the connectivity metrics from the previous four claims yields the bound
 $$
-	\ceil{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}} = \ceil{\frac{2C \log n}{\frac{2}{n} + \frac{1}{2}}}
-	= \ceil{\frac{2n}{4+n} 2C\log n}
-	\simeq \ceil{4C \log n}
+	\ceil*{\frac{2C \log n}{\Phi(R)\rho(R) + \Phi(K)\rho(K)}} = \ceil*{\frac{2C \log n}{\frac{2}{n} + \frac{1}{2}}}
+	= \ceil*{\frac{2n}{4+n} 2C\log n}
+	\simeq \ceil*{4C \log n}
 $$
 for large $n$.
 
@@ -517,8 +517,8 @@ We now use Theorem \ref{theorem:AsyncUpperBound} to bound the spreading time on 
 		\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
 		&= \min \left\{t : t \Phi(R)\rho(R) \geq C \log n \right\} \\
 		&= \min \left\{t : t \Phi(R)\rho(R) \geq C \log n \right\} \\
-		&= \ceil{\frac{C \log n}{\Phi(R)\rho(R)}} \\
-		&= \ceil{\frac{C}{2}n \log n}
+		&= \ceil*{\frac{C \log n}{\Phi(R)\rho(R)}} \\
+		&= \ceil*{\frac{C}{2}n \log n}
 	\end{align*}
 \end{proof}
 

@@ -29,9 +29,7 @@ Since the process is asynchronous, there are an uncountably infinite number of w
 
 In this section, we review a theorem for bounding the rumour spreading time of Algorithm \ref{algo:staticAsync}.
 
-The bound we review is expressed in terms of the following functions of the topology, the values of which represent the strength of different structural properties of the given topology.
-
-% TODO: Interpretation of the following metrics
+The bound we review is expressed in terms of the following functions of the topology, the values of which represent the strength of different structural properties of the given topology. We collectively refer to these functions as `connectivity metrics'.
 
 \begin{definition}
 	Conductance of a graph $G = (V, E)$
@@ -40,7 +38,7 @@ The bound we review is expressed in terms of the following functions of the topo
 	$$
 \end{definition}
 
-% TODO: Measures "connectivity"
+This function measures how `well-connected' a graph is. We observe that the conductance of disconnected graphs is 0, since if we take one of the connected components to be $S$ the cut set $E(S, \comp{S})$ will be empty. Connected graphs have a positive conductance up to a maximum of $\frac{1}{2}$ for the complete graph where all nodes are connected to each other (we compute this conductance in Theorem \ref{theorem:ringCompleteAsyncBound}). In Chapter \ref{chapter:AsyncUpperBound}, we see how the conductance affects the spreading time. 
 
 \begin{definition}
 	Diligence of a cut $ E(S, \comp{S}) $
@@ -50,8 +48,6 @@ The bound we review is expressed in terms of the following functions of the topo
 	where $\comp{d}(S) := \frac{\sum_{v \in S} d_v}{|S|}$ is the average degree of the vertices in $S$
 \end{definition}
 
-% TODO: What does this measure?
-
 \begin{definition}
 	Diligence of a graph $G$
 	$$
@@ -59,7 +55,10 @@ The bound we review is expressed in terms of the following functions of the topo
 	$$
 \end{definition}
 
-Now, we present a bound on the spreading time for a static network.
+The diligence measures the variation in the degree of the nodes in a cut. The diligence of any connected graph where all the nodes have the same degree is 1. The diligence takes a maximum value of 2, by considering the graph where a single node is connected by $n$ edges to $n$ other nodes. In this case, the cut which achieves the minimum separates the single high degree node and the $n$ low degree nodes. In Chapters \ref{chapter:AsyncUpperBound} and \ref{chapter:asyncBoundTight}, we see how this quantity affects the spreading time. 
+
+Now, we present a bound on the spreading time for a static network using these connectivity metrics.
+
 \begin{theorem}\label{theorem:staticBound}
 	Let T be the spreading time for Algorithm \ref{algo:staticAsync} on a graph $G$ with $n$ vertices. Then for $c > 0$,
 	$$
@@ -70,8 +69,6 @@ Now, we present a bound on the spreading time for a static network.
 We do not prove this theorem as it is a simple consequence of a standard result (see \cite{complexNetworksRumourSpreading}) adapted to include the diligence. We will see many of the key ideas behind this theorem in Chapter \ref{chapter:AsyncUpperBound}.
 
 We give an example of applying Theorem \ref{theorem:staticBound} bound to a static network.
-
-% TODO: Define complete graph
 
 \begin{theorem}
 	Let T be the spreading time for Algorithm \ref{algo:staticAsync} on the complete graph $K_n$ with $n$ vertices. Then for a $c > 0$,
@@ -85,7 +82,7 @@ We give an example of applying Theorem \ref{theorem:staticBound} bound to a stat
 \end{proof}
 
 Note that since that Algorithm \ref{algo:staticAsync} is randomised, the spreading time is a random variable, thus our bound is probabilistic. 
-For a fixed number of nodes $n$, by taking $c$ arbitrarily large, we get an arbitrarily confident bound. % TODO: Confident bound right wording?
+For a fixed number of nodes $n$, by taking $c$ arbitrarily large, we get an arbitrarily confident bound.
 For the remainder of this report, the variable $n$ denotes the number of nodes in the given network.
 This theorem suggests that spreading time on the complete graph grows like 
 $
@@ -107,8 +104,6 @@ For the other bounds in this report, we demand a stronger result.
 
 This is a strong requirement since for large $n$, the probability that bound holds will be infinitesimally close to 1. However, we can be extremely confident in bounds that hold w.h.p, as for large $n$, it is overwhelming likely that they hold.
 
-% TODO: linking text
-
 \section{Introducing Dynamic Networks}
 
 Here we formally define the Dynamic Network structure rumours will spread on.
@@ -122,7 +117,7 @@ Here we formally define the Dynamic Network structure rumours will spread on.
 
 $G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
 
-% TODO: Segway
+We also need to adjust some of the notation introduced in Section \ref{section:graphNotation} to accommodate the changes in the network over time.
 
 \begin{definition}
 	Vertex degree at time $\gamma \in \mathbb{R}_+ $ 
