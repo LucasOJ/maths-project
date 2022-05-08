@@ -109,7 +109,25 @@ Note that since the network is allowed to react to the rumour, and the rumour sp
 		\leq \frac{\Delta^2}{2(k - \floor{\frac{k}{2}} + 1)\Delta^2 + \Theta(n)}
 		= \Theta\lb\frac{\Delta^2}{k\Delta^2 + n}\rb
 	$$
-	% TODO: Say lower bound, show arbitrary expression
+	In fact, $A_\frac{k}{2}$ is a set of nodes which minimises the conductance. Intuitively this fact seems reasonable. $G_A$ and $G_B$ are well-connected sets by construction, so when choosing $S$ to minimise $|E(S, \comp{S})|$, it is desirable to avoid making a cut through either of these sets. Additionally, choosing $A_\frac{k}{2}$ separates the total volume of the graph in half, which maximises $\min \{\vol(S),\vol(\comp{S})\}$, and minimises the overall expression. 
+	
+	However, proving that no set achieves a lower conductance is a challenge. Let us ignore $G_A$ and $G_B$ for now and try and compute the conductance of the string of $k+1$ bipartite graphs $B$. Let $S$ be an arbitrary set of nodes and let $R_i = S_i \cap S$. We compute a general formula for the conductance of the cut $S$ as follows.
+	\begin{align*}	
+		\frac{|E(S, \comp{S})|}{\min\{\vol(S), \vol(\comp{S})\}} &=
+		\frac{\sum_{i=0}^{k-1} |E(\comp{R_i}, R_{i+1})| + |E(R_i, \comp{R_{i+1}})|}{\min\{\vol(S), \vol(\comp{S})\}} \\
+		\intertext{by considering each bipartite segment}
+		&=
+		\frac{\sum_{i=0}^{k-1} |\comp{R_i}||R_{i+1}| + |R_i||\comp{R_{i+1}}|}{\min\{\vol(S), \vol(\comp{S})\}}
+		\intertext{by the structure of the network (refer to Figure \ref{fig:HkAB_3})}
+		&=
+		\frac{\sum_{i=0}^{k-1} |\comp{R_i}||R_{i+1}| + |R_i||\comp{R_{i+1}}|}{2\Delta\min\{\sum_{i=0}^{k-1} |R_i|, \sum_{i=0}^{k-1} |\comp{R_i}|\}}
+		\intertext{since each node has degree $2\Delta$}
+		&= \frac{\sum_{i=0}^{k-1} (\Delta - |R_i|)|R_{i+1}| + |R_i| (\Delta - |R_{i+1}|)}{2\Delta\min\{\sum_{i=0}^{k-1} |R_i|, \sum_{i=0}^{k-1} (\Delta - |R_i|)\}} \\
+		\intertext{since $|S_i|=\Delta$ for all $i \leq k$}
+	\end{align*}
+	This expression shows that due to the symmetry of the network, the conductance only depends on how many nodes of $S$ are contained in each $S_i$. However, it is difficult to optimise and bound, demonstrating why the lower bound on the conductance is hard to prove for the full topology. Hence, we omit this half of the proof.
+
+	% MAYBE: MAke k = \Theta(log n / log log n )
 	\textbf{Claim 2.} $\rho(H_{k, \Delta}(A,B)) = \Theta\left(\frac{1}{\Delta}\right)$
 
 	First we consider the set of vertices $A = G_A \cup S_0$ for which the minimal diligence is achieved.

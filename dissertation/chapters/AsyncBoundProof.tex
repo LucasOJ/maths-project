@@ -17,8 +17,7 @@ An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{
 We take a moment to consider the implications of the changes this model introduces. We observed that in the static network algorithm the random set of active edges is dependent state of the network. However, this model introduces an additional layer of complexity, as the set of active edges also depends on the current topology, and hence the time. Thus, the spreading time random variable is dependent on when spreading events occur, in addition to which nodes were involved. This dependence introduces further complexity into the spreading time analysis.
 
 % An interesting observation is that unlike the static model, in Algorithm \ref{NodeCentricAsyncAlgorithm} the spreading time 
-
-% P1 Maybe: allows for topologies to be discconnected with finite spreading time - probability that spreadin time infinite - taken care of by bound
+% P1 MAYBE: allows for topologies to be discconnected with finite spreading time - probability that spreadin time infinite - taken care of by bound
 
 \section{Proof of the bound}
 
@@ -203,7 +202,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	$$
 		\min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
 	$$
-	where $C = $ % TODO: FILL
+	where $C = \lb \frac{2}{\log \frac{3}{2}} + \frac{2}{\log 2} + \frac{12c}{c_0} \rb \log n$
 \end{theorem}
 
 \begin{proof}
@@ -256,7 +255,6 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		\leq \sum_{i=0}^N (\Delta_{\tau_i}(\alpha_i) + 2) 
 	\end{equation}
 	since $K < N$.
-	Note that 
 	\begin{align*}
 		\Delta_{\tau_i}(\alpha_i) + 2 
 		&=
@@ -281,18 +279,13 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 		\leq \min \left\{t: \sum_{k=0}^t \Phi(G_{t_\text{half} +k}) \rho(G_{t_\text{half} +k}) \geq \sum_{j=0}^M (2 \beta_j + 2) \right\}
 	$$
 	where $\beta_j = \ceil{\frac{c \log n}{c_0 n(1/2)^j}}$ and $M = \floor{\log_2 n}$
-	Note that 
+	By evaluating the geometric sums we have that 
 	\begin{align*}
-		\sum_{i=0}^N (c \alpha_i + 2) + \sum_{j=0}^M (2 \beta_j + 2)
-		= 
-	\end{align*} % TODO: Evaluate this
+		\sum_{i=0}^N (2 \alpha_i + 2) + \sum_{j=0}^M (2 \beta_j + 2) \leq C
+	\end{align*}
 	By combining the results from both phases, we have that w.h.p,
 	$$
 		t_\text{all} = (t_\text{all} - t_\text{half}) + t_\text{half} \leq \min \left\{t : \sum_{k=0}^t \Phi(G_k)\rho(G_k) \geq C \log n \right\} 
-	$$
-	where 
-	$$
-		C = \sum % TODO: FILL IN
 	$$
 \end{proof}
 
