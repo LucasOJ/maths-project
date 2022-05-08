@@ -14,11 +14,11 @@ First we introduce a new algorithm for rumour spreading in discrete rounds (refe
 	The synchronous flooding algorithm proceeds in rounds on a dynamic network $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$. Initially a single node is aware of the rumour. In round $i$, every node that is aware of the rumour informs all of its neighbours in $G_i$, regardless of whether they already knew the rumour or not.
 \end{definition}
 
-We note that the asynchronous rumour spreading algorithm (Algorithm \ref{NodeCentricAsyncAlgorithm}) was probabilistic since the algorithm depended on sources of randomness such as exponential clocks. In contrast, once the dynamic network and initial node from which the rumour spreads are chosen, Algorithm \ref{SyncFloodingAlgorithm} is entirely deterministic. Since the trajectory of the rumour spread is completely determined by the initial conditions, it is reasonable to ask why we would want bounds on the spreading time if we can simply simulate the rumour, and record how long it takes to inform all the nodes. In some cases however, the graph may be so large that simulation is computationally infeasible. 
-In such cases, we may be able to take advantage of bounds in terms of the structural properties of graphs instead. % TODO: Said "cases" at beginning of both sentances
+We note that the asynchronous rumour spreading algorithm (Algorithm \ref{NodeCentricAsyncAlgorithm}) was probabilistic since the algorithm depended on sources of randomness such as Poisson processes. In contrast, once the dynamic network and initial node from which the rumour spreads are chosen, Algorithm \ref{SyncFloodingAlgorithm} is entirely deterministic. Since the trajectory of the rumour spread is completely determined by the initial conditions, it is reasonable to ask why we would want bounds on the spreading time if we can simply simulate the rumour, and record how long it takes to inform all the nodes. In some cases however, the graph may be so large that simulation is computationally infeasible. 
+For such networks, we may be able to take advantage of bounds in terms of the structural properties of the topologies instead.
 Additionally, in Section \ref{section:MEDNBound}
-we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of graphs is not fixed but instead follows some distribution. 
-In this case, deterministic bounds will allow us to bound spreading time over the distribution of graph sequences. %TODO: Said "case" again - change
+we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of topologies follows some distribution. 
+In these cases, deterministic bounds will allow us to probabilistically bound the spreading time over the distribution of networks. 
 
 \section{Bound on spreading time for the Flooding Algorithm}
 
@@ -58,11 +58,9 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 
 \begin{proof}
 	For $i = 1,\dots, s$, let $T_i$ be the earliest time step such that the number of informed nodes is larger than $h_i$, i.e
-
 	$$
 		T_i = \min \{ t \in \mathbb{N} : |I_t| > h_i \}
 	$$
-
 	First we upper-bound the number of steps in the interval $[T_i, T_j]$,
 	by bounding the number of informed nodes $t$ time-steps after $T_i$ from below.
 
@@ -75,7 +73,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\underline{Inductive Case.} For brevity, let $s = T_i + t$. Suppose that $|I_s| > (1+k_j)^t h_i$.
 
 	We notice that 
-	\begin{align*}
+	\begin{align*}\label{}
 		|I_{s+1}| &= |I_s| + |B(I_s)| \\
 		\intertext{by the operation of Algorithm \ref{SyncFloodingAlgorithm}}
 		& \geq |I_s| + k_j |I_s| \\ 
@@ -87,7 +85,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\end{align*}
 	Let $\tau = T_i + \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}}$. 
 	Suppose for contradiction that $\tau < T_j$.
-	Since we assumed $\tau < T_j$ we can apply the above inequality %TODO: label
+	Since we assumed $\tau < T_j$ we can apply the inequality we just proved
 	to get the following lower bound on the number of informed nodes at time $\tau$.
 	$$
 		|I_\tau| > 
@@ -99,7 +97,6 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	\begin{equation} \label{eq:FloodingIntervalBound}
 		T_j - T_i \leq \ceil{ \frac{\log (h_j/h_i)}{\log(1+k_j)}} \leq \frac{\log (h_j/h_i)}{\log(1+k_j)} + 1
 	\end{equation}
-	% TODO: Exposition about next steps + direction here
 
 	% TODO: What about time until first spread - must happen at timestep 2 since (h,k) expander so no isolated nodes.
 	Note that since $h_s = \frac{n}{2}$, at time $T_s$ at least half of the nodes will be aware of the rumour. Hence, if we can bound $[T_0, T_s]$, we will have bounded the time it takes for half of the nodes to be informed. 
@@ -108,9 +105,7 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	$$
 		\mathcal{O}\left(\sum_{i=1}^s \frac{\log \frac{h_i}{h_{i-1}}}{\log(1+k_i)} + s\right)
 	$$ 
-	for the interval $[T_0,T_s]$. However, we can tighten the bound by removing the additive $s$ term through case analysis on the subinterval $[T_{i-1}, T_i]$, as follows.
-
-	% TODO: Link back to theorem, after since n/2 = h_s, after T_s at least n/2 nodes are informed
+	for the interval $[T_0,T_s]$. Recall that $T_s$ is the first time more than half of nodes are aware of the rumour. However, we can tighten the bound by removing the additive $s$ term through case analysis on the subinterval $[T_{i-1}, T_i]$, as follows.
 
 	\textbf{Case 1.} Suppose $\frac{\log (h_i/h_{i-1})}{\log(1+k_i)} \geq 1$.
 
@@ -219,8 +214,6 @@ Note that in previous bounds the source of randomness in the spreading time has 
 We notice that in this theorem, instead of requiring every graph topology to satisfy the expansion conditions of Theorem \ref{theorem:DeterministicFloodingBound}, we only require that the same expansion properties hold w.h.p with respect to the stationary distribution. 
 Since each topology is sampled from the stationary distribution, these properties will hold for nearly all the topologies in the sequence. Thus, this theorem states that our deterministic bound will hold for MEDNs, as long as the long-term proportion of topologies in our network without strong expansion properties is bounded by $\frac{1}{n^2}$.
 
-% TODO: Review this proof for order that makes sense, and check it actually holds
-
 \begin{proof}
 	For all $t \in \mathbb{N}$, let $A_t$ be the event that $G_t$ is an $(h_i, k_i)$-expander for all $1 \leq i \leq s$. Since $\mathcal{M}$ is stationary, we have that $\mathbb{P}(A_t) \geq 1 - \frac{1}{n^2}$ for all t. 
 
@@ -242,8 +235,6 @@ Since each topology is sampled from the stationary distribution, these propertie
 		& \leq n \mathbb{P}(\comp{A_t}) & \text{by the union bound}\\ 
 		& \leq n \frac{1}{n^2} = \frac{1}{n} & \text{by the conditions on the stationary distribution}
 	\end{align*}
-
-	% TODO: THINK ABOUT h_0
 
 \end{proof}
 
@@ -279,7 +270,7 @@ Now we will see that the set of Markov chains associated with the edges induces 
 \end{lemma}
 
 \begin{proof}
-	Since all the edges are memoryless, the distribution of which edges will be present in the subsequent round is only dependent on which edges are present currently. %TODO: Reword this
+	Since the state of each edge is dictated by a Markov chain, the distribution of which edges will be present in the subsequent round is only dependent on which edges are present currently.
 	Thus, the distribution over possible topologies in the following round is only dependent on the topology in the current round.
 	Hence, the sequence of topologies is a Markov chain, so the network is an MEDN.
 \end{proof}
@@ -319,7 +310,7 @@ Now we prove that the ER distribution $G(n,\tilde{p})$ is the stationary distrib
 	$$
 		\pi = \left(\frac{q}{p+q}, \frac{p}{p+q}\right)
 	$$ 
-	be a distribution over the starting states of $X_e$ for any $t \in \mathbb{N}, e \in E$, % TODO: E not defined here
+	be a distribution over the starting states of $X_e$ for any $t \in \mathbb{N}, e \in E$,
 	where the first component is the probability of starting in state 0, and the second component is the probability of starting in state 1. First we show that $\pi$ is the stationary distribution for all the edge Markov chains.
 
 	Let $M$ be the transition matrix for any of the edge Markov chains. We calculate the distribution over $\{0,1\}$ after a single round starting in distribution $\pi$. Observe that
@@ -339,7 +330,7 @@ Now we prove that the ER distribution $G(n,\tilde{p})$ is the stationary distrib
 	$$
 	thus $\pi$ is the stationary distribution of any $X_e$.
 	
-	Now we formulate the stationary distribution of the topology Markov chain. Note that this is a distribution over possible topologies on the vertex set $V$. When all edges start in the stationary distribution, at any time step $t$, $X_e(t) = 1$ with probability $\frac{p}{p+q}$ by the stationarity of $\pi$. Hence, under this initial distribution, each edge is present with probability $\frac{p}{p+q}$ in any time step. Note that this distribution over the possible topologies is not dependent on the topology of the network at any other time, hence it is stationary. % TODO: IS this clear direction -> distribution is stationary
+	Now we formulate the stationary distribution of the topology Markov chain. Note that this is a distribution over possible topologies on the vertex set $V$. When all edges start in the edge stationary distribution, at any time step $t$, $X_e(t) = 1$ with probability $\frac{p}{p+q}$ by the stationarity of $\pi$. Hence, under this initial distribution, each edge is present with probability $\frac{p}{p+q}$ in any time step. Note that this distribution over the possible topologies is not dependent on the topology of the network at any other time, hence it is stationary. 
 
 	We recognise this distribution as the $G(n, \frac{p}{p+q})$ ER Random Graph distribution.
 \end{proof}
@@ -356,13 +347,11 @@ To apply Theorem \ref{theorem:markovSyncBound}, we need to compute expansion pro
 	with probability at least $1 - \frac{1}{n^2}$, for large $n$. 
 \end{lemma}
 
-% TODO: mention OMit proof citing elementary probability + not relevant
+Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology according to the $G(n, p)$ distribution with a suitably large $p$, w.h.p the boundaries of all "small" sets scale in the size of the set. Note that the condition on $p$ scales with the number of nodes $n$, so $p$ could be a function of $n$. % MAYBE: Expanding
 
-Lemma \ref{lemma:GnpExpansion} tells us that if we choose a random topology according to the $G(n, p)$ distribution with a suitably large $p$, w.h.p the boundaries of all "small" sets are large. Note that the condition on $p$ scales with the number of nodes $n$. % TODO: Expanding
+We omit the proof of Lemma \ref{lemma:GnpExpansion} as it uses standard probabilistic techniques, but refer the reader to \cite{syncPaper} for the details.
 
 In Lemma \ref{lemma:GnpExpander}, we use Lemma \ref{lemma:GnpExpansion}, to establish expansion properties for the $G(n,p)$ distribution.
-
-% TODO: Interpretation of lemma in terms of expander graphs
 
 \begin{lemma}\label{lemma:GnpExpander}
 	Let $p \geq c\frac{\log n}{n}$ for a sufficiently large constant $c$, and large $n$. With probability at least $1- n^2$, a topology $G$ drawn from the $G(n, p)$ distribution is a $(h, p\frac{n}{c})$-expander for all $1 \leq h \leq \frac{1}{p}$ and a $(h, \frac{1}{h}\frac{n}{c})$-expander for all $\frac{1}{p} \leq h \leq \frac{n}{2}$
@@ -427,10 +416,10 @@ Now we apply Theorem \ref{theorem:markovSyncBound} to the Edge-Markovian Dynamic
 
 We take a moment to consider the role of $\hat{p}$. Note that $p$ and $q$ may be functions of $n$. However, since both quantities are constants once $n$ has been fixed, we omit function notation for brevity.
 
-In the context of the Edge-Markovian model, the larger the ratio $\frac{p}{p+q}$, the less often edges fail, and the faster edges recover. %TODO: Could be misinterpreted
+In the context of the Edge-Markovian model, the larger the ratio $\frac{p}{p+q}$, the less often edges fail, and the faster edges recover.
 This in turn improves the likelihood that each topology contains many edges, increasing the speed at which the rumour spreads. This intuition is reflected in the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound}: the closer $\hat{p}$ is to 1, the smaller the $\frac{\log n}{\log n \hat{p}}$ term will be. However, interestingly the $\log \log n \hat{p}$ term increases with $\hat{p}$, which goes against our intuition, as this term will be larger for denser graphs. 
-This indicates that our bound may not always be tight, which we will explore in Section \ref{section:edgeMarkovianFloodingBoundEvaluation}. % TODO: IS THIS TRUE?
 
+% MAYBE: say more here
 
 \begin{proof}
 	Let $\hat{p}$ denote $\frac{p}{p+q}$. 
@@ -462,7 +451,7 @@ This indicates that our bound may not always be tight, which we will explore in 
 
 	\textbf{First Sum.}
 
-	Using that $\sum_{i=1}^m 1/i \leq \log m + 1$, %TODO: CITE
+	Using that $\sum_{i=1}^m 1/i \leq \log m + 1$, 
 	we observe that
 	$$
 		\frac{1}{\log(1+\frac{n\hat{p}}{c})} \sum_{i=1}^{\floor{1/\hat{p}}} \frac{1}{i} 
