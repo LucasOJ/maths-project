@@ -1,4 +1,4 @@
-\chapter{Preliminaries}
+\chapter{Mathematical Preliminaries}
 \label{chapter:Prelims}
 
 In this chapter, we introduce the mathematical background and notation needed to analyse model and analyse dynamic networks.
@@ -44,7 +44,7 @@ First we introduce notation for working with graphs, the central structure on wh
 	Graph Isomorphism
 
 	\noindent		
-	We say two graphs $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ are isomorphic if there exists a function $f: V_1 \to V_2$ such that ${u, v} \in E_1$ if and only if ${f(u), f(v)} \in E_2$, i.e, there exists a relabelling of the nodes such that $G_1=G_2$.
+	We say two graphs $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ are isomorphic if there exists a function $f: V_1 \to V_2$ such that $\{u, v\} \in E_1$ if and only if $\{f(u), f(v)\} \in E_2$, i.e, there exists a relabelling of the nodes such that $G_1=G_2$.
 \end{definition}
 
 \section{Asymptotic Notation}
@@ -90,7 +90,7 @@ In this section, we review asymptotic notation for real valued functions. We ass
 	Almost tight
 
 	\noindent
-	If the function $f$ is bounded above by $g$ such that $f(n) = \bigO\lb(\log n)^k g(n)\rb$ for some constant $k>0$ and $g(n) = \Omega((\log n)^k)$, then we say the bound $g$ is almost tight, since for large $n$ poly-logarithmic factors become comparatively small. 
+	If the function $f$ is bounded above by $g$ such that $f(n) = \bigO\lb(\log n)^k g(n)\rb$ for some constant $k \geq 1$ and $g(n) = \Omega((\log n)^k)$, then we say the bound $g$ is almost tight, since for large $n$ poly-logarithmic factors become comparatively small. 
 \end{definition}
 
 \section{Discrete-time Markov Chains}
@@ -162,14 +162,14 @@ for all $n \geq 1$ and $i, j \in S$.
 \end{definition}
 
 \begin{theorem}\label{theorem:markovChainConvergence}
-	If a Markov chain if irreducible and aperiodic, then the distribution of its current state after $n$ time steps converges to its stationary distribution as $n$ tends to infinity.
+	If a Markov chain is irreducible and aperiodic, then the distribution of its current state after $n$ time steps converges to its stationary distribution as $n$ tends to infinity.
 \end{theorem}
 
 Once the Markov chain has converged to the stationarity distribution we say it has reached equilibrium.
 
 \section{Inhomogeneous Poisson Processes}\label{section:inhomoPP}
 
-In this section we introduce an extension of the Poisson process which will be needed for the proof of Theorem \ref{theorem:AsyncUpperBound}. We assume the reader will be familiar with standard Poisson processes, but anticipate they may not be familiar with the inhomogeneous variant. Thus, we introduce the inhomogeneous Poisson Process from first principles.
+In this section we introduce a variant of the Poisson process which will be needed for Chapters \ref{chapter:AsyncUpperBound} and \ref{chapter:asyncBoundTight}. We assume the reader will be familiar with standard Poisson processes, but anticipate they may not be familiar with the inhomogeneous variant. Thus, we introduce the inhomogeneous Poisson Process from first principles.
 
 First, a review of the fundamental structure of Poisson processes.
 
@@ -187,14 +187,14 @@ First, a review of the fundamental structure of Poisson processes.
 	\label{fig:poissonProcessExample}
 \end{figure}
 
-We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as `arrivals'.  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$, as can be seen in Figure \ref{fig:poissonProcessExample}. Note that the number arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
+We interpret the function $N$ as counting the number of occurrences of an event, where $N(t)$ represents the number of events that have occurred up to and including time $t$. We refer to the occurrences of events as `arrivals'.  Since $N$ is right-continuous, $N$ increments exactly at the times of arrivals. For example, if $a^\text{th}$ arrival happens at time $t$, then $N(t) = a$, $\lim_{x \downarrow t} = a$, and $\lim_{x \uparrow t} = a - 1$, as can be seen in Figure \ref{fig:poissonProcessExample}. Note that the number of arrivals in the interval $(s, t]$ is represented by the random variable $N(t) - N(s)$. 
 
 Now we introduce a central definition in the theory of Poisson processes.
 
 \begin{definition}
 	Independent Increments
 
-	A random counting process $\left\{ N(t), t \geq 0 \right\}$ has independent increments if for any $n \in \mathbb{N}$ and $t_0, t_1, \dots, t_n \in \mathbb{R}^{+}$,
+	A random counting process $\left\{ N(t), t \geq 0 \right\}$ has independent increments if for any $n \in \mathbb{N}$ and $0 \leq t_0 \leq t_1 \leq \dots \leq t_n \in \mathbb{R}$,
 	the random variables
 	$$
 		N(t_1) - N(t_0), \dots, N(t_n) - N(t_{n - 1})
@@ -208,7 +208,7 @@ We are now ready to introduce the inhomogeneous Poisson process.
 	Inhomogeneous Poisson process
 
 	\noindent
-	An inhomogeneous Poisson process ${N(t), t \geq 0}$ with rate function $\lambda(t) > 0$ is a counting process such that
+	An inhomogeneous Poisson process ${N(t), t \geq 0}$ with rate function $\lambda(t) > 0$ is a counting process such that:
 	\begin{enumerate}
 		\item $N(t)$ has independent increments
 		\item for all $0 \leq s \leq t$, 
@@ -221,7 +221,7 @@ We are now ready to introduce the inhomogeneous Poisson process.
 	\end{enumerate}
 \end{definition}
 
-Unlike the standard Poisson process, in the inhomogeneous variant, the rate of arrivals can vary over time according to the rate function $\lambda(t)$. In this report, inhomogeneous Poisson processes arise when we consider consecutive homogenous Poisson processes. We show that the cumulative arrivals of consecutive homogenous Poisson processes form an inhomogeneous Poisson process in the following Theorem.
+Unlike the standard Poisson process, in the inhomogeneous variant, the rate of arrivals can vary over time according to the rate function $\lambda(t)$. In this report, inhomogeneous Poisson processes arise when we consider consecutive homogenous Poisson processes. We show that the cumulative arrivals of consecutive homogenous Poisson processes form an inhomogeneous Poisson process in the following theorem.
 
 \begin{theorem}
 	Let $N_1, \dots, N_m$ be independent Poisson processes, where the rate of $N_i$ is denoted by $\lambda_i$. Let $(t_1, t_2], (t_2, t_3], \dots$ be a sequence of contiguous intervals such that $t_1 = 0$ and $t_i < t_{i+1}$. Let $\{N(t), t \geq 0\}$ be a counting process such that
@@ -238,7 +238,7 @@ Unlike the standard Poisson process, in the inhomogeneous variant, the rate of a
 \begin{proof}
 	To prove this theorem, we verify that $N(t)$ satisfies the three conditions in Definition \ref{defn:inhomoPP}. First note that $N(t)$ has independent increments since each of the component Poisson processes are independent and have independent increments by definition. For the second condition, we analyse the distribution of the increment $N(t) - N(s)$ in two cases.
 
-	\textbf{Case 1.} Suppose $s, t \in (t_i, t_{i+1}]$. 
+	\textbf{Case 1.} Suppose $s, t \in (t_i, t_{i+1}]$ for some $i$. 
 	
 	\noindent
 	Then $N(t) - N(s) = N_i(t - t_i) - N_i(s - t_i)$ which has a Poisson distribution with rate $$
@@ -263,7 +263,7 @@ Unlike the standard Poisson process, in the inhomogeneous variant, the rate of a
 We now define the homogenous Poisson process in terms of the inhomogeneous process.
 
 \begin{definition}
-	(Homogeneous) Poisson Process
+	(Homogeneous) Poisson process
 
 	\noindent
 	A Homogeneous Poisson process $\{N(t), t \geq 0\}$ with rate $\lambda > 0$ is a special case of the inhomogeneous Poisson process where the rate function $\lambda(t)$ is constant i.e. $\lambda(t)=\lambda > 0$ for all $t$.
@@ -307,27 +307,27 @@ We start with the central definition.
 	$$
 \end{definition}
 
-Note that not all random variables are comparable by stochastic domination, it specifies a partial order between random variables. % MAYBE: Examples of r.vs that can't be related
+Note that not all random variables are comparable by stochastic domination, so $\preceq$ specifies a partial order between random variables. % MAYBE: Examples of r.vs that can't be related
 
 We now consider an informal example of stochastic domination to get a better intuition for the definition.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{./figures/stochastic_domination_pdf.png}
-	\caption{Example of stochastic domination - PDFs}
+	\caption{Example of stochastic domination - p.d.fs}
 	\label{fig:stochDomPDFs}
 \end{figure}
 
-Figure \ref{fig:stochDomPDFs} shows the probability density functions (PDFs) of two real random variables $X$ and $Y$, where the PDF of $X$ is blue and the PDF of $Y$ is orange. In this example, $X \preceq Y$.
+Figure \ref{fig:stochDomPDFs} shows the probability density functions (p.d.f) of two real random variables $X$ and $Y$, where the p.d.f of $X$ is blue and the p.d.f of $Y$ is orange. In this example, $X \preceq Y$.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{./figures/stochastic_domination_cdf.png}
-	\caption{Example of stochastic domination - CDFs}
+	\caption{Example of stochastic domination - c.d.fs}
 	\label{fig:stochDomCDFs}
 \end{figure}
 
-Observe that $X \preceq Y$ if an only if $\mathbb{P}(Y \leq x) \leq \mathbb{P}(X \leq x)$. We recognise $\mathbb{P}(X \leq x)$ as the cumulative distribution function (CDF) of $X$. Hence, we can verify this claim by computing the cumulative  distribution functions for $X$ and $Y$, which are displayed in Figure \ref{fig:stochDomCDFs} in their associated colours. Indeed, we see that the CDF for $Y$ is always below the CDF for $X$, hence the $Y$ distribution does in fact stochastically dominate $X$.
+Observe that $X \preceq Y$ if an only if $\mathbb{P}(Y \leq x) \leq \mathbb{P}(X \leq x)$. We recognise $\mathbb{P}(X \leq x)$ as the cumulative distribution function (c.d.f) of $X$. Hence, we can verify this claim by computing the cumulative  distribution functions for $X$ and $Y$, which are displayed in Figure \ref{fig:stochDomCDFs} in their associated colours. Indeed, we see that the c.d.f for $Y$ is always below the c.d.f for $X$, hence $Y$ does in fact stochastically dominate $X$.
 
 For proofs in Chapters \ref{chapter:AsyncUpperBound} and \ref{chapter:SyncFlooding} we need to establish stochastic dominance between pairs of Binomial random variables and Poisson random variables. To do this we use a technique called coupling. First we introduce the definition of a coupling.
 
@@ -370,7 +370,7 @@ Using Theorem \ref{theorem:couplingDomination}, we can establish stochastic domi
 	Let $\tilde{X} \sim \text{Poisson}(\lambda)$, $\tilde{Z} \sim \text{Poisson}(\mu - \lambda)$ be independent random variables. Take $\tilde{Y} := \tilde{X} + \tilde{Z}$. Since $\tilde{X}$ and $\tilde{Z}$ are independent, we have that $\tilde{Y} \sim \text{Poisson}(\mu)$ by the convolution of Poisson random variables. Thus, as $\tilde{X} \stackrel{d}{=} X$ and $\tilde{Y} \stackrel{d}{=} Y $, we have established a coupling $(\tilde{X}, \tilde{Y})$ for $X$ and $Y$. Note that since $\tilde{Z} \geq 0$, the value taken by $\tilde{Y}$ is always at least the value taken by $\tilde{X}$. Since we have found a coupling $(\tilde{X}, \tilde{Y})$ of $X$ and $Y$ where $\mathbb{P}(\tilde{Y} \geq \tilde{X}) = 1$, by Theorem \ref{theorem:couplingDomination}, $X \preceq Y$.
 \end{proof}
 
-Now we use coupling to establish first-order stochastic dominance between pairs of binomial random variables.
+Now we use coupling to establish first-order stochastic dominance between pairs of Binomial random variables.
 
 \begin{theorem}\label{theorem:binomialDomination}
 	Let $X \sim \text{Binomial}(n_1, p)$ and $Y \sim \text{Binomial}(n_2, p)$ be independent random variables with $n_1 < n_2$. Then $X$ is stochastically dominated by $Y$.

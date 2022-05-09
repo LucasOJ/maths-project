@@ -1,14 +1,14 @@
 \chapter{Synchronous Rumour Spreading}
 \label{chapter:SyncFlooding}
 
-In this chapter we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network from \cite{syncPaper}. Then we introduce a new type of dynamic network, where the sequence of topologies is not known ahead of the rumour spread, but instead follows a distribution. We generalise our flooding bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound. Throughout this chapter, we add detail to the proofs to make them more accessible.
+In this chapter we consider a new algorithm for rumour spreading on dynamic network known as flooding, which takes place in discrete rounds instead of continuous time. First we introduce algorithm and prove an upper bound for the spreading time on a dynamic network from \cite{syncPaper}. Then we introduce a new type of dynamic network, where the sequence of topologies is not known ahead of the rumour spread, but instead follows a distribution. We generalise the synchronous bound to this probabilistic class of dynamic networks, and see an extended example of applying the bound. Throughout this chapter, we add detail to the proofs to make them more accessible.
 
-\section{Model}
+\section{Synchronous Rumour Spreading Model}
 
 First we introduce a new algorithm for rumour spreading in discrete rounds (referred to in \cite{asyncPaper} as synchronous spread).
 
 \begin{definition} \label{SyncFloodingAlgorithm}
-	Synchronous Flooding Algorithm
+	Synchronous Flooding Algorithm for Dynamic Networks
 
 	\noindent
 	The synchronous flooding algorithm proceeds in rounds on a dynamic network $\mathcal{G} = (G_t)_{t \in \mathbb{N}}$. Initially a single node is aware of the rumour. In round $i$, every node that is aware of the rumour informs all of its neighbours in $G_i$, regardless of whether they already knew the rumour or not.
@@ -20,7 +20,7 @@ Additionally, in Section \ref{section:MEDNBound}
 we analyse rumour spreading on a non-deterministic dynamic network, where the sequence of topologies follows some distribution. 
 In these cases, deterministic bounds will allow us to probabilistically bound the spreading time over the distribution of networks. 
 
-\section{Bound on spreading time for the Flooding Algorithm}
+\section{Bounding the Spreading Time}
 
 In this section we prove a bound on the spreading time of the flooding algorithm from \cite{syncPaper}, adding details and expanding steps throughout.
 
@@ -176,9 +176,9 @@ We notice that there are strong conditions on the connectivity of the dynamic ne
 	% MAYBE: TRAILING T_0 = 1 and T_ALL - 1
 \end{proof}
 
-\section{Flooding on Markovian Evolving Dynamic Networks}\label{section:MEDNBound}
+\section{Markovian Evolving Dynamic Networks}\label{section:MEDNBound}
 
-Until now, all the dynamic networks we have studied have been deterministic, in the sense that the evolution of topologies has been fixed. However, knowing the future topologies of the network may be unrealistic in practice. For example, when considering rumour spread on a real-world network such as the internet, we cannot say with certainty what connections will be present on a given time in the future. This motivates a generalistion of the dynamic network model where the sequence of topologies is drawn from some distribution. This distribution expresses our uncertainty in the future topologies of the network, but allows us to encode information about how we predict the shape of the network may evolve. Under this model, the dynamic network itself is a stochastic process, and a source of randomness. In this section, we analyse the rumour spreading time when a Markov chain is used to  generate the random sequence of topologies.
+Until now, all the dynamic networks we have studied have been deterministic, in the sense that the evolution of topologies has been fixed. However, knowing the future topologies of the network may be unrealistic in practice. For example, when considering rumour spread on a real-world network such as the internet, we cannot say with certainty what connections will be present on a given time in the future. This motivates a generalistion of the dynamic network model where the sequence of topologies is drawn from some distribution. This distribution expresses our uncertainty in the future topologies of the network, but allows us to encode information about how we predict the structure of the network may evolve. Under this model, the dynamic network itself is a stochastic process, and a source of randomness. In this section, we analyse the rumour spreading time when a Markov chain is used to  generate the random sequence of topologies.
 
 First we introduce a variation of the original Dynamic Network definition.
 
@@ -187,7 +187,7 @@ First we introduce a variation of the original Dynamic Network definition.
 
 	\noindent 
 	Let $\mathcal{A}(V)$ be the set of all possible graphs on the vertex set $V$.
-	A Markovian Evolving Dynamic Network is a random sequence of graphs $\mathcal{M} = (G_t)_{t \in \mathbb{N}}$ indexed by an integer time $t$, such that $\mathcal{G}$ is a Markov chain with state space $\mathcal{A}(V)$.
+	A Markovian Evolving Dynamic Network is a random sequence of graphs $\mathcal{M} = (G_t)_{t \in \geq 0}$ indexed by an integer time $t$, such that $\mathcal{G}$ is a Markov chain with state space $\mathcal{A}(V)$.
 \end{definition}
 
 We see that this definition adheres to the previous restriction that all topologies have the same vertex set. Since the network is Markovian, the distribution from which the next topology is draw depends only on the previous topology.
@@ -195,7 +195,7 @@ We see that this definition adheres to the previous restriction that all topolog
 We say that a given MEDN $\mathcal{M}$ is stationary if the distribution of $G_0$ is a stationary distribution of $\mathcal{M}$. By the definition of a stationary distribution, in such an MEDN the probability that $G_t = G'$ for a given $G'$ is the probability that $G_t = G'$ under the stationary distribution, for any time step $t$. Hence, once the Markov chain associated with the network has reached equilibrium,
 the future evolution of the network proceeds as if by sampling a topology from the stationary distribution at each time step.
 
-Under certain conditions, Markov chains converge to their stationary distributions. Thus, for the rest of this section we assume that our MEDNs have been running for a long enough such that when we inject the rumour the network is already in equilibrium. In this paper we don't discuss how long the convergence takes, and assume that round 0 begins when we inject the rumour.
+Under certain conditions, Markov chains converge to their stationary distributions. Thus, for the rest of this section we assume that our MEDNs have been running for a long enough such that when we inject the rumour, the network is already in equilibrium. In this paper we don't discuss how long the convergence takes, and assume that round 0 begins when we inject the rumour.
 
 We now adapt the deterministic bound proved in Theorem \ref{theorem:DeterministicFloodingBound} to a MEDN, by adding details to proof from \cite{syncPaper}
 
@@ -237,7 +237,7 @@ Since each topology is sampled from the stationary distribution, these propertie
 
 \end{proof}
 
-\section{Applying the bound to the Edge Markovian MEDN}\label{section:floodingBoundEdgeMarkovian}
+\section{Edge-Markovian Networks}\label{section:floodingBoundEdgeMarkovian}
 
 In this section, we apply the bound proved in Theorem \ref{theorem:markovSyncBound} to a specific MEDN called the Edge-Markovian Network. We will also evaluate the quality of the bound by proving a lower bound on the spreading time, and comparing the results with simulations. 
 
@@ -260,7 +260,7 @@ First, we introduce and motivate the model.
 \end{definition}
 The Edge-Markovian Network models the situation when connections between nodes independently fail or are restored. The `birth' and `death' of each edge $e$ is dictated by its associated Markov chain $X_e$, where in each round, a present edge has probability $q$ of failing, and a missing edge has probability $p$ of restoration. Hence, for any given edge, after a geometrically distributed time with parameter $q$, a failure occurs. Restoring the edge takes a geometrically distributed time with parameter $p$.
 
-Since the future state of each edge is only dependent on current state, this Network is appropriate for modelling memoryless Networks where we can assume each edge acts independently with identical dynamics to other edges. For example, in a computer network we could imagine each  connection is randomly disrupted by an issue with probability $q$, and the affected connection is fixed with probability $p$ in each of the subsequent time steps. 
+Since the future state of each edge is only dependent on current state, this network is appropriate for modelling memoryless networks where we can assume each edge acts independently with identical dynamics to other edges. For example, in a computer network we could imagine each  connection is randomly disrupted by an issue with probability $q$, and the affected connection is fixed with probability $p$ in each of the subsequent time steps. 
 
 Now we will see that the set of Markov chains associated with the edges induces a Markov chain over the set of possible graphs on $V$, thus the Edge-Markovian Network is an MEDN.
 
@@ -416,7 +416,7 @@ Now we apply Theorem \ref{theorem:markovSyncBound} to the Edge-Markovian Dynamic
 We take a moment to consider the role of $\hat{p}$. Note that $p$ and $q$ may be functions of $n$. However, since both quantities are constants once $n$ has been fixed, we omit function notation for brevity.
 
 In the context of the Edge-Markovian model, the larger the ratio $\frac{p}{p+q}$, the less often edges fail, and the faster edges recover.
-This in turn improves the likelihood that each topology contains many edges, increasing the speed at which the rumour spreads. This intuition is reflected in the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound}: the closer $\hat{p}$ is to 1, the smaller the $\frac{\log n}{\log n \hat{p}}$ term will be. However, interestingly the $\log \log n \hat{p}$ term increases with $\hat{p}$, which goes against our intuition, as this term will be larger for denser graphs. 
+This in turn improves the likelihood that each topology contains many edges, increasing the speed at which the rumour spreads. This intuition is reflected in the bound given by Theorem \ref{theorem:edgeMarkovianFloodingBound}: the closer $\hat{p}$ is to 1, the smaller the $\frac{\log n}{\log n \hat{p}}$ term will be. However, interestingly the $\log \log n \hat{p}$ term increases with $\hat{p}$, which goes against our intuition, as this term will be larger for denser graphs.
 
 % MAYBE: say more here
 

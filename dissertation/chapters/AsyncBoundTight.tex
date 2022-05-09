@@ -68,11 +68,11 @@ Using $H_{k, \Delta}(A,B)$, we now construct the following family of networks fo
 
 Note that this network reacts to the spread of the rumour. At the end of each round, when the topology is allowed to change, all the informed nodes are moved into the set $A$. In Section \ref{section:adversarialLowerBound} we will see how this adversarial behaviour prolongs the rumour spreading time.
 
-\section{Obtaining the Upper Bound}
+\section{Obtaining the upper bound}
 
 In this section, we use Theorem \ref{theorem:AsyncUpperBound} to bound the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network. 
 
-Note that since the network is allowed to react to the rumour, and the rumour spreading process is random, the sequence of topologies is randomised. However, we will see that since all topologies have the same connectivity metrics regardless of the rumour spread, we can still apply Theorem \ref{theorem:AsyncUpperBound} for the $rho$-diligence network.
+Note that since the network is allowed to react to the rumour, and the rumour spreading process is random, the sequence of topologies is randomised. However, we will see that since all topologies have the same connectivity metrics regardless of the rumour spread, we can still apply Theorem \ref{theorem:AsyncUpperBound} for the $\rho$-diligent network.
 
 \begin{theorem}
 	The rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$, is at most 
@@ -206,7 +206,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	We prove this lemma by considering a modified rumour spread process.
 	Let $\{v_i, v_{i+1}\}$ be an arbitrary edge between $S_i$ and $S_{i+1}$. Since each of the nodes in $\cup_i^k S_i$ has $2\Delta$ neighbours, by superposition, $v_i$ and $v_{i+1}$ communicate according to a Poisson process with rate $\frac{1}{2\Delta} + \frac{1}{2\Delta} = \frac{1}{\Delta}$. We consider the following equivalent algorithm, which we call the 2-push algorithm. Associate each node with a Poisson process of rate 2. Each node pushes the rumour (if they know it) to a neighbour chosen uniformly at random according to the arrival times of the associated Poisson process. Under this algorithm, by thinning, we see that $v_i$ and $v_{i+1}$ communicate according to a Poisson process with rate $\frac{2}{2\Delta} = \frac{1}{\Delta}$, so the 2-push algorithm is equivalent to the original process.
 
-	Now we introduce the modified algorithm we analyse in the remainder of the proof, known as the forward 2-push algorithm. In this algorithm, each node with a Poisson process of rate 2. If $u \in S_i$ is aware of the rumour, according to the arrival times of its associated Poisson process, it pushes the rumour to a randomly chosen neighbour in $S_{i+1}$. Under this algorithm, the rumour only moves in one direction down the chain of $S_i$s.
+	Now we introduce the modified algorithm we analyse in the remainder of the proof, known as the forward 2-push algorithm. In this algorithm, each node is associated with a Poisson process of rate 2. If $u \in S_i$ is aware of the rumour, according to the arrival times of its associated Poisson process, it pushes the rumour to a randomly chosen neighbour in $S_{i+1}$. Under this algorithm, the rumour only moves in one direction down the chain of $S_i$s.
 
 	Let $\varepsilon_1$, $\varepsilon_2$, $\varepsilon_3$ denote the probabilities that least one node of $S_k$ is informed after a unit length of time under Algorithm \ref{NodeCentricAsyncAlgorithm}, the 2-push algorithm, and the forward 2-push algorithm respectively.
 	We want to show that  
@@ -222,7 +222,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 
 	\noindent
 	Let $X$ denote the random variable of the largest index $m$ such that a node of $S_m$ is aware of the rumour under the 2-push algorithm. Let $Z$ denote the same random variable under the forward 2-push algorithm. We present a coupling $(\tilde{X}, \tilde{Z})$ of $X$ and $Z$. 
-	Consider an arbitrary trajectory of the rumour under the 2-push algorithm. Here, we think of the trajectory as a sequence of directed active edges along which spreading events took place. In general, the trajectory of rumour will branch when the same node informs multiple nodes. We build a trajectory for the forward 2-push algorithm one branch at a time, where a branch runs from the initial node that was aware of the rumour, to the final node to be informed. Suppose we have the branch trajectory $e_1, e_2, \dots, e_l$ starting a $u_0 \in S_0$. Then at the times of the spreading events, we construct a branch trajectory for the 2-push algorithm by choosing the next node in the trajectory uniformly at random from the next layer of nodes, starting at $u_0$. Let $\tilde{X}$ denote the random variable of the largest index $m$ such that a node of $S_m$ is aware of the rumour under the original trajectories, and let $\tilde{Z}$ denote the same random variable under the modified trajectories. It is clear that $\tilde{X} \stackrel {d}{=} X$ since both random variables are generated by the same process. In the original trajectories, the process moves forwards according to a Poisson process of rate of $1$ and backwards according to a Poisson process of rate of $1$, by superposition. The modified trajectories move forward whenever the original trajectory moves forward or backwards, thus by superposition under these trajectories each node pushes the rumour forward according to a Poisson process of rate of $2$. Hence, $\tilde{Z} \stackrel{d}{=} Z$, and $(\tilde{X}, \tilde{Z})$ is indeed a coupling of $X$ and $Z$. 
+	Consider an arbitrary trajectory of the rumour under the 2-push algorithm. Here, we think of the trajectory as a sequence of directed active edges along which spreading events took place. In general, the trajectory of rumour will branch when the same node informs multiple nodes. We build a trajectory for the forward 2-push algorithm one branch at a time, where a branch runs from the initial node that was aware of the rumour, to the final node to be informed. Suppose we have the branch trajectory $e_1, e_2, \dots, e_l$ starting at $u_0 \in S_0$. Then at the times of the spreading events, we construct a branch trajectory for the forward 2-push algorithm by choosing the next node in the trajectory uniformly at random from the next layer of nodes, starting at $u_0$. Let $\tilde{X}$ denote the random variable of the largest index $m$ such that a node of $S_m$ is aware of the rumour under the original trajectories, and let $\tilde{Z}$ denote the same random variable under the modified trajectories. It is clear that $\tilde{X} \stackrel {d}{=} X$ since both random variables are generated by the same process. In the original trajectories, the process moves forwards according to a Poisson process of rate of $1$ and backwards according to a Poisson process of rate of $1$, by superposition. The modified trajectories move forward whenever the original trajectory moves forward or backwards, thus by superposition under these trajectories each node pushes the rumour forward according to a Poisson process of rate of $2$. Hence, $\tilde{Z} \stackrel{d}{=} Z$, and $(\tilde{X}, \tilde{Z})$ is indeed a coupling of $X$ and $Z$. 
 	
 	Suppose $\tilde{X} = m$. Then there must be a branch trajectory such that the final node is in $S_m$. Note that since the associated modified branch trajectory moved forward whenever the original trajectory moved forward or backwards, this trajectory must end in $S_l$ for some $l \geq m$. Hence, 
 	$$
@@ -232,7 +232,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	$$
 		\mathbb{P}(\varepsilon_1) 
 		= \mathbb{P}(X \geq k) 
-		\leq \mathbb{P}=(Z \geq k) \mathbb{P}(\varepsilon_3)
+		\leq \mathbb{P}(Z \geq k) = \mathbb{P}(\varepsilon_3)
 	$$
 	Thus, the claim is proved.
 
@@ -244,7 +244,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 
 	\underline{Base Case.} $\mathbb{E}I_1(\tau) \leq 2 \tau \Delta$
 
-	Since each node in $S_0$ is aware of the rumour, each of the $\Delta^2$ edges from $S_0$ to $S_1$ is pushing the rumour forward at rate $\frac{2}{\Delta}$ for all times $\gamma \in [0,1]$. Thus, by the superposition property of Poisson processes, the overall rate at which the rumour is pushed from $S_0$ to any node of $S_1$ is $\frac{2}{\Delta}\Delta^2 = 2\Delta$. Let $N_1(\tau)$ denote the number of times any node of $S_1$ is informed of the rumour in the interval $[0,\tau]$ (even if it already knew the rumour). By the theory of Poisson processes, $N_1(\tau)$ is distributed according to a Poisson distribution with mean $2\tau\Delta$. Note $I_i(\tau) \leq N_1(\tau)$ since the same nodes of $S_1$ may be contacted multiple times. Hence, $\mathbb{E}I_1(\tau) \leq \mathbb{E}N_1(\tau) = 2\tau\Delta$ as required.
+	Since each node in $S_0$ is aware of the rumour, each of the $\Delta^2$ edges from $S_0$ to $S_1$ pushes the rumour forward at rate $\frac{2}{\Delta}$ for all times $\gamma \in [0,1]$. Thus, by the superposition property of Poisson processes, the overall rate at which the rumour is pushed from $S_0$ to any node of $S_1$ is $\frac{2}{\Delta}\Delta^2 = 2\Delta$. Let $N_1(\tau)$ denote the number of times any node of $S_1$ is informed of the rumour in the interval $[0,\tau]$ (even if it already knew the rumour). By the theory of Poisson processes, $N_1(\tau)$ is distributed according to a Poisson distribution with mean $2\tau\Delta$. Note $I_i(\tau) \leq N_1(\tau)$ since the same nodes of $S_1$ may be contacted multiple times. Hence, $\mathbb{E}I_1(\tau) \leq \mathbb{E}N_1(\tau) = 2\tau\Delta$ as required.
 	
 	\underline{Inductive Case.} $\mathbb{E}I_k(\tau) \leq \frac{2^k \tau^k}{k!}\Delta$
 
@@ -257,7 +257,7 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	$$
 		\mathbb{E}[I_k(\tau) |I_{k-1}(\gamma), \gamma \in [0, \tau]] \leq \mathbb{E}[N_k(\tau) |I_{k-1}(\gamma), \gamma \in [0, \tau]]
 	$$
-	At time $\gamma \in [0,1]$, there are $I_{k-1}(\gamma)$ nodes aware of the rumour in $S_{k-1}$, and pushing the rumour to $S_k$ at rate 2. By the superposition of Poisson processes, the nodes of $S_{k-1}$ inform the nodes of $S_k$ according to a Poisson process of rate $2 I_{k-1}(\gamma)$.
+	At time $\gamma \in [0,1]$, there are $I_{k-1}(\gamma)$ nodes aware of the rumour in $S_{k-1}$, each pushing the rumour to $S_k$ at rate 2. By the superposition of Poisson processes, the nodes of $S_{k-1}$ inform the nodes of $S_k$ according to a Poisson process of rate $2 I_{k-1}(\gamma)$.
 	Thus, $N_k(\tau)|(I_{k-1}(\gamma), \gamma \in [0, \tau])$ is an inhomogeneous Poisson process, where the value of the rate function at time $\gamma$ is $2 I_{k-1}(\gamma)$. By the definition of the inhomogeneous Poisson process,
 	\begin{align*}
 		\mathbb{E}\mathbb{E}[N_k(\tau)|I_{k-1}(\gamma), \gamma \in [0, \tau]] &= \mathbb{E}\int_0^\tau 2 I_{k-1}(\gamma) d\gamma \\
@@ -271,13 +271,9 @@ First we prove a lemma about the spread of the rumour down the chain of bipartit
 	$$
 		\mathbb{E}I_k(\tau) \leq \mathbb{E}\frac{2^k \tau^k}{k!}\Delta = \frac{2^k \tau^k}{k!}\Delta
 	$$
-	Let $k=2ec\frac{\log n}{\log \log n}$ and $\tau = 1$, since we are interested in the spread by the end of the unit time round. By taking logarithms and applying Stirling's Approximation for the $\log (k!)$ term, we have that $\mathbb{E}I_k(1) \leq n^{-c}$.
-	See \cite{stirling} for a full proof of Stirling's Approximation. 
-	Thus, by Markov's inequality,
-	$$
-		\mathbb{P}(\varepsilon_1) \leq \mathbb{P}(\varepsilon_3) = \mathbb{P}(I_k(1) \geq 1) \leq \mathbb{E}I_k(1) \leq \frac{2^k}{k!}\Delta
-	$$
 \end{proof}
+
+Since we have bounded how far the rumour travels down the string of bipartite graphs in single round w.h.p, we can bound the spreading time on the $\rho$-diligent network from below.
 
 \begin{theorem}
 	w.h.p, the rumour spreading time of Algorithm \ref{NodeCentricAsyncAlgorithm} on a $\rho$-diligent dynamic network with $n$ vertices, where $\rho = \Omega(\frac{1}{\sqrt{n}})$ and $k = \Theta\lb\frac{\log n}{\log \log n}\rb$ is at least 

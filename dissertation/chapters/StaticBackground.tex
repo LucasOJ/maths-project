@@ -1,8 +1,8 @@
 \chapter{Rumour Spreading on Static Networks}\label{chapter:staticIntro}
 
-In this chapter, we introduce rumour spreading on static networks.
+In this chapter, we introduce the rumour spreading model for static networks, where the topology of the network does not change. We also review a standard result bounding the spreading time of the introduced rumour spread model on static networks.
 
-\section{Introduction to Rumour Spreading}
+\section{The Rumour Spreading Model}
 
 In this section we introduce the principles and terminology of rumour spreading common to all the rumour spreading processes we study in this report. Then we specify a rumour spreading algorithm for static networks.
 
@@ -15,21 +15,21 @@ We now introduce our first example of a rumour spreading algorithm, which specif
 
 	\noindent
 	This rumour spreading algorithm takes place in continuous time on a topology $G$ with $n$ nodes.
-	Initially a single node of $G$ is aware of rumour. Each node is associated with an independent unit rate Poisson process. Say an arrival occurs at time $t$ in the Poisson process associated with node $v$. At this time if $v$ will contact one of its neighbours $u$ uniformly at random. If $v$ is aware of the rumour and $u$ is not, $v$ will push the rumour to $u$, and $u$ will become aware of the rumour immediately. Conversely, if $v$ is not aware of the rumour but $u$ is, $v$ will pull the rumour from $u$. If both nodes are aware of the rumour or both nodes are not aware of the rumour, nothing happens.
+	Initially, a single node of $G$ is aware of rumour. Each node is associated with an independent unit rate Poisson process. Say an arrival occurs at time $t$ in the Poisson process associated with node $v$. At this time, $v$ will contact one of its neighbours $u$ uniformly at random. If $v$ is aware of the rumour and $u$ is not, $v$ will push the rumour to $u$, and $u$ will become aware of the rumour immediately. Conversely, if $v$ is not aware of the rumour but $u$ is, $v$ will pull the rumour from $u$. If both nodes are aware of the rumour or both nodes are not aware of the rumour, nothing happens.
 \end{definition}
 
 We consider the implications of this model. 
 Note that if the network on which the rumour spreads is disconnected, by Algorithm \ref{algo:staticAsync} there will always be some nodes which are unaware of the rumour. However, suppose the network is connected.
 Since informed nodes never forget the rumour, it is clear that eventually all nodes will be made aware of the rumour. We refer to the first time that all the nodes are aware of the rumour as the `spreading time'. This is the central quantity we will bound in this report. The interpretation of the spreading time depends on the model. For example, in an epidemic model, this is the first time the entire population has been infected with the epidemic. Hence, the ability to predict and bound the spreading time has practical importance for decision-making in many scenarios where rumour spreading models are used.
 
-However, we can already observe challenges in bounding the spreading time. The speed at which the rumour spreads at a given time $t$ is dependent on the set of active edges. However, this set itself is random and dependent on the state of the network at time $t$. The number of potential states the network could be in grows exponentially with the number of nodes, since each node can be in one of two states so for a network with $n$ nodes there are $2^n$ potential states. The state of the network is also dependent on the history of the rumour spread.
-Since the process is asynchronous, there are an uncountably infinite number of ways for the rumour to spread. All of these features make the spreading time process difficult to analyse. However, in Chapter \ref{chapter:AsyncUpperBound}, we will see techniques to tackle this complexity. We also note that the choice of the Poisson process as the fundamental stochastic process driving the rumour spread is essential for simplifying the analysis.
+However, we can already observe challenges in bounding the spreading time. The speed at which the rumour spreads at a given time $t$ is dependent on the set of active edges. However, this set itself is random and dependent on the state of the network at time $t$. The number of potential states the network could be in grows exponentially with the number of nodes. Since each node can be in one of two states, for a network with $n$ nodes, there are $2^n$ potential states. The state of the network is also dependent on the history of the rumour spread.
+Since the process is asynchronous, there are an uncountably infinite number of ways for the rumour to spread, known as `trajectories'. All of these features make the spreading time process difficult to analyse. However, in Chapter \ref{chapter:AsyncUpperBound}, we will see techniques to tackle this complexity. In Chapters \ref{chapter:AsyncUpperBound} and \ref{chapter:asyncBoundTight}, we will also note that the choice of the Poisson process as the fundamental stochastic process driving the rumour spread is essential for simplifying the analysis.
 
-\section{Bounding the spreading time}\label{section:graphMetrics}
+\section{Bounding the Spreading Time}\label{section:graphMetrics}
 
 In this section, we review a theorem for bounding the rumour spreading time of Algorithm \ref{algo:staticAsync}.
 
-The bound we review is expressed in terms of the following functions of the topology, the values of which represent the strength of different structural properties of the given topology. We collectively refer to these functions as `connectivity metrics'.
+The bound we review is expressed in terms of the following functions of the topology, the values of which represent the strength of different structural properties. We collectively refer to these functions as `connectivity metrics'.
 
 \begin{definition}
 	Conductance of a graph $G = (V, E)$
@@ -38,7 +38,7 @@ The bound we review is expressed in terms of the following functions of the topo
 	$$
 \end{definition}
 
-This function measures how `well-connected' a graph is. We observe that the conductance of disconnected graphs is 0, since if we take one of the connected components to be $S$ the cut set $E(S, \comp{S})$ will be empty. Connected graphs have a positive conductance up to a maximum of $\frac{1}{2}$, which is achieved by the complete graph where all nodes are connected to each other (we compute this conductance in Theorem \ref{theorem:ringCompleteAsyncBound}). In Chapter \ref{chapter:AsyncUpperBound}, we see how the conductance affects the spreading time. 
+This function measures how `well-connected' a graph is. We observe that the conductance of disconnected graphs is 0, since if we take one of the connected components to be $S$, the cut set $E(S, \comp{S})$ will be empty. Connected graphs have a positive conductance up to a maximum of $\frac{1}{2}$, which is achieved by the complete graph where all nodes are connected to each other (we compute this conductance in Theorem \ref{theorem:ringCompleteAsyncBound}). In Chapter \ref{chapter:AsyncUpperBound}, we see how the conductance affects the spreading time. 
 
 \begin{definition}
 	Diligence of a cut $ E(S, \comp{S}) $
@@ -68,10 +68,10 @@ Now, we present a bound on the spreading time for a static network using these c
 
 We do not prove this theorem as it is a simple consequence of a standard result (see \cite{complexNetworksRumourSpreading}) adapted to include the diligence. We will see many of the key ideas behind this theorem in Chapter \ref{chapter:AsyncUpperBound}.
 
-We give an example of applying Theorem \ref{theorem:staticBound} bound to a static network.
+We now give an example of applying this theorem to a static network.
 
 \begin{theorem}
-	Let T be the spreading time for Algorithm \ref{algo:staticAsync} on the complete graph $K_n$ with $n$ vertices. Then for a $c > 0$,
+	Let T be the spreading time for Algorithm \ref{algo:staticAsync} on the complete graph $K_n$ with $n$ vertices. Then for a constant $c > 0$,
 	$$
 		\mathbb{P}\lb T \geq 4c \log \frac{n}{2} \rb \leq \frac{1}{c} 
 	$$
@@ -93,10 +93,10 @@ in the number of nodes $n$ of the topology. In this report, we are interested in
 For the other bounds in this report, we demand a stronger result.
 
 \begin{definition}
-	With high probability (w.h.p)
+	With high probability (w.h.p.)
 
 	\noindent
-	Let $\lb A_n \rb_{n \geq 0}$ be a sequence of events indexed by an integer $n$. We say the events occur with high probability (w.h.p) if for some $c \geq 1$, 
+	Let $\lb A_n \rb_{n \geq 0}$ be a sequence of events indexed by an integer $n$. We say the events occur with high probability (w.h.p.) if for some $c \geq 1$, 
 	$$
 		\mathbb{P}(A_n) \geq 1 - n^{-c}
 	$$ for all sufficiently large $n$.

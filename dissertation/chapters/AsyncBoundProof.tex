@@ -1,11 +1,11 @@
 \chapter{Asynchronous Rumour Spreading}
 \label{chapter:AsyncUpperBound}
 
-In this chapter we introduce the dynamic network model and define and algorithm for rumour spreading on this model introduced by Pourmiri and Mans in \cite{asyncPaper}. We then prove a bound from \cite{asyncPaper} on the associated spreading time that holds w.h.p. We conclude the chapter by investigating how useful this bound is in practice by applying it to a selection of simple dynamic networks, and comparing the results with simulated spreading times. 
+In this chapter we introduce the dynamic network model and define an algorithm for rumour spreading on this model introduced by Pourmiri and Mans in \cite{asyncPaper}. We then prove a bound from \cite{asyncPaper} on the associated spreading time that holds w.h.p. We conclude the chapter by investigating how useful this bound is in practice. We apply the bound to a selection of simple dynamic networks, and compare the results with simulated spreading times. 
 
-\section{Modelling Dynamic Networks}
+\section{The Dynamic Network Model}
 
-Here we formally define the Dynamic Network structure rumours will spread on.
+Here we formally define the Dynamic Network structure on which rumours will spread.
 
 \begin{definition}
 	Dynamic Network
@@ -14,7 +14,7 @@ Here we formally define the Dynamic Network structure rumours will spread on.
 	A dynamic network is a sequence of graphs $\mathcal{G} = (G_t)_{t \geq 0}$ indexed by an integer time $t$. All the graphs in the sequence have the same vertex set at each time step, but the edge set may vary, i.e.  $G_t = (V, E_t)$ where $E_t$ is some edge set on $V$.
 \end{definition}
 
-$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
+$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at a continuous time $\gamma \geq 0$, we say that $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. Hence, the topology of the network can only change at integer time steps.
 
 We also need to adjust some of the notation introduced in Section \ref{section:graphNotation} to accommodate for the changes in the network topology over time.
 
@@ -31,9 +31,9 @@ We also need to adjust some of the notation introduced in Section \ref{section:g
 	We say that two dynamic networks $\mathcal{G}_1 = (G_t)_{t \geq 0}$ and $\mathcal{G}_2 = (H_t)_{t \geq 0}$ are isomorphic if the topologies $G_t$ and $H_t$ are isomorphic for all $t \geq 0$. 
 \end{definition}
 
-\section{Introduction to the Rumour Spreading Model}
+\section{The Asynchronous Rumour Spreading Model}
 
-Now we are ready to define our first asynchronous algorithm for rumour spreading on a given dynamic network.
+We are ready to define our first asynchronous algorithm for rumour spreading on a dynamic network.
 
 \begin{definition}
 	Asynchronous Push-Pull Rumour Spreading Algorithm for Dynamic Networks
@@ -41,21 +41,21 @@ Now we are ready to define our first asynchronous algorithm for rumour spreading
 \label{NodeCentricAsyncAlgorithm}
 
 \noindent
-An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{t\in \mathbb{N}}$ in rounds, each lasting a unit length of time. Initially a single node is aware of the rumour. In round $t$, the rumour spreads according to the Asynchronous Push-Pull Rumour Spreading Algorithm for Static Topologies (Algorithm \ref{algo:staticAsync}) on the topology $G_t$.
+An asynchronous rumour spreads on a given dynamic network $\mathcal{G} = (G_t)_{t \geq 0}$ in rounds, each lasting a unit length of time. Initially a single node is aware of the rumour. In round $t$, the rumour spreads according to the Asynchronous Push-Pull Rumour Spreading Algorithm for Static Topologies (Algorithm \ref{algo:staticAsync}) on the topology $G_t$.
 
-We take a moment to consider the implications of the changes this model introduces. We observed that in the static network algorithm the random set of active edges is dependent state of the network. However, this model introduces an additional layer of complexity, as the set of active edges also depends on the current topology, and hence the time. Thus, the spreading time random variable is dependent on when spreading events occur, in addition to which nodes were involved. This dependence introduces further complexity into the spreading time analysis.
+We take a moment to consider the implications of the changes this model introduces. We observed that in the static network algorithm, the random set of active edges is dependent on the state of the network. However, the dynamic model introduces an additional layer of complexity, as the set of active edges also depends on the current topology, and hence on the time. Thus, the spreading time random variable is dependent on when spreading events occur, in addition to which nodes were involved. This dependence introduces further complexity into the spreading time analysis.
 
 % An interesting observation is that unlike the static model, in Algorithm \ref{NodeCentricAsyncAlgorithm} the spreading time 
 % P1 MAYBE: allows for topologies to be discconnected with finite spreading time - probability that spreadin time infinite - taken care of by bound
 
-\section{Proof of the bound}
+\section{Bounding the Spreading Times}
 
-We follow a proof of an upper bound by Pourmiri and Mans from \cite{asyncPaper}, explaining steps in greater detail than in the original paper.
+We follow a proof of an upper bound on the spreading times of this model for an arbitrary network by Pourmiri and Mans \cite{asyncPaper}. We explain steps in greater detail than in the original paper.
 
 First we prove a lemma about how long it takes for the number of nodes aware of the rumour to increase by a multiplicative factor. 
 
 \begin{lemma} \label{AsyncIncreaseLemma}
-	Let $\mathcal{G}=(G_t)_{t \in \mathbb{N}}$ be an $n$-node dynamic network. At $t=0$ a single node is aware of rumour which spreads according to algorithm \ref{NodeCentricAsyncAlgorithm}. Choose an arbitrary time $\tau \in [0, \infty)$. We denote the set of informed nodes at this time $I_\tau$, and set uninformed nodes $U_\tau$.
+	Let $\mathcal{G}=(G_t)_{t \geq 0}$ be an $n$-node dynamic network. At $t=0$ a single node is aware of rumour which spreads according to Algorithm \ref{NodeCentricAsyncAlgorithm}. Choose an arbitrary time $\tau \in [0, \infty)$.
 	\noindent
 	Define 
 	
@@ -83,14 +83,14 @@ When less than half of the nodes are aware of the rumour, we can interpret $\tau
 
 In Lemma \ref{AsyncIncreaseLemma} we are interested in the event that this time exceeds $\Delta(\alpha) + 2$. 
 The  $+2$ term arises from technicalities in the proof, however the $\Delta_\tau(\alpha)$ term reveals a relationship between to the rate at which the set of informed nodes expands, and the connectivity of the dynamic network.
-Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta_\tau(\alpha)$ we see that the greater the conductance and diligence metrics of the static topologies in the time steps immediately after $\tau$, the smaller the value of $\Delta_\tau(\alpha)$ becomes, since the summation will exceed $2\alpha$ in fewer terms. Thus, we see that well-connected topologies will yield smaller values of $\Delta_\tau(\alpha)$. Returning to the probability bound, we see that the bounding term $e^{-c_0\alpha m(\tau)}$ is independent of the topologies after $\tau$, so the bound has the same probability of failing regardless of the connectivity metrics. Thus, the bound shows that the better the connectivity, the faster the rumour spreads.
+Suppose we fix $\alpha$ and $\tau$. From the definition of $\Delta_\tau(\alpha)$ we see that the greater the connectivity metrics of the static topologies in the time steps immediately after $\tau$, the smaller the value of $\Delta_\tau(\alpha)$ becomes, since the summation will exceed $2\alpha$ in fewer terms. Thus, we see that well-connected topologies will yield smaller values of $\Delta_\tau(\alpha)$. Returning to the probability bound, we see that the bounding term $e^{-c_0\alpha m(\tau)}$ is independent of the topologies after $\tau$, so the bound has the same probability of failing regardless of the connectivity metrics. Thus, the bound shows that the better the connectivity, the faster the rumour spreads.
 
 \begin{proof}
 	Fix $\tau > 0$.
 	Fix a time $\gamma \in [\tau, \tau')$. 
 	We consider the set of edges $E(I_\gamma, U_\gamma)$ between the informed and uninformed sets of nodes at time $\gamma$. 
 	Let $\{u, v\} \in E(I_\gamma, U_\gamma)$ where $u$ is aware of the rumour and $v$ is not.
-	Recall that $u$ chooses one of its $d_u(\gamma)$ neighbours uniformly at random to push the rumour to according the arrival times of a unit rate Poisson process. Thus, the by the thinning property of Poisson process, $u$ informs $v$ of the rumour according to the arrival times of a Poisson process with rate $\frac{1}{d_u(\gamma)}$
+	Recall that $u$ chooses one of its $d_u(\gamma)$ neighbours uniformly at random to push the rumour to according the arrival times of a unit rate Poisson process. Thus, by the thinning property of Poisson processes, $u$ informs $v$ of the rumour according to the arrival times of a Poisson process with rate $\frac{1}{d_u(\gamma)}$
 	Similarly, node $v$ pulls the rumour from one of its $d_v(\gamma)$ neighbours according to a unit rate Poisson process. Thus, $v$ pulls the rumour from $u$ according to a Poisson process of rate $\frac{1}{d_v(\gamma)}$.
 	The stochastic process by which $u$ contacts $v$ is the sum of these processes, which itself is a Poisson process with rate $\frac{1}{d_u(\gamma)} + \frac{1}{d_v(\gamma)}$ by the superposition property.
 	By considering all the active edges, the cumulative process by which any of the uniformed nodes contact any of the informed nodes is Poisson process of rate 
@@ -298,7 +298,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	We justify the final inequality as follows. Consider the sequence of connectivity metrics $(\Phi(G_k)\rho(G_k))_{k \geq 0}$.
 	Note that in the first term, since $\tau_{i+1} \leq \tau_i + \delta_i$, we take sums over potentially overlapping intervals of the sequence of connectivity metrics, namely $[\tau_0, \tau_0 + \delta_0], (\tau_1, \tau_1 + \delta_1], (\tau_2, \tau_2 + \delta_2], \dots$. Thus, each $(\Phi(G_k)\rho(G_k))$ will be considered at least once, and may contribute to multiple terms of the summation due to the overlaps. We can interpret the second sum as iterating in the same way over the following contiguous, disjoint intervals: $[T_0 = 0, T_1 = \Delta_{T_0}(\alpha_0) + 2], (T_1, T_2 = \Delta_{T_1}(\alpha_1) + 2], (T_2, T_3 = \Delta_{T_2}(\alpha_2) + 2], \dots$. Since this sum is taken over disjoint intervals, each $(\Phi(G_k)\rho(G_k))$ term is considered exactly once. Thus, more terms are needed for the contiguous summation $\sum_{k=0}^t \Phi(G_k)\rho(G_k)$ to exceed the sum of the target values $\sum_{i=0}^N (2 \alpha_i + 2)$, since connectivity metrics $\Phi(G_k)\rho(G_k)$ aren't reused.
 
-	Note that in the final bound for $t_\text{half}$ we have eliminated all random quantities such as $\tau_i$, thus this bound can be calculated using only information about network.
+	Note that in the final bound for $t_\text{half}$ we have eliminated all random quantities such as $\tau_i$ dependent on the rumour spread, thus this bound can be calculated using only information about the network.
 
 	\textbf{Second Phase.} The second phase starts at $t_\text{half}$, when at least $\frac{n}{2}$ nodes have been made aware of the rumour. The phase ends at the first time all nodes are aware of the rumour, which we denote $t_\text{all}$. Note that since the number of informed nodes is at least $\frac{n}{2}$ during this is phase, the number of uninformed nodes is at most $\frac{n}{2}$. Thus, for $\tau > t_\text{half}$, $m(\tau) = |U_\tau|$. From this point, the ideas used to bound the second phase are identical to those in the analysis of the first phase. We omit the analysis of this phase to avoid repetition, and refer the reader to \cite{asyncPaper} for the full details. 
 
@@ -318,7 +318,7 @@ Now we iteratively apply Lemma \ref{AsyncIncreaseLemma} to derive the following 
 	$$
 \end{proof}
 
-In Theorem \ref{theorem:AsyncUpperBound}, we have successfully generalized standard results about the rumour spreading time to dynamic networks. Indeed, by using Theorem \ref{theorem:AsyncUpperBound} we can recover the standard result about rumour spreading on static networks from Theorem \ref{theorem:staticBound}. If we let $G_t = G$ for all $t$ (i.e. a static network), by Theorem \ref{theorem:AsyncUpperBound} the rumour spreading time $T$ satisfies 
+In Theorem \ref{theorem:AsyncUpperBound}, we have successfully bounded the asynchronous rumour spreading time on dynamic networks. Indeed, using Theorem \ref{theorem:AsyncUpperBound} we can recover the standard result about rumour spreading on static networks from Theorem \ref{theorem:staticBound}. If we let $G_t = G$ for all $t$ (i.e. a static network), by Theorem \ref{theorem:AsyncUpperBound} the rumour spreading time $T$ satisfies 
 \begin{align*}
 	T &\leq \min \left\{t : \sum_{k=0}^t \Phi(G)\rho(G) \geq C \log n \right\} \\
 	&= \min \left\{t : t \Phi(G)\rho(G) \geq C \log n \right\}  \\
@@ -330,6 +330,8 @@ w.h.p. Encouragingly, we have recovered the same scaling in spreading time as Th
 Theorem \ref{theorem:AsyncUpperBound} also expresses the relationship between the success probability of the bound, and the size of the bound. We recall that the failure probability of the bound is $\mathcal{O}\left(n^{-(c-1)s}\right)$.
 We also note that the constant $C$ in Theorem \ref{theorem:AsyncUpperBound} is monotone increasing in $c$. The greater $C$ is, the more terms will be required for the summation to exceed $C \log n$, which will yield a larger bound. 
 Thus, the greater the success probability of the bound, the larger the bound will be.
+
+Notice that since the conductance of disconnected topologies is 0, such topologies increase the number of terms needed to exceed $C \log n$ without contributing to the connectivity metric sum. Thus, inserting disconnected topologies into a network increases the spreading time bound, as we would expect. But what happens if all the topologies in the network are disconnected? In this case, the bound is infinite, which tells us no information about the spreading time. However, it is possible for the spreading time to be finite in some such networks, as new edges can enable the rumour to spread between previously disconnected nodes. Consider the network consisting of 3 nodes $\{v_1, v_2, v_3\}$ where only one node knows the rumour initially. Suppose that we alternate between a topology where only $v_1$ and $v_2$ are connected, and a topology where only $v_2$ and $v_3$ are connected. Since all the topologies are disconnected, the bound will be infinite for this network. However, it is almost certain that the rumour will spread to all nodes in a finite time. An interesting avenue for further study is to construct spreading time bounds for networks consisting of disconnected topologies. 
  
 % MAYBE: How does diligence affect bound?
 
@@ -569,7 +571,7 @@ To answer this question, we investigate the spreading time on the static ring gr
 \end{theorem}
 
 \begin{proof}
-	We notice that the Shuffled Ring Network and Static Ring Network networks are isomorphic. Since the conductance and diligence metrics are invariant to node renaming, both networks they have the same conductance and diligence in each round. Since Theorem \ref{theorem:AsyncUpperBound} is only dependent on the sequence of conductance and diligence, we obtain the same bound for the Static Ring Network and the Shuffled Ring Network.
+	We notice that the Shuffled Ring Network and Static Ring Network networks are isomorphic. Since the connectivity metrics are invariant to node renaming, both networks have the same conductance and diligence in each round. Since Theorem \ref{theorem:AsyncUpperBound} is only dependent on the sequence of connectivity metrics, we obtain the same bound for the Static Ring Network and the Shuffled Ring Network.
 \end{proof} 
 
 Now we investigate the simulated spreading times on the Static Ring Graph.
@@ -588,7 +590,7 @@ We investigate why the rumour spreads faster on the Shuffled Ring Network by com
 
 By the superposition and thinning properties of the Poisson process, we can interpret the operation of Algorithm \ref{NodeCentricAsyncAlgorithm} as picking a node at random according to the arrival times of rate $n$ Poisson process,
 before picking a random neighbour to exchange the rumour with. If one of the nodes is aware of the rumour and the other is not, a spreading event will occur.
-In the ring topology all nodes have the same degree, so we can further simplify the interpretation of the spreading process as choosing a present edge uniformly according to the arrival times of a rate $n$ Poisson process. Thus, the greater the proportion of active edges to inactive edges, the greater the probability that the chosen edge is active, and triggers a spreading event. More frequent spreading events in turn yield lower spreading times. 
+In the ring topology all nodes have the same degree, so we can further simplify the interpretation of the spreading process as choosing a present edge uniformly at random according to the arrival times of a rate $n$ Poisson process. Thus, the greater the proportion of active edges to inactive edges, the greater the probability that the chosen edge is active, and triggers a spreading event. More frequent spreading events in turn yield lower spreading times. 
 
 \begin{figure}[h]
 	\centering
@@ -643,10 +645,10 @@ As the network becomes saturated with informed nodes around time 7, the number o
 
 Note that since Algorithm \ref{NodeCentricAsyncAlgorithm} is a random process, the individual simulations analysed in Figures \ref{fig:staticRingInformedNodeGrowth} and \ref{fig:shuffledRingInformedNodeGrowth} are not necessarily characteristic of how the rumour spreads on each network. However, after running the simulations multiple times, we see the same general structures we have discussed in both plots, hence these displays are useful illustrations.
 
-We now return to the question posed in section \ref{section:shuffledRingAsyncApplication} - why is the bound given by Theorem \ref{theorem:AsyncUpperBound} weak for the Shuffled Ring? We saw in the proof of Theorem \ref{theorem:staticRingAsyncBound} that the $\mathcal{O}(n \log n)$ bound must hold w.h.p for both the Static Ring and Shuffled Ring, since they have identical structures. However, we have seen from simulations that the spreading time of the Static ring grows like $\mathcal{O}(n)$, so our bound for both the Static Ring and Shuffled Ring can be no better than $\mathcal{O}(n)$. 
+We now return to the question posed in Section \ref{section:shuffledRingAsyncApplication} - why is the bound given by Theorem \ref{theorem:AsyncUpperBound} weak for the Shuffled Ring? We saw in the proof of Theorem \ref{theorem:staticRingAsyncBound} that the $\mathcal{O}(n \log n)$ bound must hold w.h.p for both the Static Ring and Shuffled Ring, since they are isomorphic. However, we have seen from simulations that the spreading time of the Static ring grows like $\mathcal{O}(n)$, so our bound for both the Static Ring and Shuffled Ring can be no better than $\mathcal{O}(n)$. 
 
 We can interpret the Static Ring as a version of the Shuffled Ring in which the nodes have been relabelled. This example shows that such a renaming has no effect on the bound, but has a significant impact on the spreading time, hence the bound must accommodate for the network with the worse spreading time. We refer to such a network as `adversarial', in the sense that it is the network which aims to slow the spread of the rumour by relabelling nodes. This example demonstrates a limitation of the bound: given a network, the bound can be no better than the spreading time of the corresponding adversarial network (the isomorphic network with the slowest spreading time).
 
-For example, all other networks isomorphic but not equal to the Static Ring Network (such as the Shuffle Ring Network) involve some relabelling of nodes between rounds, which could introduce additional active edges. Thus, the Static Ring minimises the number of active edges at all time steps so is in fact the adversarial network for the Shuffle Ring Network. 
+For example, all other networks isomorphic but not equal to the Static Ring Network (such as the Shuffle Ring Network) involve some relabelling of nodes between rounds, which could introduce additional active edges. Thus, the Static Ring minimises the number of active edges at all time steps so is in fact the adversarial network for the Shuffled Ring Network. 
 
 In conclusion, we have seen in this section that although sometimes the bound is nearly tight, frequently it is not. After studying the behaviour of rumour spreading on isomorphic ring networks, we also saw that adversarial networks with larger spreading times than their isomorphic networks weaken the bound for these other networks. In this example we saw that the bound was only a factor of $\mathcal{O}(\log n)$ worse than the best possible bound in the adversarial case. But are there other adversarial networks for which the bound is almost tight? And is the adversarial network always the static equivalent of a given network? We investigate these questions in Chapter \ref{chapter:asyncBoundTight}.
