@@ -6,7 +6,7 @@ In this chapter, we introduce rumour spreading on static networks.
 
 In this section we introduce the principles and terminology of rumour spreading common to all the rumour spreading processes we study in this report. Then we specify a rumour spreading algorithm for static networks.
 
-Static rumour spreading takes place on a graph $G=(V,E)$ which we will often refer to as the "topology". The process takes place over time $t \geq 0$. Each node can be in one of two states at each time during the spread of a rumour, either it is aware of the rumour, or not aware of the rumour. For a given time $t$, we refer the set of nodes aware of the rumour as the "informed" nodes, denoted by $I_t$. The set of nodes not aware of the rumour at time $t$ are called the "uninformed" nodes, denoted by $U_t$. We assume that once a node is aware of the rumour, it never forgets it, so after a node been informed, it never becomes uniformed again. The rumour spreads from informed nodes to uninformed nodes along edges (sometimes referred to as "connections") between informed and uniformed nodes. We refer to such edges as "active" edges, as they have the potential to spread the rumour. The remaining edges between pairs of informed nodes or pairs of uninformed nodes are referred to as "inactive" edges, as the rumour cannot spread along these edges. We refer to the time at which a new node becomes aware of the rumour as a "spreading event".
+Static rumour spreading takes place on a graph $G=(V,E)$ which we will often refer to as the `topology'. The process takes place over time $t \geq 0$. Each node can be in one of two states at each time during the spread of a rumour, either it is aware of the rumour, or not aware of the rumour. For a given time $t$, we refer the set of nodes aware of the rumour as the `informed' nodes, denoted by $I_t$. The set of nodes not aware of the rumour at time $t$ are called the `uninformed' nodes, denoted by $U_t$. We assume that once a node is aware of the rumour, it never forgets it, so after a node been informed, it never becomes uniformed again. The rumour spreads from informed nodes to uninformed nodes along edges (sometimes referred to as `connections') between informed and uniformed nodes. We refer to such edges as `active' edges, as they have the potential to spread the rumour. The remaining edges between pairs of informed nodes or pairs of uninformed nodes are referred to as `inactive' edges, as the rumour cannot spread along these edges. We refer to the time at which a new node becomes aware of the rumour as a `spreading event'.
 
 We now introduce our first example of a rumour spreading algorithm, which specifies exactly how the rumour spreads.  
 
@@ -20,7 +20,7 @@ We now introduce our first example of a rumour spreading algorithm, which specif
 
 We consider the implications of this model. 
 Note that if the network on which the rumour spreads is disconnected, by Algorithm \ref{algo:staticAsync} there will always be some nodes which are unaware of the rumour. However, suppose the network is connected.
-Since informed nodes never forget the rumour, it is clear that eventually all nodes will be made aware of the rumour. We refer to the first time that all the nodes are aware of the rumour as the "spreading time". This is the central quantity we will bound in this report. The interpretation of the spreading time depends on the model. For example, in an epidemic model, this is the first time the entire population has been infected with the epidemic. Hence, the ability to predict and bound the spreading time has practical importance for decision-making in many scenarios where rumour spreading models are used.
+Since informed nodes never forget the rumour, it is clear that eventually all nodes will be made aware of the rumour. We refer to the first time that all the nodes are aware of the rumour as the `spreading time'. This is the central quantity we will bound in this report. The interpretation of the spreading time depends on the model. For example, in an epidemic model, this is the first time the entire population has been infected with the epidemic. Hence, the ability to predict and bound the spreading time has practical importance for decision-making in many scenarios where rumour spreading models are used.
 
 However, we can already observe challenges in bounding the spreading time. The speed at which the rumour spreads at a given time $t$ is dependent on the set of active edges. However, this set itself is random and dependent on the state of the network at time $t$. The number of potential states the network could be in grows exponentially with the number of nodes, since each node can be in one of two states so for a network with $n$ nodes there are $2^n$ potential states. The state of the network is also dependent on the history of the rumour spread.
 Since the process is asynchronous, there are an uncountably infinite number of ways for the rumour to spread. All of these features make the spreading time process difficult to analyse. However, in Chapter \ref{chapter:AsyncUpperBound}, we will see techniques to tackle this complexity. We also note that the choice of the Poisson process as the fundamental stochastic process driving the rumour spread is essential for simplifying the analysis.
@@ -38,7 +38,7 @@ The bound we review is expressed in terms of the following functions of the topo
 	$$
 \end{definition}
 
-This function measures how `well-connected' a graph is. We observe that the conductance of disconnected graphs is 0, since if we take one of the connected components to be $S$ the cut set $E(S, \comp{S})$ will be empty. Connected graphs have a positive conductance up to a maximum of $\frac{1}{2}$ for the complete graph where all nodes are connected to each other (we compute this conductance in Theorem \ref{theorem:ringCompleteAsyncBound}). In Chapter \ref{chapter:AsyncUpperBound}, we see how the conductance affects the spreading time. 
+This function measures how `well-connected' a graph is. We observe that the conductance of disconnected graphs is 0, since if we take one of the connected components to be $S$ the cut set $E(S, \comp{S})$ will be empty. Connected graphs have a positive conductance up to a maximum of $\frac{1}{2}$, which is achieved by the complete graph where all nodes are connected to each other (we compute this conductance in Theorem \ref{theorem:ringCompleteAsyncBound}). In Chapter \ref{chapter:AsyncUpperBound}, we see how the conductance affects the spreading time. 
 
 \begin{definition}
 	Diligence of a cut $ E(S, \comp{S}) $
@@ -103,31 +103,3 @@ For the other bounds in this report, we demand a stronger result.
 \end{definition}
 
 This is a strong requirement since for large $n$, the probability that bound holds will be infinitesimally close to 1. However, we can be extremely confident in bounds that hold w.h.p, as for large $n$, it is overwhelming likely that they hold.
-
-\section{Introducing Dynamic Networks}
-
-Here we formally define the Dynamic Network structure rumours will spread on.
-
-\begin{definition}
-	Dynamic Network
-
-	\noindent
-	A dynamic network is a sequence of graphs $\mathcal{G} = (G_t)_{t \geq 0}$ indexed by an integer time $t$. All the graphs in the sequence have the same vertex set at each time step, but the edge set may vary, i.e.  $G_t = (V, E_t)$ where $E_t$ is some edge set on $V$.
-\end{definition}
-
-$G_t$ represents the topology of the network at the discrete time step $t$. However, asynchronous rumour spreading algorithms operate in continuous time, so we need to define the topology of the network at non-integer times. To represent the state of the network at any non-negative continuous time $\gamma \in \mathbb{R}_+$, we say that the current network topology $G_\gamma$ := $G_{\floor\gamma}$. Thus, for any time $\gamma \in [t, t + 1)$ the network topology is fixed to $G_t$. This corresponds to allowing the network topology change at integer time steps only.
-
-We also need to adjust some of the notation introduced in Section \ref{section:graphNotation} to accommodate the changes in the network over time.
-
-\begin{definition}
-	Vertex degree at time $\gamma \in \mathbb{R}_+ $ 
-
-	\noindent
-	For a Dynamic Network $\mathcal{G}$ on a vertex set $V$, $d_v(\gamma)$ is the degree of a vertex $v \in V$ at time $\gamma$, i.e. the degree of $v$ in $G_\gamma$
-\end{definition}
-
-\begin{definition}
-	Dynamic Network Isomorphism
-
-	We say that two dynamic networks $\mathcal{G}_1 = (G_t)_{t \geq 0}$ and $\mathcal{G}_2 = (H_t)_{t \geq 0}$ are isomorphic if the topologies $G_t$ and $H_t$ are isomorphic for all $t \geq 0$. 
-\end{definition}
