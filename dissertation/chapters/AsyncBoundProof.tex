@@ -477,11 +477,11 @@ Now we compare the bound with simulated spreading times on $\mathcal{A}$.
 	\label{fig:alternatingSimResults}
 \end{figure}
 
-The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results simulated rumour spreading on $\mathcal{A}$. Each blue point in the plot represents a single simulation, where the $x$ component is the number of nodes in the simulation, and the $y$ component is spreading time. Since the spreading time is random variable, 200 simulations were run for each network size we investigated. The means (displayed by red points) illustrate the relationship between the size of the network and the expected spreading time. 
+The scatter plot in Figure \ref{fig:alternatingSimResults} displays the results of simulated rumour spreading on $\mathcal{A}$. Each blue point in the plot represents a single simulation, where the $x$ component is the number of nodes in the simulation, and the $y$ component is spreading time. Since the spreading time is a random variable, 200 simulations were run for each network size we investigated. The means (displayed by red points) illustrate the relationship between the size of the network and the expected spreading time. 
 
 However, since the bound holds w.h.p, we want to find a value larger than almost all the simulated spreading times for each $n$. Thus, in orange we plot the $99^\text{th}$ percentile of the spreading times for each $n$.
 
-On Figure \ref{fig:floodingGnpSimResultsTight}, we have plotted the function $f(n) = c \log \log (n)$ in green, with an appropriately chosen scaling constant $c$. Note that the $99^\text{th}$ percentile function has a similar growth rate, so these simulations suggest that w.h.p, the spreading time on $\mathcal{A}$ grows like $\mathcal{O}(\log \log n)$ in the network size.
+On Figure \ref{fig:alternatingSimResults}, we have plotted the function $f(n) = c \log \log (n)$ in green, with an appropriately chosen scaling constant $c$. Note that the $99^\text{th}$ percentile function has a similar growth rate, so these simulations suggest that w.h.p, the spreading time on $\mathcal{A}$ grows like $\mathcal{O}(\log \log n)$ in the network size.
 
 This analysis suggests that the $\mathcal{O}(\log n)$ bound given by Theorem \ref{theorem:AsyncUpperBound} is not tight for $\mathcal{A}$.
 
